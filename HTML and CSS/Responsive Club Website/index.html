@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hyrule Adventurers Guild — Sheikah Edition</title>
+
+  <link rel="shortcut icon" href="./images/ur_logo_favicon.png" type="image/x-icon">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top sheikah-nav px-4">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="./images/triforce_logo.jpg" class="me-2 logo-glow" height="60" alt="Triforce Logo">
+      <span class="fs-3 fw-bold d-none d-md-inline sheikah-text">Hyrule Adventurers Guild</span>
+    </a>
+
+    <button class="navbar-toggler sheikah-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navMenu">
+      <ul class="navbar-nav gap-3">
+        <li class="nav-item"><a class="nav-link sheikah-link" href="#home">Home</a></li>
+        <li class="nav-item"><a class="nav-link sheikah-link" href="#characters">Characters</a></li>
+        <li class="nav-item"><a class="nav-link sheikah-link" href="#games">Games</a></li>
+        <li class="nav-item"><a class="nav-link sheikah-link" href="#follow">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="home" class="hero sheikah-section text-center">
+    <h1 class="club-name sheikah-text">Hyrule Adventurers Guild</h1>
+    <img src="./images/live_legend_of_zelda.jpg" class="hero-img sheikah-img" alt="Zelda Hero Image">
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="container text-center my-5 py-5 sheikah-section">
+    <h2 class="fw-bold mb-3 section-title sheikah-title">About Us</h2>
+    <p class="fs-2 fst-italic sheikah-text">"In this Guild, we honor the legacy of Hyrule’s greatest heroes."</p>
+  </section>
+
+  <!-- GAMES -->
+  <section id="games" class="container text-center my-5 py-5 sheikah-section">
+    <h2 class="fw-bold mb-4 section-title sheikah-title">Games</h2>
+
+    <div class="row g-4 justify-content-center">
+      <div class="col-6 col-md-3">
+        <img src="./images/The_Legend_of_Zelda_Breath_of_the_Wild.jpg" class="game-img sheikah-img">
+      </div>
+      <div class="col-6 col-md-3">
+        <img src="./images/The_Legend_of_Zelda_Tears_of_the_Kingdom_cover.jpg" class="game-img sheikah-img">
+      </div>
+      <div class="col-6 col-md-3">
+        <img src="./images/ocarina_of_time.jpg" class="game-img sheikah-img">
+      </div>
+      <div class="col-6 col-md-3">
+        <img src="./images/link_to_the_past.jpg" class="game-img sheikah-img">
+      </div>
+    </div>
+  </section>
+
+  <!-- CHARACTERS -->
+  <section id="characters" class="container text-center my-5 py-5 sheikah-section">
+    <h2 class="fw-bold mb-4 section-title sheikah-title">Characters</h2>
+
+    <div class="row justify-content-center g-4">
+      <div class="col-6 col-md-3">
+        <img src="./images/zelda_action_figures.jpg" class="character-img sheikah-img">
+        <p class="mt-2 fs-4 fw-bold sheikah-text">Link</p>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <img src="./images/princess_action_figures.jpg" class="character-img sheikah-img">
+        <p class="mt-2 fs-4 fw-bold sheikah-text">Zelda</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="follow" class="sheikah-footer text-center py-5 mt-5">
+    <div class="container">
+      <h3><a class="email-link sheikah-link fw-bold" href="mailto:fan@zeldaclub.com">Contact Us</a></h3>
+      <p class="sheikah-text">Phone: +999 (111) 777‑8888</p>
+      <p class="sheikah-text">Address: 7 Guardian Watchtower Road, Castle Town</p>
+      <p class="sheikah-text">Central Hyrule Province, Hyrule (HR) 96218</p>
+      <img src="./images/link_statue.jpg" class="img-fluid rounded shadow mt-3 sheikah-img" width="150">
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

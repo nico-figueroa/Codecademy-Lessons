@@ -1,0 +1,269 @@
+/* --------------------------------------------------
+   GLOBAL THEME + BASE STYLES
+-------------------------------------------------- */
+
+html {
+  scroll-behavior: smooth;
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #0d0d0d, #000000 70%);
+  color: #d9faff;
+  margin-top: 7rem;
+}
+
+/* Sheikah Glow Text */
+.sheikah-text {
+  color: #00e5ff;
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.7);
+}
+
+/* --------------------------------------------------
+   NAVBAR
+-------------------------------------------------- */
+
+.sheikah-nav {
+  background: rgba(0, 0, 0, 0.7);
+  border-bottom: 2px solid #00e5ff;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+}
+
+.logo-glow {
+  filter: drop-shadow(0 0 10px #00e5ff);
+}
+
+.sheikah-link {
+  color: #00e5ff !important;
+  font-weight: bold;
+  text-shadow: 0 0 6px rgba(0, 229, 255, 0.6);
+}
+
+.sheikah-link:hover {
+  color: #ff8800 !important;
+  text-shadow: 0 0 10px rgba(255, 136, 0, 0.8);
+}
+
+/* --------------------------------------------------
+   HERO SECTION — RESPONSIVE TYPOGRAPHY + IMAGE
+-------------------------------------------------- */
+
+.club-name {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero-img {
+  width: 100%;
+  max-width: 40rem;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+@media (min-width: 600px) {
+  .club-name {
+    font-size: 3rem;
+  }
+  .hero-img {
+    max-width: 50rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .club-name {
+    font-size: 3.5rem;
+  }
+  .hero-img {
+    max-width: 60rem;
+  }
+}
+
+/* --------------------------------------------------
+   SECTION CIRCUIT FRAME
+-------------------------------------------------- */
+
+.sheikah-section {
+  position: relative;
+  padding: 4rem 2rem;
+  margin-bottom: 5rem;
+  border: 2px solid #00e5ff;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.4);
+  background: rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  scroll-margin-top: 7rem;
+}
+
+.sheikah-section::before,
+.sheikah-section::after {
+  content: "";
+  position: absolute;
+  width: 120%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+  animation: circuit-move 4s linear infinite;
+  opacity: 0.6;
+}
+
+.sheikah-section::before {
+  top: 0;
+  left: -10%;
+}
+
+.sheikah-section::after {
+  bottom: 0;
+  left: -10%;
+  animation-delay: 2s;
+}
+
+@keyframes circuit-move {
+  0% { transform: translateX(-20%); }
+  100% { transform: translateX(20%); }
+}
+
+/* --------------------------------------------------
+   TITLES
+-------------------------------------------------- */
+
+.section-title,
+.sheikah-title {
+  color: #00e5ff;
+  text-shadow: 0 0 12px rgba(0, 229, 255, 0.9);
+  font-size: 2rem;
+  position: relative;
+}
+
+.sheikah-title::after {
+  content: "";
+  display: block;
+  width: 5rem;
+  height: 0.25rem;
+  background: #00e5ff;
+  margin: 0.5rem auto 0;
+  border-radius: 2px;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.9);
+}
+
+/* --------------------------------------------------
+   IMAGE BASE STYLES + GUARDIAN EYE EFFECT
+-------------------------------------------------- */
+
+@keyframes guardian-pulse {
+  from {
+    box-shadow:
+      0 0 20px rgba(255, 0, 0, 0.6),
+      0 0 40px rgba(255, 0, 0, 0.4);
+  }
+  to {
+    box-shadow:
+      0 0 35px rgba(255, 0, 0, 1),
+      0 0 70px rgba(255, 0, 0, 0.8);
+  }
+}
+
+.sheikah-img {
+  border: 2px solid #00e5ff;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.sheikah-img:hover {
+  transform: scale(1.08);
+  border-color: #ff0000;
+  animation: guardian-pulse 1.2s infinite alternate;
+}
+
+/* --------------------------------------------------
+   GAME IMAGES — 420px TALL, FULLY VISIBLE, CENTERED, RESPONSIVE
+-------------------------------------------------- */
+
+.game-img {
+  width: auto;              
+  height: 400px;            /* fixed height */
+  object-fit: contain;      /* full image visible */
+  object-position: center;
+  border-radius: 0.75rem;
+}
+
+/* --------------------------------------------------
+   RESPONSIVE LAYOUT SHIFT (GAMES)
+-------------------------------------------------- */
+
+@media (min-width: 769px) and (max-width: 1600px) {
+  .game-img {
+    height: 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  #games .row {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    gap: 1rem;
+  }
+
+  .game-img {
+    display: flex;
+    height: 200px;
+    align-self: center;
+  }
+
+}
+
+@media (min-width: 601px) and (max-width: 1200px) {
+  #games .row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    gap: 1rem;
+  }
+
+  .game-img {
+    height: 200px;
+  }
+
+}
+
+@media (min-width: 1201px) {
+  #games .row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+}
+
+/* --------------------------------------------------
+   CHARACTER IMAGES — HALF PAGE ON DESKTOP
+-------------------------------------------------- */
+
+.character-img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  #characters .col-md-3 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+/* --------------------------------------------------
+   FOOTER
+-------------------------------------------------- */
+
+.sheikah-footer {
+  background: rgba(0, 0, 0, 0.85);
+  border-top: 2px solid #00e5ff;
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+}
+
+.email-link:hover {
+  text-decoration: underline;
+  color: #ff8800 !important;
+}

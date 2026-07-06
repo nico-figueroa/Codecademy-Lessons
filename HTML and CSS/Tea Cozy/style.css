@@ -1,0 +1,170 @@
+/* Full page */
+
+* {
+    /* border: 3px dotted red; --> Used for adjustments only */
+    margin: 0;
+    /*opacity: 0.9;*/
+    font-family: Helvetica;
+}
+
+ body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4); 
+    pointer-events: none; 
+    z-index: 1; 
+} 
+
+body {   
+    font-size: 22px;
+    color: seashell;
+    background-color: black;
+    text-align: center;
+}
+
+a {
+    color: seashell;
+}
+
+/* Navigation bar */
+
+nav {
+    display: flex;
+    justify-content:space-between;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: black;
+    height: 69px;
+    z-index: 2;
+}
+
+nav ul {
+    display: inline-flex;
+    width: fit-content;
+}
+
+nav li {
+    margin: 20px;
+}
+
+.logo {
+    height: 50px;
+    margin: 9.5px 10px;
+    width: fit-content;
+}
+
+/* Mission section */
+
+.main {
+    scroll-margin-top: 69px;
+    top: 69px;
+}
+
+.main div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 700px;
+    width: 1200px;
+    background-image: url(./images/img-mission-background.jpg);
+    top: 69px;
+    margin: 10px auto;
+}
+
+.main h2, h4 {
+    padding: 10px;
+    background-color: black;
+}
+
+/* Tea of the Month Section */
+
+.second {
+    margin-top: 20px;
+    scroll-margin-top: 69px;
+}
+
+.second div {
+    display: inline-flex;
+    flex-direction: column;
+    align-content: center;
+}
+
+.second img {
+    height: 200px;
+    width: 300px;
+    margin: 0 50px;
+}
+
+.second h4 {
+    margin: 10px;
+}
+
+/* Locations section */
+
+.third  {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 10px auto;
+    background-image: url(./images/img-locations-background.jpg);
+    background-size: 100% 110%;
+    height: 500px;
+    width: 1200px;
+    text-align: center;
+    scroll-margin-top: 69px;
+}
+
+.third ul {
+    display: inline-flex;
+    justify-content: center;
+    margin-left: 0;
+}
+
+.third li {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin: 0 20px;
+    text-align: center;
+    height: 300px;
+    width: 300px;
+    background-color: black;
+}
+
+.title h3 {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.third li h3 {
+    margin: 0;
+}
+
+.oakdale {
+    position: relative;
+    z-index: 2;
+}
+
+/* Footer styles */
+
+footer h2, h5 {
+    margin: 30px;
+}
+
+footer div {
+    height: 200px;
+}
+
+footer a {
+    text-decoration: none;
+}
+
+#copyright {
+    width: fit-content;
+    margin-left: 20px;
+}

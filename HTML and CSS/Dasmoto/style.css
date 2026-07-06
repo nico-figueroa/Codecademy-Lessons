@@ -1,0 +1,56 @@
+.header {
+    position: relative;
+    width: 100%; /* According to dasmotos-arts_redline.jpg specification */
+    background-image: url('./images/pattern.jpeg'); /* According to dasmotos-arts_redline.jpg specification */
+    background-size: 300%;      
+    background-position: center; /* keeps it centered */
+    
+    margin: 60px 0; /* adds vertical spacing */
+    padding-top: 20px; /* adjust to vertically center text */
+    padding-bottom: 20px; /* adjust to vertically center text */
+    box-sizing: border-box; /* ensures padding doesn't affect overall size */
+}
+
+.header h1 {
+    font-family: Helvetica; /* According to dasmotos-arts_redline.jpg specification */
+    font-size: 100px; /* According to dasmotos-arts_redline.jpg specification */
+    font-weight: bold; /* According to dasmotos-arts_redline.jpg specification */
+    color: khaki; /* According to dasmotos-arts_redline.jpg specification */
+    text-align: center; /* According to dasmotos-arts_redline.jpg specification */
+    z-index: 2; /* stays above background */
+    margin: 0; /* removes default margin */ 
+    position: relative; /* allows z-index to work */
+}
+
+strong { /* According to dasmotos-arts_redline.jpg specification */
+    font-family: Helvetica;
+    font-weight: bold;
+    color: blue;
+}
+
+h2 { /* According to dasmotos-arts_redline.jpg specification */
+    font-family: Helvetica;
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+    text-align: left;
+}
+
+p { /* Match font and color specifications in dasmotos-arts_redline.jpg */
+    font-family: Helvetica;
+    font-size: 18px;
+    color: black;
+    text-align: left;
+}
+
+.brushes h2 { /* According to dasmotos-arts_redline.jpg specification */
+    background-color: mediumspringgreen;
+}
+
+.frames h2{ /* According to dasmotos-arts_redline.jpg specification */
+    background-color: lightcoral;
+}
+
+.paints h2 { /* According to dasmotos-arts_redline.jpg specification */
+    background-color: skyblue;
+}

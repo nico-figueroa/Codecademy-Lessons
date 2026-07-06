@@ -1,0 +1,325 @@
+/* General themes */
+
+html {
+    font-family:Roboto, sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color: white;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Navbar */
+
+nav {
+  background: rgba(0, 0, 0, .4); /* This could be a variable or fallback color to keep it consistent with your nav bar theme --> */
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 2rem;
+    z-index: 10;
+}
+
+.navbar .logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.navbar ul {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap; 
+    margin-right: 2rem; 
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.navbar a:hover {
+    color: #00aaff;
+    transition: color 0.2s ease-in-out;
+}
+
+.navbar p {
+    margin: 0;
+    font-size: 2rem;
+    margin-left: 1rem;
+}
+
+.logo img {
+    height: 5rem;
+    width: 5rem;
+}
+
+@media only screen and (max-width: 768px) {/* This will apply styles for screens with a maximum width of 768 pixels */
+    .navbar a {
+        font-size: 1rem;
+        padding: 0.5rem;
+    }
+
+    .navbar p {
+    display: none;
+    }
+}
+
+/* Home Section */
+
+#home {
+    display: flex;
+    flex-direction: row; 
+    align-items: center; 
+    color: white;
+    scroll-margin-top: 7rem;
+}
+
+.banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+}
+
+.banner {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    background-image: url("./images/ur_background.png");
+    background-size: cover;
+    background-position: center;
+    height: 100vh; /* This will make the banner take up the full viewport height */
+    width: auto;
+}
+
+.banner h1 {
+    position: relative;
+    font-size: 10rem;
+}
+
+@media only screen and (max-width: 768px) /* This will apply styles for screens with a maximum width of 768 pixels */{
+    .banner {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: top;
+        height: 50vh; /* This will make the banner take up the full viewport height */
+        width: auto;
+    }
+
+    .banner h1 {
+        font-size: 5rem;
+    }
+}
+
+/* Mission section */
+
+#about h2 { font-size: 1.5rem; max-width: 60ch; }
+
+#about {
+    margin-top: 7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-style: italic;
+    scroll-margin-top: 7rem;
+}
+
+.mission p {
+    display: flex;
+    font-size: 1.5rem;
+    max-width: 60ch;
+    flex-shrink: 0;
+}
+
+@media only screen and (max-width: 768px) /* This will apply styles for screens with a maximum width of 768 pixels */{
+    .mission p {
+    font-size: 2rem;
+    text-align: center;
+    }
+}
+
+/* Services section */
+
+#services {
+    margin-top: 7rem;
+    width: 100%;
+    height: auto;
+    scroll-margin-top: 7rem;
+    text-align: center;
+}
+
+.services ul li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+.services ul li:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
+}
+
+.services ul img {
+    width: 15rem;
+    height: 15rem;
+    object-fit: cover;
+    border-radius: 0.5rem; /* optional, looks nicer */
+}
+
+.list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: 2rem;
+    justify-items: center;
+}
+
+li.budget { grid-column: 1; grid-row: 1; }
+li.schedule { grid-column: 2; grid-row: 1; }
+li.preparation { grid-column: 3; grid-row: 1; }
+li.experience { grid-column: 2; grid-row: 2; }
+
+@media only screen and (max-width: 768px) { /* This will apply styles for screens with a maximum width of 768 pixels */  
+    .list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }    
+
+    .services ul img {
+        height: 10rem;
+        width: 10rem;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Team section */
+
+#team {
+    display: flex;
+    flex-direction: column; /* This will arrange the text items vertically within their container */
+    align-content: center; /* This will center the text items vertically within their container */
+    scroll-margin-top: 7rem;
+}
+
+.organization h2 {
+    text-align: center;
+}
+
+.organization div {
+    display: inline-flex;
+    justify-content: center;
+}
+
+.organization p {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bolder;
+    font-size: larger;
+    padding: 2rem;
+}
+
+.organization img {
+    width: 15rem;
+    height: 15rem;
+    object-fit: cover;
+    border-radius: 0.5rem; /* optional, looks nicer */
+}
+
+@media only screen and (max-width: 768px) { /* This will apply styles for screens with a maximum width of 768 pixels */
+    .organization img {
+        height: 10rem;
+        width: 10rem;
+        margin-bottom: 1rem;
+    } 
+
+    .organization div {
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+    }
+}
+
+/* Footer / Contact section */
+
+#contact {
+    scroll-margin-top: 7rem;
+}
+
+footer {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    padding: 2rem 1rem;
+    gap: 2rem;
+}
+
+footer div {
+    text-align: center;
+}
+
+footer .email-link {
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+footer .email-link:hover {
+  text-decoration: underline;
+}
+
+footer form {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+footer form input {
+    text-align: center;
+}
+
+footer img {
+    width: 10rem;
+    height: 10rem;
+    align-self: center;
+    object-fit: cover;
+    border-radius: 0.5rem; /* optional, looks nicer */
+}
+
+@media only screen and (max-width: 768px) { /* This will apply styles for screens with a maximum width of 768 pixels */
+    footer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    footer form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+    }
+}

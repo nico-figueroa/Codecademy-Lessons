@@ -1,0 +1,170 @@
+/* General Styling */
+
+.color-styles h1, .font-styles h1, .text-styles h1 {
+  font-size: 50px;
+  font-weight: bolder;
+  text-decoration: underline;
+  text-align: center;
+}
+
+/* Navigation Bar */
+
+nav {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+nav li {
+  display: inline-block;
+  margin: 10px;
+  box-sizing: border-box;
+  width: 200px;
+  height: 50px;
+  background-color: royalblue;
+  border: 2px solid black;
+  text-align: center;
+  font-size: 30px;
+  box-shadow: 2px 5px;
+  border-radius: 10px;
+}
+
+nav li:hover {
+  background-color: seagreen;
+  box-shadow: none;
+}
+
+nav li a {
+  color: snow;
+  text-decoration: none;
+}
+
+/* Color Styles Section */
+
+.color-styles {
+  border: 1px solid black;
+  font-weight: bolder;
+  text-align: center;
+}
+
+.color-styles li {
+  display: inline-block;
+  box-sizing: border-box;
+  margin: 10px;
+  width: 300px;
+  padding: 50px 50px;
+  text-align: center;
+  border: 1px solid black;
+}
+
+#color-1 {
+  background-color: slateblue;
+}
+#color-2 {
+  background-color: seagreen;
+}
+#color-3 {
+  background-color: royalblue;
+}
+#color-4 {
+  background-color: mediumspringgreen;
+}
+#color-5 {
+  background-color: lemonchiffon;
+}
+#color-6 {
+  background-color: snow;
+}
+
+/* Font Styles Section */
+
+.font-styles {
+  border: 1px solid black;
+  text-align: center;
+}
+
+.font-styles div {
+  display: inline-block;
+  margin: 0 30px; 
+}
+
+.font-styles h2 {
+  text-decoration: underline;
+}
+
+#font-1 {
+  font-family: Arial;
+}
+#font-2 {
+  font-family: Verdana;
+}
+#font-3 {
+  font-family: 'Times New Roman';
+}
+#font-4 {
+  font-family:'Courier New';
+}
+
+.bold {
+  font-weight: bold;
+}
+.italic {
+  font-style: italic;
+}
+
+/* Test Styles Section */
+
+.text-styles {
+  border: 1px solid black;
+}
+
+.text-styles div {
+    display: inline-block;  
+    width: fit-content;
+    margin: 0 30px;
+}
+
+.text-styles ul {
+  list-style-position: inside;
+}
+
+#text-style-1 {
+  font-weight: 700;
+  font-size: 26px;
+  font-family: Verdana;
+  text-align: center;
+}
+
+#text-style-2 {
+  font-weight: 600;
+  font-size: 20px;
+  font-family: Verdana;
+  text-align: center;
+}
+
+#text-style-3 {
+  font-weight: 500;
+  font-size: 18px;
+  font-family: 'Times New Roman';
+  text-align: center;
+}
+
+#text-style-4 {
+  font-weight: 400;
+  font-size: 14px;
+  font-family: 'Times New Roman';
+  text-align: center;
+}
+
+/* Footer Section */
+
+footer {
+  margin: 20px 0px;
+  background-color: snow;
+  padding: 20px;
+  text-align: center;
+}
+.footer-links a {
+  margin: 0 10px;
+  color: black;
+  text-decoration: none;
+}
