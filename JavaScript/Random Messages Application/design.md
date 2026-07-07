@@ -36,18 +36,18 @@ Generate a message that shares the spaceship to use, the distance to travel and 
 * 2 arrays for the message components: 
     1. Spaceships
     2. Destinations
-* 3 functions to create and display the message:
-    * Component index selector
+* 2 functions to create and display the message:
     * Message builder
     * Message presentation
 
 **Development process**
 
-1. Generate a new git branch for my project (engage)
-2. Describe the design in a design.md file
-3. Code the application in engage.js within VS Code and commit after completion of every project file
-4. Test the application
-5. Use the VS Code Git Hub terminal to push code to the remote repository
-6. Generate a pull request in the Git Hub repository and approve it
-7. Merge the changes to main
+1. Create a new issue for every task from Codecademy
+2. Generate a new git branch for my project
+3. Describe the design in a design.md file
+4. Code the application in engage.js within VS Code and commit after completion of every project file
+5. Test the application
+6. Use the VS Code Git Hub terminal to push code to the remote repository
+7. Generate a pull request in the Git Hub repository and approve it
+8. Merge the changes to main
 
