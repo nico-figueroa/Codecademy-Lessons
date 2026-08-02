@@ -1,0 +1,313 @@
+{
+  "project": "jammming",
+  "generatedAt": "2026-08-01T22:34:57.178Z",
+  "notes": "node_modules and public are standard Vite folders and were skipped.",
+  "root": {
+    "name": "Jammming",
+    "type": "folder",
+    "children": [
+      {
+        "name": ".gitignore",
+        "type": "file",
+        "extension": "",
+        "fullPath": ".gitignore",
+        "imports": []
+      },
+      {
+        "name": ".oxlintrc.json",
+        "type": "data",
+        "extension": ".json",
+        "fullPath": ".oxlintrc.json",
+        "imports": []
+      },
+      {
+        "name": "generate-structure.js",
+        "type": "util",
+        "extension": ".js",
+        "fullPath": "generate-structure.js",
+        "imports": [
+          "fs",
+          "path"
+        ],
+        "content": "import fs from \"fs\";\r\nimport path from \"path\";\r\n\r\nconst ROOT = process.cwd();\r\n\r\n// Folders to skip entirely\r\nconst IGNORE = new Set([\"node_modules\", \"public\", \".git\"]);\r\n\r\n// Toggle this ON if you want file contents included\r\nconst INCLUDE_CONTENT = true;\r\n\r\n// Simple heuristics for classifying files\r\nfunction classifyFile(name, fullPath) {\r\n  const ext = path.extname(name);\r\n\r\n  // Assets\r\n  if ([\".png\", \".jpg\", \".jpeg\", \".svg\", \".gif\"].includes(ext)) return \"asset\";\r\n\r\n  // Styles\r\n  if (ext === \".css\") return \"style\";\r\n\r\n  // Root-level project files\r\n  if (ext === \".html\") return \"root\";\r\n  if (ext === \".md\") return \"root\";\r\n\r\n  // Config files\r\n  if (name === \"package.json\") return \"config\";\r\n  if (name === \"vite.config.js\") return \"config\";\r\n  if (name.endsWith(\"config.js\")) return \"config\";\r\n  if (name.endsWith(\"config.json\")) return \"config\";\r\n\r\n  // Hooks\r\n  if (name.startsWith(\"use\") && ext === \".js\") return \"hook\";\r\n\r\n  // Components\r\n  if (ext === \".jsx\" || ext === \".tsx\") return \"component\";\r\n\r\n  // Utilities\r\n  if (ext === \".js\" || ext === \".ts\") return \"util\";\r\n\r\n  // Data files\r\n  if (ext === \".json\") return \"data\";\r\n\r\n  return \"file\";\r\n}\r\n\r\n// Extract import statements from JS/TS/JSX/TSX files\r\nfunction extractImports(fullPath) {\r\n  const ext = path.extname(fullPath);\r\n  if (![\".js\", \".jsx\", \".ts\", \".tsx\"].includes(ext)) return [];\r\n\r\n  const content = fs.readFileSync(fullPath, \"utf8\");\r\n  const importRegex = /import\\s+.*?from\\s+[\"'](.+?)[\"']/g;\r\n\r\n  const imports = [];\r\n  let match;\r\n\r\n  while ((match = importRegex.exec(content)) !== null) {\r\n    imports.push(match[1]);\r\n  }\r\n\r\n  return imports;\r\n}\r\n\r\nfunction mapFolder(folderPath) {\r\n  const entries = fs.readdirSync(folderPath, { withFileTypes: true });\r\n\r\n  const result = {\r\n    name: path.basename(folderPath),\r\n    type: \"folder\",\r\n    children: []\r\n  };\r\n\r\n  for (const entry of entries) {\r\n    if (IGNORE.has(entry.name)) continue;\r\n\r\n    const fullPath = path.join(folderPath, entry.name);\r\n\r\n    if (entry.isDirectory()) {\r\n      result.children.push(mapFolder(fullPath));\r\n    } else {\r\n      const fileType = classifyFile(entry.name, fullPath);\r\n      const imports = extractImports(fullPath);\r\n\r\n      const fileInfo = {\r\n        name: entry.name,\r\n        type: fileType,\r\n        extension: path.extname(entry.name),\r\n        fullPath: fullPath.replace(ROOT + path.sep, \"\"),\r\n        imports\r\n      };\r\n\r\n      if (INCLUDE_CONTENT && [\"component\", \"hook\", \"util\"].includes(fileType)) {\r\n        fileInfo.content = fs.readFileSync(fullPath, \"utf8\");\r\n      }\r\n\r\n      result.children.push(fileInfo);\r\n    }\r\n  }\r\n\r\n  return result;\r\n}\r\n\r\nfunction main() {\r\n  let projectName = path.basename(ROOT);\r\n\r\n  try {\r\n    const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, \"package.json\"), \"utf8\"));\r\n    if (pkg.name) projectName = pkg.name;\r\n  } catch {}\r\n\r\n  const structure = {\r\n    project: projectName,\r\n    generatedAt: new Date().toISOString(),\r\n    notes: \"node_modules and public are standard Vite folders and were skipped.\",\r\n    root: mapFolder(ROOT)\r\n  };\r\n\r\n  fs.writeFileSync(\"project-structure.json\", JSON.stringify(structure, null, 2));\r\n  console.log(`Generated project-structure.json for project: ${projectName}`);\r\n}\r\n\r\nmain();"
+      },
+      {
+        "name": "index.html",
+        "type": "root",
+        "extension": ".html",
+        "fullPath": "index.html",
+        "imports": []
+      },
+      {
+        "name": "package-lock.json",
+        "type": "data",
+        "extension": ".json",
+        "fullPath": "package-lock.json",
+        "imports": []
+      },
+      {
+        "name": "package.json",
+        "type": "config",
+        "extension": ".json",
+        "fullPath": "package.json",
+        "imports": []
+      },
+      {
+        "name": "project-structure.json",
+        "type": "data",
+        "extension": ".json",
+        "fullPath": "project-structure.json",
+        "imports": []
+      },
+      {
+        "name": "README.md",
+        "type": "root",
+        "extension": ".md",
+        "fullPath": "README.md",
+        "imports": []
+      },
+      {
+        "name": "src",
+        "type": "folder",
+        "children": [
+          {
+            "name": "assets",
+            "type": "folder",
+            "children": [
+              {
+                "name": "hero.png",
+                "type": "asset",
+                "extension": ".png",
+                "fullPath": "src\\assets\\hero.png",
+                "imports": []
+              },
+              {
+                "name": "react.svg",
+                "type": "asset",
+                "extension": ".svg",
+                "fullPath": "src\\assets\\react.svg",
+                "imports": []
+              },
+              {
+                "name": "vite.svg",
+                "type": "asset",
+                "extension": ".svg",
+                "fullPath": "src\\assets\\vite.svg",
+                "imports": []
+              }
+            ]
+          },
+          {
+            "name": "components",
+            "type": "folder",
+            "children": [
+              {
+                "name": "App",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "App.css",
+                    "type": "style",
+                    "extension": ".css",
+                    "fullPath": "src\\components\\App\\App.css",
+                    "imports": []
+                  },
+                  {
+                    "name": "App.jsx",
+                    "type": "component",
+                    "extension": ".jsx",
+                    "fullPath": "src\\components\\App\\App.jsx",
+                    "imports": [
+                      "react",
+                      "../SearchBar/SearchBar",
+                      "../SearchResults/SearchResults",
+                      "../Playlist/Playlist",
+                      "../../utils/appleMusicApi",
+                      "../../hooks/useAppleMusicAuth"
+                    ],
+                    "content": "// src/components/App/App.jsx\nimport React, { useState, useEffect } from 'react';\nimport SearchBar from '../SearchBar/SearchBar';\nimport SearchResults from '../SearchResults/SearchResults';\nimport Playlist from '../Playlist/Playlist';\nimport { search } from \"../../utils/appleMusicApi\";\nimport { getDeveloperToken, getUserToken, initMusicKit } from \"../../hooks/useAppleMusicAuth\";\n\nexport default function App() {\n  // Hard-coded track data for now\n  const [searchResults, setSearchResults] = useState([\n    {\n      id: 1,\n      name: \"Track One\",\n      artist: \"Artist A\",\n      album: \"Album Alpha\"\n    },\n    {\n      id: 2,\n      name: \"Track Two\",\n      artist: \"Artist B\",\n      album: \"Album Beta\"\n    },\n    {\n      id: 3,\n      name: \"Track Three\",\n      artist: \"Artist C\",\n      album: \"Album Gamma\"\n    }\n  ]);\n\n  const [playlistName, setPlaylistName] = useState(\"New Playlist\");\n  const [playlistTracks, setPlaylistTracks] = useState([]);\n  const [editing, setEditing] = useState(false);\n\n  function addTrack(track) {\n    if (playlistTracks.find(t => t.id === track.id)) return;\n    setPlaylistTracks(prev => [...prev, track]);\n  }\n\n  function removeTrack(track) {\n    setPlaylistTracks(prev => prev.filter(t => t.id !== track.id));\n  }\n\n  function savePlaylist() {\n    // Extract URIs from playlistTracks\n    const trackUris = playlistTracks.map(track => track.uri);\n\n    console.log(\"Saving playlist with URIs:\", trackUris);\n    \n    // Reset playlist\n    setPlaylistName(\"New Playlist\");\n    setPlaylistTracks([]);\n  }\n\n  useEffect(() => {\n    const devToken = getDeveloperToken();\n    const usrToken = getUserToken();\n    initMusicKit();\n\n    console.log(\"Developer Token:\", devToken);\n    console.log(\"User Token:\", usrToken);\n  }, []);\n\n  async function handleSearch(term) {\n    const results = await search(term);\n    setSearchResults(results);\n  }\n\n  return (\n    <div className=\"App\">\n      <h1>Jammming</h1>\n      <h2>(Apple Music Edition)</h2>\n      <SearchBar \n        onSearch={handleSearch} \n        editing={editing}\n      />\n      <SearchResults \n        searchResults={searchResults} \n        onAddTrack={addTrack}\n      />\n      <Playlist\n        playlistName={playlistName}\n        playlistTracks={playlistTracks}\n        onNameChange={setPlaylistName}\n        onRemoveTrack={removeTrack}\n        onSave={savePlaylist}\n        editing={editing}\n        setEditing={setEditing}\n      />\n    </div>\n  );\n}\n"
+                  }
+                ]
+              },
+              {
+                "name": "Playlist",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "Playlist.css",
+                    "type": "style",
+                    "extension": ".css",
+                    "fullPath": "src\\components\\Playlist\\Playlist.css",
+                    "imports": []
+                  },
+                  {
+                    "name": "Playlist.jsx",
+                    "type": "component",
+                    "extension": ".jsx",
+                    "fullPath": "src\\components\\Playlist\\Playlist.jsx",
+                    "imports": [
+                      "react",
+                      "../Tracklist/Tracklist"
+                    ],
+                    "content": "// src/components/Playlist/Playlist.jsx\r\nimport React, { useState } from 'react';\r\nimport Tracklist from '../Tracklist/Tracklist';\r\n\r\nexport default function Playlist({\r\n    playlistName,\r\n    playlistTracks,\r\n    onNameChange,\r\n    onRemoveTrack,\r\n    onSave,\r\n    editing,\r\n    setEditing\r\n  }) {\r\n\r\n  return (\r\n    <div className=\"Playlist\">\r\n      {editing ? (\r\n        <input\r\n          value={playlistName}\r\n          onChange={(e) => onNameChange(e.target.value)}\r\n          onKeyDown={(e) => {\r\n            if (e.key === \"Enter\") {\r\n              setEditing(false);\r\n            }\r\n          }}\r\n          onBlur={() => setEditing(false)}\r\n          autoFocus\r\n        />\r\n      ) : (\r\n        <h2 onClick={() => setEditing(true)}>\r\n          {playlistName}\r\n        </h2>\r\n      )}\r\n\r\n      <p>\r\n        {playlistTracks.length} {playlistTracks.length === 1 ? \"track\" : \"tracks\"}\r\n      </p>\r\n\r\n      <Tracklist\r\n        tracks={playlistTracks}\r\n        onRemoveTrack={onRemoveTrack}\r\n        editing={editing}\r\n      />\r\n\r\n      <button onClick={onSave}>\r\n        Save to Apple Music\r\n      </button>\r\n    </div>\r\n  );\r\n}\r\n\r\n"
+                  }
+                ]
+              },
+              {
+                "name": "SearchBar",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "SearchBar.css",
+                    "type": "style",
+                    "extension": ".css",
+                    "fullPath": "src\\components\\SearchBar\\SearchBar.css",
+                    "imports": []
+                  },
+                  {
+                    "name": "SearchBar.jsx",
+                    "type": "component",
+                    "extension": ".jsx",
+                    "fullPath": "src\\components\\SearchBar\\SearchBar.jsx",
+                    "imports": [
+                      "react"
+                    ],
+                    "content": "// src/components/SearchBar/SearchBar.jsx\r\nimport React from 'react';\r\n\r\nexport default function SearchBar({ onSearch, editing }) {\r\n  const [term, setTerm] = React.useState('');\r\n\r\n  function handleKeyDown(e) {\r\n    if (e.key === 'Enter' && !editing) {\r\n      onSearch(term);\r\n    }\r\n  }\r\n\r\n  return (\r\n    <div className=\"SearchBar\">\r\n      <input\r\n        placeholder=\"Enter a song, album, or artist\"\r\n        value={term}\r\n        onChange={(e) => setTerm(e.target.value)}\r\n        onKeyDown={handleKeyDown}\r\n        disabled={editing}\r\n      />\r\n      <button onClick={() => onSearch(term)} disabled={editing}>\r\n        Search\r\n      </button>\r\n    </div>\r\n  );\r\n}"
+                  }
+                ]
+              },
+              {
+                "name": "SearchResults",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "SearchResults.css",
+                    "type": "style",
+                    "extension": ".css",
+                    "fullPath": "src\\components\\SearchResults\\SearchResults.css",
+                    "imports": []
+                  },
+                  {
+                    "name": "SearchResults.jsx",
+                    "type": "component",
+                    "extension": ".jsx",
+                    "fullPath": "src\\components\\SearchResults\\SearchResults.jsx",
+                    "imports": [
+                      "react",
+                      "../Tracklist/Tracklist"
+                    ],
+                    "content": "// src/components/SearchResults/SearchResults.jsx\r\nimport React from 'react';\r\nimport Tracklist from '../Tracklist/Tracklist';\r\n\r\nexport default function SearchResults({ searchResults, onAddTrack, editing }) {\r\n  return (\r\n    <div className=\"SearchResults\">\r\n      <h2>Results</h2>\r\n      <Tracklist \r\n        tracks={searchResults} \r\n        onAddTrack={onAddTrack} \r\n        editing={editing}\r\n      />\r\n    </div>\r\n  );\r\n}\r\n\r\n"
+                  }
+                ]
+              },
+              {
+                "name": "Track",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "Track.css",
+                    "type": "style",
+                    "extension": ".css",
+                    "fullPath": "src\\components\\Track\\Track.css",
+                    "imports": []
+                  },
+                  {
+                    "name": "Track.jsx",
+                    "type": "component",
+                    "extension": ".jsx",
+                    "fullPath": "src\\components\\Track\\Track.jsx",
+                    "imports": [
+                      "react"
+                    ],
+                    "content": "// src/components/Track/Track.jsx\r\nimport React from 'react';\r\n\r\nexport default function Track({ track, onAddTrack, onRemoveTrack, editing }) {\r\n  return (\r\n    <div className=\"Track\">\r\n      <h3>{track.name}</h3>\r\n      <p>{track.artist} — {track.album}</p>\r\n\r\n      {onAddTrack && (\r\n        <button onClick={() => onAddTrack(track)} disabled={editing}>\r\n          +\r\n        </button>\r\n      )}\r\n\r\n      {onRemoveTrack && (\r\n        <button onClick={() => onRemoveTrack(track)} disabled={editing}>\r\n          -\r\n        </button>\r\n      )}\r\n    </div>\r\n  );\r\n}\r\n\r\n"
+                  }
+                ]
+              },
+              {
+                "name": "Tracklist",
+                "type": "folder",
+                "children": [
+                  {
+                    "name": "Tracklist.css",
+                    "type": "style",
+                    "extension": ".css",
+                    "fullPath": "src\\components\\Tracklist\\Tracklist.css",
+                    "imports": []
+                  },
+                  {
+                    "name": "Tracklist.jsx",
+                    "type": "component",
+                    "extension": ".jsx",
+                    "fullPath": "src\\components\\Tracklist\\Tracklist.jsx",
+                    "imports": [
+                      "react",
+                      "../Track/Track"
+                    ],
+                    "content": "// src/components/Tracklist/Tracklist.jsx\r\nimport React from 'react';\r\nimport Track from '../Track/Track';\r\n\r\nexport default function Tracklist({ tracks, onAddTrack, onRemoveTrack, editing }) {\r\n  return (\r\n    <div className=\"Tracklist\">\r\n      {tracks.map(track => (\r\n        <Track\r\n          key={track.id}\r\n          track={track}\r\n          onAddTrack={onAddTrack}\r\n          onRemoveTrack={onRemoveTrack}\r\n          editing={editing}\r\n        />\r\n      ))}\r\n    </div>\r\n  );\r\n}\r\n\r\n"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "hooks",
+            "type": "folder",
+            "children": [
+              {
+                "name": "useAppleMusicAuth.js",
+                "type": "hook",
+                "extension": ".js",
+                "fullPath": "src\\hooks\\useAppleMusicAuth.js",
+                "imports": [],
+                "content": "// Mock version for Codecademy step\r\nlet developerToken = null;\r\nlet userToken = null;\r\n\r\nexport function getDeveloperToken() {\r\n  // Later: fetch from your Node server\r\n  developerToken = \"mock-developer-token\";\r\n  return developerToken;\r\n}\r\n\r\nexport function getUserToken() {\r\n  // Later: retrieved from MusicKit JS\r\n  userToken = \"mock-user-token\";\r\n  return userToken;\r\n}\r\n\r\nexport function initMusicKit() {\r\n  // Later: MusicKit.configure({ developerToken })\r\n  console.log(\"MusicKit initialized (mock)\");\r\n}\r\n"
+              }
+            ]
+          },
+          {
+            "name": "index.css",
+            "type": "style",
+            "extension": ".css",
+            "fullPath": "src\\index.css",
+            "imports": []
+          },
+          {
+            "name": "main.jsx",
+            "type": "component",
+            "extension": ".jsx",
+            "fullPath": "src\\main.jsx",
+            "imports": [
+              "react",
+              "react-dom/client",
+              "./components/App/App.jsx"
+            ],
+            "content": "import { StrictMode } from 'react'\nimport { createRoot } from 'react-dom/client'\nimport './index.css'\nimport App from './components/App/App.jsx'\n\ncreateRoot(document.getElementById('root')).render(\n  <StrictMode>\n    <App />\n  </StrictMode>,\n)\n"
+          },
+          {
+            "name": "utils",
+            "type": "folder",
+            "children": [
+              {
+                "name": "appleMusicApi.js",
+                "type": "util",
+                "extension": ".js",
+                "fullPath": "src\\utils\\appleMusicApi.js",
+                "imports": [],
+                "content": "// src/utils/appleMusicApi.js\r\n\r\nexport async function search(term) {\r\n  // For now, return mock data (Codecademy requirement)\r\n  // Later, replace with real Apple Music API request\r\n\r\n  return [\r\n    {\r\n      id: \"123\",\r\n      name: \"Mock Song One\",\r\n      artist: \"Mock Artist A\",\r\n      album: \"Mock Album Alpha\",\r\n      uri: \"mock-uri-1\" // Spotify uses uri; Apple uses id, but keep for Codecademy compatibility\r\n    },\r\n    {\r\n      id: \"456\",\r\n      name: \"Mock Song Two\",\r\n      artist: \"Mock Artist B\",\r\n      album: \"Mock Album Beta\",\r\n      uri: \"mock-uri-2\"\r\n    }\r\n  ];\r\n}\r\n"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "vite.config.js",
+        "type": "config",
+        "extension": ".js",
+        "fullPath": "vite.config.js",
+        "imports": [
+          "vite",
+          "@vitejs/plugin-react"
+        ]
+      }
+    ]
+  }
+}

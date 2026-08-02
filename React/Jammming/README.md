@@ -1,16 +1,43 @@
-# React + Vite
+# Jammming Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## Purpose of this project
+Practice and learn the use of React to generate web applications.
 
-Currently, two official plugins are available:
+## Technologies used:
+* React
+* Javascript
+* Apple Music API using HTTP Requests and Responses
+* HTML
+* CSS
+* Authentication
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
+* Allows the creation of new playlists in an existing Apple Music account
+* Allows the update of exisiting playlists in an existing Apple Music account
+* Browse and select tracks from the Apple Music library
 
-## React Compiler
+## Future work
+* Integrate other APIs (Spotify, Amazon Music, etc)
+* Play tracks or playlists directly in the application
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Project Requirements
+1. Build a web app using React
+2. Version control your application with Git and host the repository on GitHub
+3. Integrate with Spotify or another API
+4. Deploy your application
+5. Write a README (using Markdown) that documents your project
 
-## Expanding the Oxlint configuration
+## Features:
+* Users can search for songs by song title.
+* You can also include functionality to search by other attributes like artist’s name, genre, etc.
+* Users can see information about each song like title, artist, and album for songs they queried
+* You can also include other information – the design is up to you
+* Users can export their custom playlist to their personal Spotify account
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## How to deploy and use the application:
+### Online
+* Access the deployed link via GitHub Pages: (Pending)
+
+### Local
+* Place the files in a container or environment with npm installed.
+* Command: npm run dev
