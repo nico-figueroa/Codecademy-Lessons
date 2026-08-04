@@ -1,0 +1,28 @@
+.UserPlaylists {
+  margin-top: 2rem;
+}
+
+.playlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.playlist-card {
+  background: var(--bg-card);
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.playlist-card:hover {
+  transform: scale(1.05);
+}
+
+.playlist-card img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}

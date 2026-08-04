@@ -1,0 +1,36 @@
+.Playlist {
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+.Playlist h2 {
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+.Playlist input {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-light);
+  color: var(--text-light);
+}
+
+.Playlist p {
+  margin-bottom: 1rem;
+  color: var(--text-muted);
+}
+
+.Playlist button {
+  background: var(--accent);
+  color: white;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.Playlist button:hover:not(:disabled) {
+  background: var(--accent-hover);
+}

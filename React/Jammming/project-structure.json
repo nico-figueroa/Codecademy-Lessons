@@ -1,11 +1,18 @@
 {
   "project": "jammming",
-  "generatedAt": "2026-08-01T22:34:57.178Z",
+  "generatedAt": "2026-08-02T18:15:18.829Z",
   "notes": "node_modules and public are standard Vite folders and were skipped.",
   "root": {
     "name": "Jammming",
     "type": "folder",
     "children": [
+      {
+        "name": ".env",
+        "type": "file",
+        "extension": "",
+        "fullPath": ".env",
+        "imports": []
+      },
       {
         "name": ".gitignore",
         "type": "file",
@@ -122,10 +129,10 @@
                       "../SearchBar/SearchBar",
                       "../SearchResults/SearchResults",
                       "../Playlist/Playlist",
-                      "../../utils/appleMusicApi",
-                      "../../hooks/useAppleMusicAuth"
+                      "../../utils/spotifyApi",
+                      "../../hooks/useSpotifyAuth"
                     ],
-                    "content": "// src/components/App/App.jsx\nimport React, { useState, useEffect } from 'react';\nimport SearchBar from '../SearchBar/SearchBar';\nimport SearchResults from '../SearchResults/SearchResults';\nimport Playlist from '../Playlist/Playlist';\nimport { search } from \"../../utils/appleMusicApi\";\nimport { getDeveloperToken, getUserToken, initMusicKit } from \"../../hooks/useAppleMusicAuth\";\n\nexport default function App() {\n  // Hard-coded track data for now\n  const [searchResults, setSearchResults] = useState([\n    {\n      id: 1,\n      name: \"Track One\",\n      artist: \"Artist A\",\n      album: \"Album Alpha\"\n    },\n    {\n      id: 2,\n      name: \"Track Two\",\n      artist: \"Artist B\",\n      album: \"Album Beta\"\n    },\n    {\n      id: 3,\n      name: \"Track Three\",\n      artist: \"Artist C\",\n      album: \"Album Gamma\"\n    }\n  ]);\n\n  const [playlistName, setPlaylistName] = useState(\"New Playlist\");\n  const [playlistTracks, setPlaylistTracks] = useState([]);\n  const [editing, setEditing] = useState(false);\n\n  function addTrack(track) {\n    if (playlistTracks.find(t => t.id === track.id)) return;\n    setPlaylistTracks(prev => [...prev, track]);\n  }\n\n  function removeTrack(track) {\n    setPlaylistTracks(prev => prev.filter(t => t.id !== track.id));\n  }\n\n  function savePlaylist() {\n    // Extract URIs from playlistTracks\n    const trackUris = playlistTracks.map(track => track.uri);\n\n    console.log(\"Saving playlist with URIs:\", trackUris);\n    \n    // Reset playlist\n    setPlaylistName(\"New Playlist\");\n    setPlaylistTracks([]);\n  }\n\n  useEffect(() => {\n    const devToken = getDeveloperToken();\n    const usrToken = getUserToken();\n    initMusicKit();\n\n    console.log(\"Developer Token:\", devToken);\n    console.log(\"User Token:\", usrToken);\n  }, []);\n\n  async function handleSearch(term) {\n    const results = await search(term);\n    setSearchResults(results);\n  }\n\n  return (\n    <div className=\"App\">\n      <h1>Jammming</h1>\n      <h2>(Apple Music Edition)</h2>\n      <SearchBar \n        onSearch={handleSearch} \n        editing={editing}\n      />\n      <SearchResults \n        searchResults={searchResults} \n        onAddTrack={addTrack}\n      />\n      <Playlist\n        playlistName={playlistName}\n        playlistTracks={playlistTracks}\n        onNameChange={setPlaylistName}\n        onRemoveTrack={removeTrack}\n        onSave={savePlaylist}\n        editing={editing}\n        setEditing={setEditing}\n      />\n    </div>\n  );\n}\n"
+                    "content": "// src/components/App/App.jsx\nimport React, { useState, useEffect } from 'react';\nimport SearchBar from '../SearchBar/SearchBar';\nimport SearchResults from '../SearchResults/SearchResults';\nimport Playlist from '../Playlist/Playlist';\nimport { search, createPlaylist } from \"../../utils/spotifyApi\";\nimport { getAccessToken } from \"../../hooks/useSpotifyAuth\";\n\nlet hasFetchedToken = false;\n\nexport default function App() {\n  const [searchResults, setSearchResults] = useState([]);\n  const [playlistName, setPlaylistName] = useState(\"New Playlist\");\n  const [playlistTracks, setPlaylistTracks] = useState([]);\n  const [editing, setEditing] = useState(false);\n  const [hasSearched, setHasSearched] = useState(false);\n  \n  useEffect(() => {\n    if (!hasFetchedToken) {\n      hasFetchedToken = true;\n      getAccessToken();\n    }\n  }, []);\n\n  async function handleSearch(term) {\n    setHasSearched(true);\n    const results = await search(term);\n    setSearchResults(results);\n  }\n\n  function addTrack(track) {\n    if (!playlistTracks.find(t => t.id === track.id)) {\n      setPlaylistTracks(prev => [...prev, track]);\n    }\n  }\n\n  function removeTrack(track) {\n    setPlaylistTracks(prev => prev.filter(t => t.id !== track.id));\n  }\n\n  async function savePlaylist() {\n    if (!playlistTracks.length) {\n      console.log(\"No tracks to save.\");\n      return;\n    }\n\n    const trackUris = playlistTracks.map(track => track.uri);\n    console.log(\"Saving playlist with URIs:\", trackUris);\n\n    try {\n      const playlist = await createPlaylist(playlistName, trackUris);\n\n      if (!playlist || !playlist.id) {\n        console.error(\"Playlist creation failed:\", playlist);\n        return;\n      }\n\n      console.log(\"Playlist saved successfully!\", playlist);\n\n      // Reset playlist UI\n      setPlaylistName(\"New Playlist\");\n      setPlaylistTracks([]);\n\n    } catch (error) {\n      console.error(\"Error saving playlist:\", error);\n    }\n  }\n\n\n  return (\n    <div className=\"App\">\n      <h1>Jammming</h1>\n      <h2>(Spotify Edition)</h2>\n      <SearchBar \n        onSearch={handleSearch} \n        editing={editing}\n      />\n      <SearchResults \n        searchResults={searchResults} \n        onAddTrack={addTrack}\n        editing={editing}\n        hasSearched={hasSearched}\n      />\n      <Playlist\n        playlistName={playlistName}\n        playlistTracks={playlistTracks}\n        onNameChange={setPlaylistName}\n        onAddTrack={addTrack}\n        onRemoveTrack={removeTrack}\n        onSave={savePlaylist}\n        editing={editing}\n        setEditing={setEditing}\n      />\n    </div>\n  );\n}\n"
                   }
                 ]
               },
@@ -149,7 +156,7 @@
                       "react",
                       "../Tracklist/Tracklist"
                     ],
-                    "content": "// src/components/Playlist/Playlist.jsx\r\nimport React, { useState } from 'react';\r\nimport Tracklist from '../Tracklist/Tracklist';\r\n\r\nexport default function Playlist({\r\n    playlistName,\r\n    playlistTracks,\r\n    onNameChange,\r\n    onRemoveTrack,\r\n    onSave,\r\n    editing,\r\n    setEditing\r\n  }) {\r\n\r\n  return (\r\n    <div className=\"Playlist\">\r\n      {editing ? (\r\n        <input\r\n          value={playlistName}\r\n          onChange={(e) => onNameChange(e.target.value)}\r\n          onKeyDown={(e) => {\r\n            if (e.key === \"Enter\") {\r\n              setEditing(false);\r\n            }\r\n          }}\r\n          onBlur={() => setEditing(false)}\r\n          autoFocus\r\n        />\r\n      ) : (\r\n        <h2 onClick={() => setEditing(true)}>\r\n          {playlistName}\r\n        </h2>\r\n      )}\r\n\r\n      <p>\r\n        {playlistTracks.length} {playlistTracks.length === 1 ? \"track\" : \"tracks\"}\r\n      </p>\r\n\r\n      <Tracklist\r\n        tracks={playlistTracks}\r\n        onRemoveTrack={onRemoveTrack}\r\n        editing={editing}\r\n      />\r\n\r\n      <button onClick={onSave}>\r\n        Save to Apple Music\r\n      </button>\r\n    </div>\r\n  );\r\n}\r\n\r\n"
+                    "content": "// src/components/Playlist/Playlist.jsx\r\nimport React, { useState } from 'react';\r\nimport Tracklist from '../Tracklist/Tracklist';\r\n\r\nexport default function Playlist({\r\n    playlistName,\r\n    playlistTracks,\r\n    onNameChange,\r\n    onAddTrack,\r\n    onRemoveTrack,\r\n    onSave,\r\n    editing,\r\n    setEditing\r\n  }) {\r\n\r\n  return (\r\n    <div className=\"Playlist\">\r\n      {editing ? (\r\n        <input\r\n          value={playlistName}\r\n          onChange={(e) => onNameChange(e.target.value)}\r\n          onKeyDown={(e) => {\r\n            if (e.key === \"Enter\") {\r\n              setEditing(false);\r\n            }\r\n          }}\r\n          onBlur={() => setEditing(false)}\r\n          autoFocus\r\n        />\r\n      ) : (\r\n        <h2 onClick={() => setEditing(true)}>\r\n          {playlistName}\r\n        </h2>\r\n      )}\r\n\r\n      <p>\r\n        {playlistTracks.length} {playlistTracks.length === 1 ? \"track\" : \"tracks\"}\r\n      </p>\r\n\r\n      <Tracklist\r\n        tracks={playlistTracks}\r\n        onAddTrack={onAddTrack}\r\n        onRemoveTrack={onRemoveTrack}\r\n        editing={editing}\r\n      />\r\n\r\n      <button onClick={onSave}>\r\n        Save to Spotify\r\n      </button>\r\n    </div>\r\n  );\r\n}\r\n\r\n"
                   }
                 ]
               },
@@ -196,7 +203,7 @@
                       "react",
                       "../Tracklist/Tracklist"
                     ],
-                    "content": "// src/components/SearchResults/SearchResults.jsx\r\nimport React from 'react';\r\nimport Tracklist from '../Tracklist/Tracklist';\r\n\r\nexport default function SearchResults({ searchResults, onAddTrack, editing }) {\r\n  return (\r\n    <div className=\"SearchResults\">\r\n      <h2>Results</h2>\r\n      <Tracklist \r\n        tracks={searchResults} \r\n        onAddTrack={onAddTrack} \r\n        editing={editing}\r\n      />\r\n    </div>\r\n  );\r\n}\r\n\r\n"
+                    "content": "// src/components/SearchResults/SearchResults.jsx\r\nimport React from 'react';\r\nimport Tracklist from '../Tracklist/Tracklist';\r\n\r\nexport default function SearchResults({ searchResults, onAddTrack, editing, hasSearched }) {\r\n  const noResults = hasSearched && searchResults.length === 0;\r\n\r\n  return (\r\n    <div className=\"SearchResults\">\r\n      <h2>Results</h2>\r\n\r\n      {noResults ? (\r\n        <p className=\"no-results\">No search results meet the search criteria</p>\r\n      ) : (\r\n        <Tracklist \r\n          tracks={searchResults} \r\n          onAddTrack={onAddTrack} \r\n          editing={editing}\r\n        />\r\n      )}\r\n    </div>\r\n  );\r\n}\r\n\r\n"
                   }
                 ]
               },
@@ -254,12 +261,12 @@
             "type": "folder",
             "children": [
               {
-                "name": "useAppleMusicAuth.js",
+                "name": "useSpotifyAuth.js",
                 "type": "hook",
                 "extension": ".js",
-                "fullPath": "src\\hooks\\useAppleMusicAuth.js",
+                "fullPath": "src\\hooks\\useSpotifyAuth.js",
                 "imports": [],
-                "content": "// Mock version for Codecademy step\r\nlet developerToken = null;\r\nlet userToken = null;\r\n\r\nexport function getDeveloperToken() {\r\n  // Later: fetch from your Node server\r\n  developerToken = \"mock-developer-token\";\r\n  return developerToken;\r\n}\r\n\r\nexport function getUserToken() {\r\n  // Later: retrieved from MusicKit JS\r\n  userToken = \"mock-user-token\";\r\n  return userToken;\r\n}\r\n\r\nexport function initMusicKit() {\r\n  // Later: MusicKit.configure({ developerToken })\r\n  console.log(\"MusicKit initialized (mock)\");\r\n}\r\n"
+                "content": "// --- PKCE HELPERS ---\r\nconst generateRandomString = (length) => {\r\n  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';\r\n  const values = window.crypto.getRandomValues(new Uint8Array(length));\r\n  return values.reduce((acc, x) => acc + possible[x % possible.length], \"\");\r\n}\r\n\r\nconst sha256 = async (plain) => {\r\n  const encoder = new TextEncoder()\r\n  const data = encoder.encode(plain)\r\n  return window.crypto.subtle.digest('SHA-256', data)\r\n}\r\n\r\nconst base64encode = (input) => {\r\n  return btoa(String.fromCharCode(...new Uint8Array(input)))\r\n    .replace(/=/g, '')\r\n    .replace(/\\+/g, '-')\r\n    .replace(/\\//g, '_');\r\n}\r\n\r\n// --- MAIN AUTH FUNCTION ---\r\n\r\nexport async function getAccessToken() {\r\n  \r\n  // --- SPOTIFY AUTH CONFIG ---\r\n  const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;\r\n  const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI;\r\n\r\n  let codeVerifier = localStorage.getItem('code_verifier');\r\n\r\n  if (!codeVerifier) {\r\n    codeVerifier = generateRandomString(64);\r\n    localStorage.setItem('code_verifier', codeVerifier);\r\n  }\r\n\r\n  const hashed = await sha256(codeVerifier)\r\n  const codeChallenge = base64encode(hashed);\r\n\r\n  const scope = 'playlist-modify-public playlist-modify-private';\r\n  const authUrl = new URL(\"https://accounts.spotify.com/authorize\")\r\n\r\n  // window.localStorage.setItem('code_verifier', codeVerifier);\r\n\r\n  const params =  {\r\n    response_type: 'code',\r\n    client_id: clientId,\r\n    scope,\r\n    code_challenge_method: 'S256',\r\n    code_challenge: codeChallenge,\r\n    redirect_uri: redirectUri,\r\n  }\r\n\r\n  authUrl.search = new URLSearchParams(params).toString();\r\n \r\n  // Parse the URL to retrieve the code parameter\r\n  const urlParams = new URLSearchParams(window.location.search);\r\n  let code = urlParams.get(\"code\");\r\n\r\n  if (!code) {\r\n    window.location.href = authUrl.toString();\r\n    return; // prevent running the rest\r\n  }\r\n \r\n  const getToken = async code => {\r\n\r\n    // stored in the previous step\r\n    const codeVerifier = localStorage.getItem('code_verifier');\r\n\r\n    const url = \"https://accounts.spotify.com/api/token\";\r\n    const payload = {\r\n      method: 'POST',\r\n      headers: {\r\n        'Content-Type': 'application/x-www-form-urlencoded',\r\n      },\r\n      body: new URLSearchParams({\r\n        client_id: clientId,\r\n        grant_type: 'authorization_code',\r\n        code,\r\n        redirect_uri: redirectUri,\r\n        code_verifier: codeVerifier,\r\n      }),\r\n    }\r\n\r\n    const body = await fetch(url, payload);\r\n    const response = await body.json();\r\n\r\n    localStorage.setItem('access_token', response.access_token);\r\n    window.history.replaceState({}, document.title, redirectUri);\r\n\r\n  }\r\n\r\n  await getToken(code);\r\n\r\n  const storedToken = localStorage.getItem('access_token');\r\n  if (storedToken) {\r\n    return storedToken;\r\n  }\r\n  \r\n}\r\n\r\n\r\n"
               }
             ]
           },
@@ -287,16 +294,23 @@
             "type": "folder",
             "children": [
               {
-                "name": "appleMusicApi.js",
+                "name": "spotifyApi.js",
                 "type": "util",
                 "extension": ".js",
-                "fullPath": "src\\utils\\appleMusicApi.js",
+                "fullPath": "src\\utils\\spotifyApi.js",
                 "imports": [],
-                "content": "// src/utils/appleMusicApi.js\r\n\r\nexport async function search(term) {\r\n  // For now, return mock data (Codecademy requirement)\r\n  // Later, replace with real Apple Music API request\r\n\r\n  return [\r\n    {\r\n      id: \"123\",\r\n      name: \"Mock Song One\",\r\n      artist: \"Mock Artist A\",\r\n      album: \"Mock Album Alpha\",\r\n      uri: \"mock-uri-1\" // Spotify uses uri; Apple uses id, but keep for Codecademy compatibility\r\n    },\r\n    {\r\n      id: \"456\",\r\n      name: \"Mock Song Two\",\r\n      artist: \"Mock Artist B\",\r\n      album: \"Mock Album Beta\",\r\n      uri: \"mock-uri-2\"\r\n    }\r\n  ];\r\n}\r\n"
+                "content": "export async function search(term) {\r\n  const cleaned = term.trim();\r\n  if (!cleaned) return [];\r\n\r\n  let token = localStorage.getItem('access_token');\r\n  \r\n  const encoded = encodeURIComponent(cleaned);\r\n  \r\n  const response = await fetch(`https://api.spotify.com/v1/search?q=${encoded}&type=track`, {\r\n      headers: {\r\n        Authorization: `Bearer ${token}`,\r\n      },\r\n    }\r\n  );\r\n\r\n  const data = await response.json();\r\n  console.log(\"Search Results:\", data);\r\n  const tracks = data.tracks?.items || [];\r\n\r\n  return tracks.map(track => ({\r\n    id: track.id,\r\n    name: track.name,\r\n    artist: track.artists[0].name,\r\n    album: track.album.name,\r\n    uri: track.uri,\r\n  }));\r\n}\r\n\r\nexport async function createPlaylist(name, trackUris) {\r\n  let token = localStorage.getItem('access_token');\r\n\r\n  // Get user profile\r\n  const profileRes = await fetch(\"https://api.spotify.com/v1/me\", {\r\n    headers: { Authorization: `Bearer ${token}` },\r\n  });\r\n  const profile = await profileRes.json();\r\n  console.log(\"User Profile:\", profile);\r\n\r\n  // Create playlist\r\n  const playlistRes = await fetch(\r\n    `https://api.spotify.com/v1/me/playlists`,\r\n    {\r\n      method: \"POST\",\r\n      headers: {\r\n        Authorization: `Bearer ${token}`,\r\n        \"Content-Type\": \"application/json\",\r\n      },\r\n      body: JSON.stringify({\r\n        name: name,\r\n        description: \"Created with Jammming\",\r\n      }),\r\n    }\r\n  );\r\n\r\n  const playlist = await playlistRes.json();\r\n  console.log(\"Created Playlist:\", playlist);\r\n\r\n  // Add tracks\r\n  await fetch(\r\n    `https://api.spotify.com/v1/playlists/${playlist.id}/items`,\r\n    {\r\n      method: \"POST\",\r\n      headers: {\r\n        Authorization: `Bearer ${token}`,\r\n        \"Content-Type\": \"application/json\",\r\n      },\r\n      body: JSON.stringify({\r\n        uris: trackUris,\r\n      }),\r\n    }\r\n  );\r\n\r\n  return playlist;\r\n}\r\n"
               }
             ]
           }
         ]
+      },
+      {
+        "name": "Test Script.md",
+        "type": "root",
+        "extension": ".md",
+        "fullPath": "Test Script.md",
+        "imports": []
       },
       {
         "name": "vite.config.js",

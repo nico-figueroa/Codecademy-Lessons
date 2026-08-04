@@ -1,8 +1,9 @@
 // src/components/Tracklist/Tracklist.jsx
 import React from 'react';
 import Track from '../Track/Track';
+import "./Tracklist.css";
 
-export default function Tracklist({ tracks, onAddTrack, onRemoveTrack, editing }) {
+export default function Tracklist({ tracks, onAddTrack, onRemoveTrack, editing, deviceId }) {
   return (
     <div className="Tracklist">
       {tracks.map(track => (
@@ -12,6 +13,7 @@ export default function Tracklist({ tracks, onAddTrack, onRemoveTrack, editing }
           onAddTrack={onAddTrack}
           onRemoveTrack={onRemoveTrack}
           editing={editing}
+          deviceId={deviceId}
         />
       ))}
     </div>

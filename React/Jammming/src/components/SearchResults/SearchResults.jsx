@@ -1,8 +1,9 @@
 // src/components/SearchResults/SearchResults.jsx
 import React from 'react';
 import Tracklist from '../Tracklist/Tracklist';
+import "./SearchResults.css";
 
-export default function SearchResults({ searchResults, onAddTrack, editing, hasSearched }) {
+export default function SearchResults({ searchResults, onAddTrack, editing, hasSearched, deviceId }) {
   const noResults = hasSearched && searchResults.length === 0;
 
   return (
@@ -16,6 +17,7 @@ export default function SearchResults({ searchResults, onAddTrack, editing, hasS
           tracks={searchResults} 
           onAddTrack={onAddTrack} 
           editing={editing}
+          deviceId={deviceId}
         />
       )}
     </div>

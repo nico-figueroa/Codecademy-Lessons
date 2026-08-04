@@ -1,5 +1,6 @@
 // src/components/SearchBar/SearchBar.jsx
 import React from 'react';
+import "./SearchBar.css";
 
 export default function SearchBar({ onSearch, editing }) {
   const [term, setTerm] = React.useState('');

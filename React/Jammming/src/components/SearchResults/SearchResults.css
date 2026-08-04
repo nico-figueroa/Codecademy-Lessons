@@ -1,0 +1,13 @@
+.SearchResults {
+  margin-top: 2rem;
+  text-align: left;
+}
+
+.SearchResults h2 {
+  margin-bottom: 1rem;
+}
+
+.no-results {
+  color: var(--text-muted);
+  font-style: italic;
+}

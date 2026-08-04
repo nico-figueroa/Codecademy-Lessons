@@ -9,5 +9,12 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        const token = localStorage.getItem("access_token");
+        window.initializePlayer(token);
+      };
+    </script>
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
   </body>
 </html>

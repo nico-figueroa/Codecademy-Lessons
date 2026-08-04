@@ -1,6 +1,7 @@
 // src/components/Playlist/Playlist.jsx
 import React, { useState } from 'react';
 import Tracklist from '../Tracklist/Tracklist';
+import "./Playlist.css";
 
 export default function Playlist({
     playlistName,

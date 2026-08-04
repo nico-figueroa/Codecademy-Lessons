@@ -1,0 +1,17 @@
+.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.alert.success {
+  background: #1db954;
+  color: white;
+}
+
+.alert.error {
+  background: #d32f2f;
+  color: white;
+}

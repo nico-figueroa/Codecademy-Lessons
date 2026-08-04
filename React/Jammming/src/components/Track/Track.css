@@ -1,0 +1,60 @@
+.Track {
+  background: var(--bg-card);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.track-image {
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.track-info {
+  flex: 1;
+}
+
+.track-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.Track:hover {
+  background: #222;
+  transform: scale(1.02);
+  transition: transform 0.15s ease;
+}
+
+.round-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.add-btn {
+  background: var(--accent);
+}
+
+.add-btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.remove-btn {
+  background: #d32f2f;
+}
+
+.remove-btn:hover:not(:disabled) {
+  background: #b71c1c;
+}

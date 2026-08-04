@@ -1,3 +1,5 @@
+import { initializePlayer } from "../utils/spotifyPlayer";
+
 // --- PKCE HELPERS ---
 const generateRandomString = (length) => {
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -36,7 +38,17 @@ export async function getAccessToken() {
   const hashed = await sha256(codeVerifier)
   const codeChallenge = base64encode(hashed);
 
-  const scope = 'playlist-modify-public playlist-modify-private';
+  const scope = [
+  "streaming",
+  "user-read-email",
+  "user-read-private",
+  "user-modify-playback-state",
+  "user-read-playback-state",
+  "playlist-modify-public",
+  "playlist-modify-private",
+  "playlist-read-private",
+  "playlist-read-collaborative"
+  ].join(" ");
   const authUrl = new URL("https://accounts.spotify.com/authorize")
 
   // window.localStorage.setItem('code_verifier', codeVerifier);
@@ -85,6 +97,7 @@ export async function getAccessToken() {
     const response = await body.json();
 
     localStorage.setItem('access_token', response.access_token);
+    initializePlayer(response.access_token);
     window.history.replaceState({}, document.title, redirectUri);
 
   }
