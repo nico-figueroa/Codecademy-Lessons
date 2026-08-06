@@ -14,6 +14,8 @@ export default function Playlist({
     setEditing
   }) {
 
+  console.log("Executed Playlist.jsx")
+
   return (
     <div className="Playlist">
       {editing ? (

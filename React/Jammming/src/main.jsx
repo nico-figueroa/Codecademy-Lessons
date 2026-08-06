@@ -5,9 +5,9 @@ import App from './components/App/App.jsx'
 import { MessageProvider } from "./context/MessageContext";
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  
     <MessageProvider>
       <App />
     </MessageProvider>
-  </StrictMode>,
+  
 )

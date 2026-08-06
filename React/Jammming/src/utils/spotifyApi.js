@@ -71,17 +71,22 @@ export async function createPlaylist(name, trackUris) {
     }
   );
 
+  console.log("Executed createPlaylist function")
   return playlist;
 }
 
 export async function playTrack(uri, deviceId) {
-  let token = localStorage.getItem('access_token');
-  const deviceIdArray = [deviceId];
-  console.log(typeof deviceId, deviceId, deviceIdArray, typeof deviceIdArray);
-  console.log(`Playing track ${uri} on device ${deviceIdArray}`);
+  const token = localStorage.getItem('access_token');
 
-  // 1. Transfer playback to the Web Playback SDK device
-  await fetch("https://api.spotify.com/v1/me/player/play", {
+  if (!token) {
+    throw new Error("No Spotify access token available.");
+  }
+
+  if (!deviceId) {
+    throw new Error("No Spotify Web Playback device is ready.");
+  }
+
+  await fetch("https://api.spotify.com/v1/me/player", {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -89,11 +94,10 @@ export async function playTrack(uri, deviceId) {
     },
     body: JSON.stringify({
       device_ids: [deviceId],
-      play: false
-    })
+      play: false,
+    }),
   });
 
-  // 2. Play the track on that device
   await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
     method: "PUT",
     headers: {
@@ -101,10 +105,9 @@ export async function playTrack(uri, deviceId) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      uris: [uri]
-    })
+      uris: [uri],
+    }),
   });
-
 }
 
 export async function getUserPlaylists() {
@@ -126,7 +129,7 @@ export async function getUserPlaylists() {
     return [];
   }
 
-  console.log("User Playlists:", data.items);
+  console.log("Executed getUserPlaylists:", data.items);
 
   return data.items.map(playlist => ({
     id: playlist.id,

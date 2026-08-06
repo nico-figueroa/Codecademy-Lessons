@@ -1,114 +1,155 @@
 import { initializePlayer } from "../utils/spotifyPlayer";
 
+const runtimeEnv = typeof import.meta !== "undefined" ? import.meta.env : undefined;
+
 // --- PKCE HELPERS ---
 const generateRandomString = (length) => {
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const values = window.crypto.getRandomValues(new Uint8Array(length));
   return values.reduce((acc, x) => acc + possible[x % possible.length], "");
-}
+};
 
 const sha256 = async (plain) => {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(plain)
-  return window.crypto.subtle.digest('SHA-256', data)
-}
+  const encoder = new TextEncoder();
+  const data = encoder.encode(plain);
+  return window.crypto.subtle.digest('SHA-256', data);
+};
 
 const base64encode = (input) => {
   return btoa(String.fromCharCode(...new Uint8Array(input)))
     .replace(/=/g, '')
     .replace(/\+/g, '-')
     .replace(/\//g, '_');
+};
+
+export function getRedirectUri(configuredRedirectUri = runtimeEnv?.VITE_SPOTIFY_REDIRECT_URI) {
+  if (configuredRedirectUri) {
+    try {
+      const parsed = new URL(configuredRedirectUri);
+      if (parsed.pathname === "/" || parsed.pathname === "") {
+        parsed.pathname = "/callback";
+      }
+      return parsed.toString().replace(/\/$/, "");
+    } catch {
+      return configuredRedirectUri.endsWith("/callback")
+        ? configuredRedirectUri
+        : `${configuredRedirectUri.replace(/\/$/, "")}/callback`;
+    }
+  }
+
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return `${window.location.origin}/callback`;
+  }
+
+  return "/callback";
+}
+
+export function getAuthorizationCodeFromUrl(url = window.location.href) {
+  if (typeof url !== "string") {
+    return null;
+  }
+
+  try {
+    const params = new URLSearchParams(new URL(url).search);
+    return params.get("code");
+  } catch {
+    return null;
+  }
 }
 
 // --- MAIN AUTH FUNCTION ---
-
 export async function getAccessToken() {
-  
-  // --- SPOTIFY AUTH CONFIG ---
-  const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-  const redirectUri = import.meta.env.VITE_SPOTIFY_REDIRECT_URI;
-
-  let codeVerifier = localStorage.getItem('code_verifier');
-
-  if (!codeVerifier) {
-    codeVerifier = generateRandomString(64);
-    localStorage.setItem('code_verifier', codeVerifier);
+  const existingToken = localStorage.getItem("access_token");
+  if (existingToken) {
+    return existingToken;
   }
 
-  const hashed = await sha256(codeVerifier)
+  const clientId = runtimeEnv?.VITE_SPOTIFY_CLIENT_ID;
+  const redirectUri = getRedirectUri();
+  const code = getAuthorizationCodeFromUrl();
+
+  if (!clientId) {
+    console.error("Spotify client ID is missing.");
+    return null;
+  }
+
+  if (code) {
+    const codeVerifier = localStorage.getItem("code_verifier");
+
+    if (!codeVerifier) {
+      console.error("No code_verifier was stored for the token exchange.");
+      return null;
+    }
+
+    try {
+      const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          client_id: clientId,
+          grant_type: "authorization_code",
+          code,
+          redirect_uri: redirectUri,
+          code_verifier: codeVerifier,
+        }),
+      });
+
+      const tokenData = await tokenResponse.json();
+
+      if (!tokenResponse.ok) {
+        throw new Error(tokenData.error_description || tokenData.error || "Token exchange failed.");
+      }
+
+      localStorage.setItem("access_token", tokenData.access_token);
+      if (tokenData.refresh_token) {
+        localStorage.setItem("refresh_token", tokenData.refresh_token);
+      }
+
+      if (typeof window !== "undefined" && typeof window.initializePlayer === "function") {
+        window.initializePlayer(tokenData.access_token);
+      }
+
+      window.history.replaceState({}, "", window.location.pathname);
+      return tokenData.access_token;
+    } catch (error) {
+      console.error("Spotify token exchange failed:", error);
+      return null;
+    }
+  }
+
+  let codeVerifier = localStorage.getItem("code_verifier");
+
+  if (!codeVerifier) {
+    codeVerifier = generateRandomString(128);
+    localStorage.setItem("code_verifier", codeVerifier);
+  }
+
+  const hashed = await sha256(codeVerifier);
   const codeChallenge = base64encode(hashed);
 
   const scope = [
-  "streaming",
-  "user-read-email",
-  "user-read-private",
-  "user-modify-playback-state",
-  "user-read-playback-state",
-  "playlist-modify-public",
-  "playlist-modify-private",
-  "playlist-read-private",
-  "playlist-read-collaborative"
+    "streaming",
+    "user-read-email",
+    "user-read-private",
+    "user-modify-playback-state",
+    "user-read-playback-state",
+    "playlist-modify-public",
+    "playlist-modify-private",
+    "playlist-read-private",
+    "playlist-read-collaborative"
   ].join(" ");
-  const authUrl = new URL("https://accounts.spotify.com/authorize")
 
-  // window.localStorage.setItem('code_verifier', codeVerifier);
-
-  const params =  {
-    response_type: 'code',
+  const authUrl = new URL("https://accounts.spotify.com/authorize");
+  const params = {
+    response_type: "code",
     client_id: clientId,
     scope,
-    code_challenge_method: 'S256',
+    code_challenge_method: "S256",
     code_challenge: codeChallenge,
     redirect_uri: redirectUri,
-  }
+  };
 
   authUrl.search = new URLSearchParams(params).toString();
- 
-  // Parse the URL to retrieve the code parameter
-  const urlParams = new URLSearchParams(window.location.search);
-  let code = urlParams.get("code");
-
-  if (!code) {
-    window.location.href = authUrl.toString();
-    return; // prevent running the rest
-  }
- 
-  const getToken = async code => {
-
-    // stored in the previous step
-    const codeVerifier = localStorage.getItem('code_verifier');
-
-    const url = "https://accounts.spotify.com/api/token";
-    const payload = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        client_id: clientId,
-        grant_type: 'authorization_code',
-        code,
-        redirect_uri: redirectUri,
-        code_verifier: codeVerifier,
-      }),
-    }
-
-    const body = await fetch(url, payload);
-    const response = await body.json();
-
-    localStorage.setItem('access_token', response.access_token);
-    initializePlayer(response.access_token);
-    window.history.replaceState({}, document.title, redirectUri);
-
-  }
-
-  await getToken(code);
-
-  const storedToken = localStorage.getItem('access_token');
-  if (storedToken) {
-    return storedToken;
-  }
-  
+  window.location.assign(authUrl.toString());
+  return null;
 }
-
-

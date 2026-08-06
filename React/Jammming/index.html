@@ -12,7 +12,9 @@
     <script>
       window.onSpotifyWebPlaybackSDKReady = () => {
         const token = localStorage.getItem("access_token");
-        window.initializePlayer(token);
+        if (token && window.initializePlayer) {
+          window.initializePlayer(token);
+        }
       };
     </script>
     <script src="https://sdk.scdn.co/spotify-player.js"></script>

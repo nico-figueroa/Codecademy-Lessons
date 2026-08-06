@@ -5,6 +5,8 @@ import "./SearchBar.css";
 export default function SearchBar({ onSearch, editing }) {
   const [term, setTerm] = React.useState('');
 
+  console.log("Executed SearchBar.jsx")
+
   function handleKeyDown(e) {
     if (e.key === 'Enter' && !editing) {
       onSearch(term);

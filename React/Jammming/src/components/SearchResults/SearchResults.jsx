@@ -3,12 +3,13 @@ import React from 'react';
 import Tracklist from '../Tracklist/Tracklist';
 import "./SearchResults.css";
 
-export default function SearchResults({ searchResults, onAddTrack, editing, hasSearched, deviceId }) {
+export default function SearchResults({ searchResults, onAddTrack, editing, hasSearched, /*deviceId*/ }) {
+  console.log("Executed SearchResults.jsx")
   const noResults = hasSearched && searchResults.length === 0;
-
+  
   return (
     <div className="SearchResults">
-      <h2>Results</h2>
+      <h2>Results:</h2>
 
       {noResults ? (
         <p className="no-results">No search results meet the search criteria</p>
@@ -17,7 +18,7 @@ export default function SearchResults({ searchResults, onAddTrack, editing, hasS
           tracks={searchResults} 
           onAddTrack={onAddTrack} 
           editing={editing}
-          deviceId={deviceId}
+          /*deviceId={deviceId}*/
         />
       )}
     </div>
