@@ -1,5 +1,5 @@
 {
-  "name": "tech-news",
+  "name": "flashcards",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -9,10 +9,10 @@
     "@testing-library/user-event": "^14.6.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-markdown": "^10.1.0",
     "react-redux": "^9.3.0",
     "react-router-dom": "^7.18.2",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "5.0.1",
+    "web-vitals": "^6.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -21,7 +21,10 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [

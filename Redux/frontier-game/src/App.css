@@ -1,0 +1,118 @@
+/* MAIN LAYOUT */
+.app-container {
+  padding: 20px;
+  font-family: Georgia, serif;
+  background: linear-gradient(#f7f2e7, #e9dcc4);
+  min-height: 100vh;
+  display: flex;
+  gap: 20px;
+}
+
+/* LEFT PANEL */
+.left-panel {
+  flex: 1;
+  background: #fff8e6;
+  border: 2px solid #d4b483;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.title {
+  margin-top: 0;
+  color: #8b5e34;
+}
+
+.current-day {
+  color: #5b4636;
+}
+
+/* PROGRESS BAR */
+.progress-section {
+  margin-bottom: 20px;
+}
+
+.progress-label {
+  color: #5b4636;
+}
+
+.progress-bar {
+  background: #e0c9a6;
+  height: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #8b5e34;
+  transition: width 0.3s;
+}
+
+/* WAGON STATE BOX */
+.wagon-state {
+  background: #fdf6e3;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #e0c9a6;
+  color: #5b4636;
+}
+
+/* BUTTONS */
+.button-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.btn {
+  background: #d4b483;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #4a2f1b;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: transform 0.1s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.restart-btn {
+  background: #b56576;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+  flex: 1;
+  background: #fff8e6;
+  border: 2px solid #d4b483;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  height: 80vh;
+  overflow-y: auto;
+}
+
+.log-title {
+  margin-top: 0;
+  color: #8b5e34;
+}
+
+.no-events {
+  color: #5b4636;
+}
+
+.log-list {
+  padding-left: 20px;
+  color: #5b4636;
+}
+
+.log-item {
+  margin-bottom: 8px;
+}
