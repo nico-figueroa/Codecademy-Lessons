@@ -1,10 +1,11 @@
-# 🎓 Codecademy Lessons
+# 🎓 Codecademy ![Codecademy](https://img.shields.io/badge/Codecademy-Learning-blue) Lessons
 A collection of coursework, exercises, and projects completed throughout Codecademy’s curriculum. This repository reflects my progression in understanding, building, refactoring, and maintaining front‑end and full‑stack applications — sometimes independently, sometimes assisted by AI systems like Copilot.
 
 ## 📘 About This Repository
 These lessons demonstrate my ability to work with JavaScript, React, Redux, HTML, CSS, Git, and testing frameworks. Many projects follow structured learning paths provided by Codecademy, while others include personal enhancements or refactoring.
 
 All licenses and source materials are respected and referenced when appropriate. Contents may be reused under an open license.
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow)
 
 ## 📂 Main Projects
 ### React — Jammming
@@ -22,11 +23,11 @@ Each folder corresponds to a Codecademy module and contains exercises, projects,
 
 ## 🛠️ Technologies Practiced
 
-* JavaScript
-* React
-* Redux
-* HTML
-* CSS
+* ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+* ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
+* ![Redux](https://img.shields.io/badge/Redux-764ABC?logo=redux&logoColor=white)
+* ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
+* ![CSS](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
 * Vite
 * APIs
 * Git workflows
