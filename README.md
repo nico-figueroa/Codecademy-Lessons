@@ -28,9 +28,9 @@ Each folder corresponds to a Codecademy module and contains exercises, projects,
 * ![Redux](https://img.shields.io/badge/Redux-764ABC?logo=redux&logoColor=white)
 * ![HTML](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
 * ![CSS](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
-* Vite
-* APIs
-* Git workflows
+* ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
+* ![APIs](https://img.shields.io/badge/APIs-0052CC?logo=api&logoColor=white)
+* ![Git](https://img.shields.io/badge/Git%20Workflows-F05032?logo=git&logoColor=white)
 
 ## 📨 Contact
 * Name: Nicolas Figueroa
