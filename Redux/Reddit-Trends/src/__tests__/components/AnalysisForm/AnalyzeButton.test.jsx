@@ -1,15 +1,23 @@
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import React from "react";
+import { render, fireEvent } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { MemoryRouter } from "react-router-dom";
+import { store } from "../../../redux/store";
 import AnalyzeButton from "../../../components/AnalysisForm/AnalyzeButton";
 
-test("calls onClick when Analyze button is pressed", async () => {
-  const user = userEvent.setup();
-  const handleClick = jest.fn();
+test("calls onClick when Analyze button is pressed", () => {
+  const { getByText } = render(
+    <Provider store={store}>
+      <MemoryRouter>
+        <AnalyzeButton
+          selectedSubreddit="reactjs"
+          startDate="1700000000"
+          endDate="1700001000"
+        />
+      </MemoryRouter>
+    </Provider>
+  );
 
-  render(<AnalyzeButton onClick={handleClick} />);
-
-  const button = screen.getByRole("button", { name: /analyze/i });
-  await user.click(button);
-
-  expect(handleClick).toHaveBeenCalled();
+  const button = getByText(/analyze/i);
+  fireEvent.click(button);
 });

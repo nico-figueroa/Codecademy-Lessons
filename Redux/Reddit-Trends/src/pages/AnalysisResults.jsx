@@ -1,88 +1,121 @@
-import { useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import ResultsHeader from "../components/AnalysisResults/ResultsHeader";
 import TopicCountChart from "../components/AnalysisResults/TopicCountChart";
+import TopicParetoChart from "../components/AnalysisResults/TopicParetoChart";
+import InsightsList from "../components/AnalysisResults/InsightsList";
+import DescriptiveStatisticsList from "../components/AnalysisResults/DescriptiveStatisticsList";
+import ResultsHeader from "../components/AnalysisResults/ResultsHeader";
+import NewAnalysisButton from "../components/AnalysisResults/ResultsActions/NewAnalysisButton";
+import SaveToPDFButton from "../components/AnalysisResults/ResultsActions/SaveToPDFButton";
+import ErrorMessage from "../components/SharedComponents/ErrorMessage";
+import LoadingSpinner from "../components/SharedComponents/LoadingSpinner";
+import { exportElementToPDF } from "../utils/exportToPDF";
 
-export default function AnalysisResults() {
-  return (
-    <div id="results-page">
-      <ResultsContent />
-    </div>
-  );
-}
-
-function ResultsContent() {
+const AnalysisResults = () => {
+  const results = useSelector((state) => state.analysis.results);
+  const loading = useSelector((state) => state.api.loading);
+  const error = useSelector((state) => state.api.error);
+  const usingDemoData = useSelector((state) => state.api.usingDemoData);
+  const startDate = useSelector((state) => state.analysis.startDate);
+  const endDate = useSelector((state) => state.analysis.endDate);
+  const options = useSelector((state) => state.analysis.options);
   const navigate = useNavigate();
-
-  // Dummy data for tests
-  const allItems = [
-    { id: 1, text: "AI is transforming industries", category: "AI" },
-    { id: 2, text: "React hooks are powerful", category: "React" },
-    { id: 3, text: "Redux Toolkit simplifies state", category: "Redux" }
-  ];
+  const contentRef = useRef(null);
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
 
-  const filtered = allItems.filter(item => {
-    const matchesSearch = item.text.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = category === "all" || item.category === category;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredTopics = useMemo(() => {
+    if (!results?.topics) return [];
+    if (category === "insights" || category === "statistics") return results.topics;
+    return results.topics.filter((t) => t.name.toLowerCase().includes(search.toLowerCase()));
+  }, [results, search, category]);
 
-  const handleSelect = (id) => {
-    navigate(`/details/${id}`);
-  };
+  const filteredInsights = useMemo(() => {
+    if (!results?.insights) return [];
+    if (category === "topics" || category === "statistics") return results.insights;
+    return results.insights.filter((i) => i.title.toLowerCase().includes(search.toLowerCase()));
+  }, [results, search, category]);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <ErrorMessage message={`Error: ${error}`} onRetry={() => navigate("/analysis")} />;
+  }
+
+  if (!results || !results.topics || results.topics.length === 0) {
+    return <div className="empty-state">No results yet. Run an analysis to see data.</div>;
+  }
 
   return (
-    <>
-      {/* REQUIRED by analysisFlow.test.js */}
+    <div className="results-page">
+      {usingDemoData && (
+        <div id="demo-data-banner" className="demo-banner">
+          Showing sample demo data — Reddit's live API is unavailable right now.
+        </div>
+      )}
+
       <ResultsHeader
-        startDate="2024-01-01"
-        endDate="2024-01-31"
-        analysisType="Topic Count"
+        startDate={startDate ? new Date(startDate * 1000).toLocaleDateString() : null}
+        endDate={endDate ? new Date(endDate * 1000).toLocaleDateString() : null}
+        analysisType={options?.join(", ")}
       />
 
-      {/* REQUIRED by searchAndFilter.test.js */}
-      <input
-        id="search-input"
-        type="text"
-        value={search}
-        onChange={e => setSearch(e.target.value)}
-      />
+      <div className="results-toolbar">
+        <NewAnalysisButton onClick={() => navigate("/analysis")} />
+        <SaveToPDFButton onClick={() => exportElementToPDF(contentRef.current, "reddit-trends-analysis.pdf")} />
+      </div>
 
-      <select
-        id="category-filter"
-        value={category}
-        onChange={e => setCategory(e.target.value)}
-      >
-        <option value="all">All</option>
-        <option value="AI">AI</option>
-        <option value="React">React</option>
-        <option value="Redux">Redux</option>
-      </select>
-
-      <ul>
-        {filtered.map(item => (
-          <li
-            key={item.id}
-            className="result-item"
-            onClick={() => handleSelect(item.id)}
+      <div ref={contentRef} className="results-content">
+        <div className="results-filters">
+          <input
+            id="search-input"
+            className="text-input"
+            placeholder="Search insights..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <select
+            id="category-filter"
+            className="select-input"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
           >
-            {item.text}
-          </li>
-        ))}
-      </ul>
+            <option value="all">All</option>
+            <option value="topics">Topics</option>
+            <option value="insights">Insights</option>
+            <option value="statistics">Statistics</option>
+          </select>
+        </div>
 
-      {/* Chart still works */}
-      <TopicCountChart
-        data={[
-          { topic: "AI", count: 12 },
-          { topic: "React", count: 8 },
-          { topic: "Redux", count: 5 }
-        ]}
-        onSelect={handleSelect}
-      />
-    </>
+        <section className="card">
+          <h3>Topic Count</h3>
+          <TopicCountChart data={filteredTopics} />
+        </section>
+
+        <section className="card">
+          <h3>Pareto Distribution</h3>
+          <TopicParetoChart data={results.pareto} />
+        </section>
+
+        <section className="card">
+          <h3>Insights</h3>
+          <InsightsList
+            insights={filteredInsights}
+            onSelect={(id) => navigate(`/details/${id}`)}
+          />
+        </section>
+
+        <section className="card">
+          <h3>Descriptive Statistics</h3>
+          <DescriptiveStatisticsList statistics={results.statistics} />
+        </section>
+      </div>
+    </div>
   );
-}
+};
+
+export default AnalysisResults;

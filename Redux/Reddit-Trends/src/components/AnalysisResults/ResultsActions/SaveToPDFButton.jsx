@@ -1,6 +1,6 @@
 export default function SaveToPDFButton({ onClick }) {
   return (
-    <button onClick={onClick}>
+    <button className="btn btn-secondary" onClick={onClick}>
       Save to PDF
     </button>
   );

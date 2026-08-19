@@ -3,12 +3,12 @@ import TopicParetoChart from "../../../components/AnalysisResults/TopicParetoCha
 
 test("renders top topics from data", () => {
   const fakeData = [
-    { topic: "AI", count: 120 },
-    { topic: "Gaming", count: 90 }
+    { name: "AI", percentage: 57.14, cumulativePercent: 57.14 },
+    { name: "Gaming", percentage: 42.86, cumulativePercent: 100 }
   ];
 
   render(<TopicParetoChart data={fakeData} />);
 
-  expect(screen.getByText("AI")).toBeInTheDocument();
-  expect(screen.getByText("Gaming")).toBeInTheDocument();
+  expect(screen.getByText("AI", { exact: false })).toBeInTheDocument();
+  expect(screen.getByText("Gaming", { exact: false })).toBeInTheDocument();
 });

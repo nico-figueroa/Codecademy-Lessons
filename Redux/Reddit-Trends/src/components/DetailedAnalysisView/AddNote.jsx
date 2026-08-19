@@ -5,18 +5,20 @@ export default function AddNote({ onSubmit }) {
 
   return (
     <form
+      className="add-note-form"
       onSubmit={e => {
         e.preventDefault();
         onSubmit(note);
       }}
     >
       <input
+        className="text-input"
         placeholder="Add a note"
         value={note}
         onChange={e => setNote(e.target.value)}
       />
 
-      <button type="submit">
+      <button type="submit" className="btn btn-primary">
         Save Note
       </button>
     </form>

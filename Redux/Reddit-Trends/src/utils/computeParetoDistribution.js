@@ -1,14 +1,31 @@
 export default function computeParetoDistribution(data) {
-  // Minimal implementation to satisfy the test
-  const total = data.reduce((sum, item) => sum + item.count, 0);
+  if (!Array.isArray(data) || data.length === 0) return [];
+
+  // Normalize input to { name, count }
+  const normalized = data.map((item, index) => ({
+    name:
+      item.name ??
+      item.topic ??
+      item.label ??
+      `Item ${index + 1}`,
+    count: item.count ?? item.value ?? item.frequency ?? 0
+  }));
+
+  const total = normalized.reduce((sum, item) => sum + item.count, 0) || 1;
+
+  // Sort descending by count
+  const sorted = normalized.sort((a, b) => b.count - a.count);
 
   let cumulative = 0;
 
-  return data.map(item => {
-    cumulative += item.count;
+  return sorted.map((item) => {
+    const percentage = (item.count / total) * 100;
+    cumulative += percentage;
+
     return {
-      ...item,
-      cumulativePercent: (cumulative / total) * 100
+      name: item.name,
+      percentage: Number(percentage.toFixed(2)),
+      cumulativePercent: Number(cumulative.toFixed(2))
     };
   });
 }

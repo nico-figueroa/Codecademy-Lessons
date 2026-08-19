@@ -1,15 +1,25 @@
+import extractKeywords from "./extractKeywords";
+
+// Normalizes raw Reddit API posts and derives a "topic" per post from its
+// most prominent keyword (real Reddit posts have no topic field of their own).
 export default function transformRedditData(raw) {
-  const counts = {};
+  if (!Array.isArray(raw)) return [];
 
-  raw.forEach(post => {
-    const topic = post.topic;
-    counts[topic] = (counts[topic] || 0) + 1;
+  return raw.map(post => {
+    const text = `${post.title || ""} ${post.selftext || ""}`;
+    const keywords = extractKeywords(text);
+    const topic = keywords[0] || post.subreddit || "unknown";
+
+    return {
+      id: post.id,
+      title: post.title,
+      selftext: post.selftext,
+      score: post.score ?? 0,
+      created_utc: post.created_utc,
+      author: post.author,
+      subreddit: post.subreddit,
+      keywords,
+      topic
+    };
   });
-
-  return {
-    topics: Object.entries(counts).map(([topic, count]) => ({
-      topic,
-      count
-    }))
-  };
 }

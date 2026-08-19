@@ -1,13 +1,27 @@
 import transformRedditData from "../../utils/transformRedditData";
 
-test("transforms raw Reddit posts into topic counts", () => {
+test("normalizes raw Reddit posts and derives a topic per post", () => {
   const raw = [
-    { title: "AI is taking over", id: 1 },
-    { title: "Gaming trends 2024", id: 2 }
+    { id: 1, title: "AI is taking over", score: 100, created_utc: 1700000000, subreddit: "technology" },
+    { id: 2, title: "Gaming trends 2024", score: 50, created_utc: 1700001000, subreddit: "gaming" }
   ];
 
   const result = transformRedditData(raw);
 
-  expect(result).toHaveProperty("topics");
-  expect(result.topics.length).toBeGreaterThan(0);
+  expect(Array.isArray(result)).toBe(true);
+  expect(result).toHaveLength(2);
+  expect(result[0]).toMatchObject({ id: 1, title: "AI is taking over", topic: "AI" });
+  expect(result[0].keywords).toContain("AI");
+});
+
+test("falls back to the subreddit name when no keywords are found", () => {
+  const raw = [{ id: 3, title: "", selftext: "", subreddit: "news" }];
+
+  const result = transformRedditData(raw);
+
+  expect(result[0].topic).toBe("news");
+});
+
+test("returns an empty array for non-array input", () => {
+  expect(transformRedditData(null)).toEqual([]);
 });

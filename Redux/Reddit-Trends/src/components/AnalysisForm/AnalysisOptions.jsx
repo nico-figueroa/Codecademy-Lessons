@@ -2,9 +2,9 @@ export default function AnalysisOptions({ selected = [], onChange }) {
   const options = ["Keyword Frequency", "Topic Trends", "Pareto Analysis"];
 
   return (
-    <div>
+    <div className="analysis-options">
       {options.map(opt => (
-        <label key={opt}>
+        <label key={opt} className="option-pill">
           <input
             type="checkbox"
             checked={selected.includes(opt)}

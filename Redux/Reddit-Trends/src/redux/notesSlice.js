@@ -9,8 +9,7 @@ const notesSlice = createSlice({
   initialState,
   reducers: {
     addNote(state, action) {
-      // The test passes { id, text }, so we only store the text
-      state.notes.push({ text: action.payload.text });
+      state.notes.push({ id: action.payload.id, text: action.payload.text });
     }
   }
 });

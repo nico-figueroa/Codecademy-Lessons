@@ -1,16 +1,23 @@
-export default function InsightsList({ items = [], onSelect }) {
+import React from "react";
+
+const InsightsList = ({ insights, onSelect }) => {
+  if (!insights || insights.length === 0) {
+    return <div>No insights available.</div>;
+  }
+
   return (
-    <ul>
-      {items.map(item => (
+    <ul className="insights-list">
+      {insights.map((insight) => (
         <li
-          key={item.id}
+          key={insight.id}
           className="result-item"
-          onClick={() => onSelect(item.id)}
-          role="button"
+          onClick={() => onSelect && onSelect(insight.id)}
         >
-          {item.text}
+          {insight.title}
         </li>
       ))}
     </ul>
   );
-}
+};
+
+export default InsightsList;
