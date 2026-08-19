@@ -1,6 +1,6 @@
 export default function AnalyzeButton({ onClick }) {
   return (
-    <button onClick={onClick}>
+    <button id="analyze-btn" onClick={onClick}>
       Analyze
     </button>
   );

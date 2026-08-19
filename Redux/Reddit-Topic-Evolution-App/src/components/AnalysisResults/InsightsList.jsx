@@ -4,6 +4,7 @@ export default function InsightsList({ items = [], onSelect }) {
       {items.map(item => (
         <li
           key={item.id}
+          className="result-item"
           onClick={() => onSelect(item.id)}
           role="button"
         >
