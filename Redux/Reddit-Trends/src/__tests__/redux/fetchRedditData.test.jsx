@@ -1,9 +1,5 @@
 import { fetchRedditData } from "../../redux/apiSlice";
 
-jest.mock("../../redux/redditAuth", () => ({
-  getAccessToken: jest.fn().mockResolvedValue("test-token")
-}));
-
 beforeEach(() => {
   global.fetch = jest.fn();
 });

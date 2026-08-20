@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAccessToken } from "./redditAuth";
 
 const initialState = {
   loading: false,
@@ -41,15 +40,12 @@ export default apiReducer;
  * This is a pure function and does not interact with Redux directly.
  */
 export async function fetchRedditData(subreddit, { start, end }) {
-  const token = await getAccessToken();
+  // Fetched directly from the browser: reddit.com's base subreddit listing
+  // endpoint (unlike /top.json, or this same endpoint with sort=top/t= params)
+  // allows this cross-origin fetch without a server-side proxy or CORS error.
+  const url = `https://www.reddit.com/r/${subreddit}.json?limit=100`;
 
-  // Routed through the Vite dev proxy (see vite.config.js) to reach
-  // oauth.reddit.com, which requires the Authorization header below.
-  const url = `/reddit-oauth-api/r/${subreddit}/top.json?limit=100`;
-
-  const response = await fetch(url, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error("Network response was not ok");

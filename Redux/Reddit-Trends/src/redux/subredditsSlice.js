@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAccessToken } from "./redditAuth";
 
 // Used until (or unless) the live "popular subreddits" fetch succeeds, so the
 // dropdown is never empty when Reddit's anonymous API is unavailable/blocked.
@@ -49,13 +48,9 @@ export function loadSubreddits() {
     dispatch(setLoading(true));
 
     try {
-      const token = await getAccessToken();
-
-      // Routed through the Vite dev proxy (see vite.config.js) to reach
-      // oauth.reddit.com, which requires the Authorization header below.
-      const response = await fetch("/reddit-oauth-api/subreddits/popular.json", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Fetched directly from the browser (see fetchRedditData in apiSlice.js
+      // for why this works without a proxy/CORS error).
+      const response = await fetch("https://www.reddit.com/subreddits/popular.json");
 
       if (!response.ok) {
         dispatch(setError("Failed to load subreddits"));

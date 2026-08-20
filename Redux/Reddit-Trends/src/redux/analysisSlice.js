@@ -61,6 +61,10 @@ export function loadRedditData(subreddit, dateRange) {
 
       dispatch(setLoading(false));
     } catch (err) {
+      // Surfaced to the console so real fetch failures are diagnosable instead
+      // of silently masked by the demo-data fallback below.
+      console.warn("loadRedditData: live fetch failed, falling back to demo data:", err);
+
       const demoPosts = generateMockPosts(subreddit, dateRange);
       dispatch(setData(demoPosts));
       dispatch(setUsingDemoData(true));
@@ -69,6 +73,35 @@ export function loadRedditData(subreddit, dateRange) {
       const results = runAnalysisPipeline(demoPosts);
       dispatch(setResults(results));
 
+      dispatch(setLoading(false));
+    }
+  };
+}
+
+/**
+ * Thunk: Parse Reddit listing JSON pasted in manually (e.g. copied from a
+ * browser tab navigated directly to https://www.reddit.com/r/{subreddit}.json)
+ * and run it through the same analysis pipeline as a live fetch. This exists
+ * because a page's own fetch() to reddit.com is blocked by CORS even though a
+ * real browser navigation to the same URL succeeds.
+ */
+export function loadFromRawJSON(rawText) {
+  return function (dispatch) {
+    dispatch(setLoading(true));
+
+    try {
+      const json = JSON.parse(rawText);
+      const posts = json.data.children.map((child) => child.data);
+
+      dispatch(setData(posts));
+      dispatch(setUsingDemoData(false));
+      dispatch(setError(null));
+
+      const results = runAnalysisPipeline(posts);
+      dispatch(setResults(results));
+      dispatch(setLoading(false));
+    } catch (err) {
+      dispatch(setError(`Could not parse pasted data: ${err.message}`));
       dispatch(setLoading(false));
     }
   };

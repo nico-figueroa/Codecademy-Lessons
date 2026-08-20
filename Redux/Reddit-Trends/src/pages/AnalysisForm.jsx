@@ -5,6 +5,7 @@ import { setDateRange, setOptions } from "../redux/analysisSlice";
 import AnalyzeButton from "../components/AnalysisForm/AnalyzeButton";
 import AnalysisOptions from "../components/AnalysisForm/AnalysisOptions";
 import DateRangePicker from "../components/AnalysisForm/DateRangePicker";
+import ManualJSONImport from "../components/AnalysisForm/ManualJSONImport";
 import validateDateRange from "../utils/dateRangeValidation";
 
 // Calendar inputs give "YYYY-MM-DD" strings; the rest of the app works in UTC seconds.
@@ -91,6 +92,8 @@ const AnalysisForm = () => {
         endDate={toUnixSeconds(endDate)}
         disabled={!selectedSubreddit || !isDateRangeValid}
       />
+
+      <ManualJSONImport />
     </div>
   );
 };

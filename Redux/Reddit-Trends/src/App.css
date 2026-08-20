@@ -101,6 +101,38 @@
   margin-bottom: 12px;
 }
 
+.manual-import {
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.manual-import summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--reddit-blue);
+}
+
+.manual-import-help {
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+.manual-import-help code {
+  background: var(--bg-page);
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+}
+
+.manual-json-textarea {
+  width: 100%;
+  min-height: 120px;
+  font-family: var(--mono);
+  font-size: 12px;
+  margin-bottom: 10px;
+  resize: vertical;
+}
+
 /* Analysis options (checkbox pills) */
 .analysis-options {
   display: flex;

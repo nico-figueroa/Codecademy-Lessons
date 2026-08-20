@@ -8,10 +8,6 @@ import subredditsReducer, {
 
 import * as api from "../../redux/subredditsSlice";
 
-jest.mock("../../redux/redditAuth", () => ({
-  getAccessToken: jest.fn().mockResolvedValue("test-token")
-}));
-
 // Mock fetch
 global.fetch = jest.fn();
 
