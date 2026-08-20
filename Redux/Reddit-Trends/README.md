@@ -1,10 +1,45 @@
 # Reddit Topic Evolution App
 
+Live application: https://trendsanalyzer.netlify.app/
+
+Project planning: [Reddit Client App GitHub Project](https://github.com/users/nico-figueroa/projects/12/views/2)
+
 ## About the App
 This application will enable the user to choose between two dates to perform an analysis of the keywords that have trended between the same in Reddit.
 
 ## Objective of the project
 Practice all Frontend development tools taught by Codecademy as part of the third module of the Full Stack Engineer program.
+
+## Technologies Used
+
+- React 19 and React Router
+- Redux Toolkit and React Redux
+- Vite
+- Recharts for visualizations
+- Jest and React Testing Library for unit/component tests
+- Selenium WebDriver with Microsoft Edge for end-to-end tests
+- jsPDF and html2canvas for PDF export
+- CSS custom properties and responsive media queries
+
+React Testing Library is used instead of Enzyme because Enzyme does not provide a maintained React 19 adapter. The tests still provide Jest-based component coverage using user-facing behavior.
+
+## Features
+
+- Analyze Reddit posts across a selected subreddit and date range
+- Derive trend keywords, topic counts, descriptive statistics, and Pareto distributions
+- Search results by term and filter them by predefined category
+- Open detailed analysis views through `/details/:id`
+- Add notes and export analysis views to PDF
+- Import real Reddit JSON manually when Reddit blocks browser API requests
+- Fall back to bundled demo data when live Reddit data is unavailable
+- Responsive desktop and mobile layouts with loading, error, and recovery states
+
+## Future Work
+
+- Add an authenticated server-side Reddit API integration to avoid client-side CORS and bot-detection limitations
+- Add saved analyses and persistent notes
+- Add broader browser/device testing and automated Lighthouse checks
+- Improve direct deployment support for additional shareable analysis URLs
 
 ## Project Requirements:
 
@@ -16,7 +51,7 @@ Practice all Frontend development tools taught by Codecademy as part of the thir
   - Technologies used
   - Features
   - Future work
-5. Write unit tests for your components using Jest and Enzyme
+5. Write unit tests for your components using Jest and React Testing Library
 6. Write end-to-end tests for your application
 7. Users can use the application on any device (desktop to mobile)
 8. Users can use the application on any modern browser
@@ -48,6 +83,13 @@ Practice all Frontend development tools taught by Codecademy as part of the thir
 
 ## Wireframes
 [Wireframes](./documentation/Wireframes.pdf)
+
+## Deployment and Quality Evidence
+
+- The application is deployed at https://trendsanalyzer.netlify.app/.
+- The repository is hosted on GitHub and planned through the GitHub Project linked above.
+- The PageSpeed Insights mobile report recorded Performance `100`, Accessibility `96`, and Best Practices `96`. SEO was `80`, so SEO remains below the 90+ target and is future work.
+- Run `npm run dev` before the Selenium suite, then run `npm test -- --selectProjects e2e --runInBand`.
 
 ## Component Hierarchy
 
