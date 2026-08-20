@@ -1,6 +1,6 @@
 import computeTopicCounts from "../utils/computeTopicCounts";
 import computeParetoDistribution from "../utils/computeParetoDistribution";
-import extractKeywords from "../utils/extractKeywords";
+import extractKeywords from "../utils/extractTrendwords";
 import computeDescriptiveStatistics from "../utils/computeDescriptiveStatistics";
 import transformRedditData from "../utils/transformRedditData";
 

@@ -1,4 +1,4 @@
-import extractKeywords from "./extractKeywords";
+import extractKeywords from "./extractTrendwords";
 
 // Normalizes raw Reddit API posts and derives a "topic" per post from its
 // most prominent keyword (real Reddit posts have no topic field of their own).
