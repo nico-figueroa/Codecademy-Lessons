@@ -12,6 +12,15 @@ All licenses and source materials are respected and referenced when appropriate.
 A full React application built during Codecademy’s React course.
 Includes component architecture, state management, API integration, and deployment practice.
 
+### Redux — Reddit Trends Analyzer
+* Full React + Redux application
+* Wireframes generation
+* Project Management via GitHub
+* Reddit API use
+* Full Jest + Selenium unit and integration test suites
+* CI/CD via GitHub + Netlify including custom domain
+* Offline operation capabilities
+
 Each folder corresponds to a Codecademy module and contains exercises, projects, or guided assignments.
 
 ## 📚 Learning Sources
