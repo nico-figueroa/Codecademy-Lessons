@@ -1,0 +1,104 @@
+:root {
+  /* Reddit brand palette */
+  --reddit-orange: #ff4500;
+  --reddit-orange-dark: #cc3600;
+  --reddit-blue: #0079d3;
+  --reddit-blue-dark: #0060a8;
+  --reddit-green: #46d160;
+  --reddit-danger: #ea0027;
+
+  --bg-page: #dae0e6;
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --border: #edeff1;
+  --border-strong: #ccc;
+  --text: #1c1c1c;
+  --text-h: #1a1a1b;
+  --text-secondary: #787c7e;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-full: 999px;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.12);
+
+  --sans: 'Segoe UI', system-ui, Roboto, Arial, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 16px/145% var(--sans);
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-page: #030303;
+    --bg-card: #1a1a1b;
+    --bg-input: #272729;
+    --border: #343536;
+    --border-strong: #4a4a4b;
+    --text: #d7dadc;
+    --text-h: #f3f4f6;
+    --text-secondary: #818384;
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--sans);
+  font-weight: 700;
+  color: var(--text-h);
+  margin: 0 0 12px;
+}
+
+h1 {
+  font-size: 28px;
+}
+
+h2 {
+  font-size: 22px;
+}
+
+h3 {
+  font-size: 17px;
+}
+
+p {
+  margin: 0 0 8px;
+  color: var(--text-secondary);
+}
+
+a {
+  color: var(--reddit-blue);
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+}
+

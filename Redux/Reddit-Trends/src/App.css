@@ -1,0 +1,354 @@
+/* Layout shell */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+
+.app-header {
+  background: var(--reddit-orange);
+  padding: 16px 24px;
+}
+
+.app-header h1 {
+  margin: 0;
+  color: #fff;
+  font-size: 20px;
+}
+
+.mobile-header {
+  background: var(--reddit-orange-dark);
+  color: #fff;
+  padding: 10px 16px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.app-footer {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 13px;
+  text-align: center;
+  padding: 16px;
+}
+
+/* Cards */
+.card,
+.form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 20px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+/* Form fields */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.date-range-picker {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.date-range-picker .field-group {
+  margin-bottom: 0;
+  flex: 1 1 160px;
+}
+
+.select-input,
+.date-input,
+.text-input {
+  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  color: var(--text);
+}
+
+.select-input:focus,
+.date-input:focus,
+.text-input:focus {
+  outline: 2px solid var(--reddit-blue);
+  outline-offset: 1px;
+}
+
+.field-error {
+  color: var(--reddit-danger);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.manual-import {
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.manual-import summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--reddit-blue);
+}
+
+.manual-import-help {
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+.manual-import-help code {
+  background: var(--bg-page);
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+}
+
+.manual-json-textarea {
+  width: 100%;
+  min-height: 120px;
+  font-family: var(--mono);
+  font-size: 12px;
+  margin-bottom: 10px;
+  resize: vertical;
+}
+
+/* Analysis options (checkbox pills) */
+.analysis-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.option-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Buttons */
+.btn {
+  font: inherit;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  padding: 10px 20px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s, opacity 0.15s;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--reddit-orange);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--reddit-orange-dark);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--reddit-blue);
+  border-color: var(--reddit-blue);
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 121, 211, 0.1);
+}
+
+/* Results page */
+.results-header .results-header-range,
+.results-header .results-header-type {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.results-toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.results-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.results-filters .text-input {
+  flex: 1 1 200px;
+}
+
+.empty-state {
+  background: var(--bg-card);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 32px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.demo-banner {
+  background: #fff8e6;
+  border: 1px solid #f0b90b;
+  color: #7a5c00;
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Lists */
+.insights-list,
+.stats-list,
+.notes-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.result-item {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+
+.result-item:hover {
+  background: var(--bg-page);
+  color: var(--reddit-blue);
+}
+
+.stat-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.notes-list li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Detail page */
+.detail-page .additional-info {
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.add-note-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.add-note-form .text-input {
+  flex: 1;
+}
+
+/* Error banner */
+.error-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--reddit-danger);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin: 24px auto;
+  max-width: 480px;
+  text-align: center;
+}
+
+.error-banner #error-message {
+  color: var(--reddit-danger);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* Loading spinner */
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px 0;
+  color: var(--text-secondary);
+}
+
+.spinner-ring {
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--border);
+  border-top-color: var(--reddit-orange);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: var(--shadow-card);
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    padding: 16px 12px 32px;
+  }
+
+  .date-range-picker {
+    flex-direction: column;
+  }
+}
+
