@@ -1,5 +1,3 @@
-import React from "react";
-
 const InsightsList = ({ insights, onSelect }) => {
   if (!insights || insights.length === 0) {
     return <div>No insights available.</div>;

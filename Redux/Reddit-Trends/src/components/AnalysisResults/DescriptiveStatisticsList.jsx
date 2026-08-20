@@ -1,5 +1,3 @@
-import React from "react";
-
 // Converts camelCase keys (e.g. "totalPosts") into readable labels ("Total Posts")
 const humanize = (key) =>
   key

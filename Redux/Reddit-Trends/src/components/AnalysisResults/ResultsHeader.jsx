@@ -1,5 +1,3 @@
-import React from "react";
-
 const ResultsHeader = ({ startDate, endDate, analysisType }) => {
   return (
     <header className="results-header">
