@@ -31,6 +31,7 @@ Each folder corresponds to a Codecademy module and contains exercises, projects,
 * ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
 * ![APIs](https://img.shields.io/badge/APIs-0052CC?logo=api&logoColor=white)
 * ![Git](https://img.shields.io/badge/Git%20Workflows-F05032?logo=git&logoColor=white)
+* [![Netlify Status](https://api.netlify.com/api/v1/badges/87fdc821-4d0c-4dd8-87a8-e23632178083/deploy-status)](https://app.netlify.com/projects/trendsanalyzer/deploys)
 
 ## 📨 Contact
 * Name: Nicolas Figueroa
