@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Biography</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Update a Biography</h1>
+  <nav><a href="index.html">API Home</a><a href="bios.html">Biographies</a><a href="quotes.html">Quotes</a></nav>
+  <div class="inputs">
+    <label for="id">Biography ID:</label><input id="id" type="number" min="1">
+    <label for="person">Person:</label><input id="person">
+    <label for="birth-year">Birth year:</label><input id="birth-year" type="number" min="1" max="2026">
+    <label for="bio">Biography:</label><textarea id="bio" maxlength="1000"></textarea>
+  </div>
+  <button id="update-bio" type="button">Update Biography</button>
+  <div id="bio-result"></div>
+  <script src="update-bio.js"></script>
+</body>
+</html>
