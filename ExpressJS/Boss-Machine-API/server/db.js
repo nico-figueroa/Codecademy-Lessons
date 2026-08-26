@@ -1,4 +1,4 @@
-const faker = require('faker');
+const { faker } = require('@faker-js/faker');
 
 let minionIdCounter = 1;
 
@@ -6,7 +6,7 @@ const createMinion = () => {
   const weaknesses = new Array(3).fill(0).map(() => {
     const reasons = ['Cannot do', 'Unable to execute', 'Will not build'];
     const reason = reasons[Math.floor(Math.random() * reasons.length)];
-    const adj = faker.company.bsAdjective();
+    const adj = faker.company.buzzAdjective();
     const noun = faker.company.catchPhraseNoun();
     return `${reason} ${adj} ${noun}`;
   })
@@ -14,8 +14,8 @@ const createMinion = () => {
 
   return {
     id: `${minionIdCounter++}`,
-    name: faker.name.findName(),
-    title: faker.name.jobTitle(),
+    name: faker.person.fullName(),
+    title: faker.person.jobTitle(),
     weaknesses: weaknesses,
     salary: 40000,
   }
@@ -44,7 +44,7 @@ const companies = [
 ];
 
 const createIdea = () => {
-  const noun = faker.company.bsNoun();
+  const noun = faker.company.buzzNoun();
   const name = companies[Math.floor(Math.random() * companies.length)];
   let weeklyRevenue = 0;
   let numWeeks = 0;
@@ -141,7 +141,7 @@ const isValidMeeting = (instance) => {
   if (typeof instance.time !== 'string' || instance.time.length < 4) {
     throw new Error('Meeting time must be valid!');
   }
-  if (!instance.date instanceof Date) {
+  if (!(instance.date instanceof Date)) {
     throw new Error('Meeting date must be a JS Date object');
   }
   if (!instance.day || typeof instance.day !== 'string') {
