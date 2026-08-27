@@ -1,0 +1,42 @@
+{
+  "name": "build-apis-boss-machine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "cross-env PORT=8000 mocha",
+    "start-dev": "webpack -w & nodemon --watch app.js --watch main.js --watch server/",
+    "start": "nodemon --watch app.js --watch main.js --watch server/",
+    "postinstall": "webpack"
+  },
+  "author": "Codecademy",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^10.6.0",
+    "axios": "^1.20.0",
+    "body-parser": "^2.3.0",
+    "chai": "^6.2.2",
+    "cors": "^2.8.6",
+    "cross-env": "^10.1.0",
+    "express": "^5.2.1",
+    "mocha": "^11.8.0",
+    "morgan": "^1.11.0",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^10.1.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-redux": "^9.3.0",
+    "react-router": "^8.3.0",
+    "redux": "^5.0.1",
+    "redux-thunk": "^3.1.0",
+    "webpack": "^5.110.1"
+  }
+}
