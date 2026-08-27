@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="undefined" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+	<link rel="stylesheet" href="../public/styles.css">
+</head>
+<body>
+	<%- include('header.ejs') %>
+<div class="card">
+    <div class="row">
+        <div class="col-md-8 cart">
+            <div class="title">
+                <div class="row">
+                    <div class="col">
+                        <h4><b>Shopping Cart</b></h4>
+                    </div>
+                    <div class="col align-self-center text-right text-muted"><%= items.length %> items</div>
+                </div>
+            </div>
+            <% if (items.length === 0) { %>
+                <div class="row border-top border-bottom">
+                    <div class="row main align-items-center">
+                        <div class="col">Your cart is empty.</div>
+                    </div>
+                </div>
+            <% } else { %>
+                <% items.forEach(function(item) { %>
+                    <div class="row border-top border-bottom">
+                        <div class="row main align-items-center">
+                            <div class="col-2"><img class="img-fluid" src="<%= item.image %>"></div>
+                            <div class="col">
+                                <div class="row text-muted"><%= item.name %></div>
+                                <div class="row">Qty: <%= item.qty %></div>
+                            </div>
+                            <div class="col">&euro; <%= item.price.toFixed(2) %> x <%= item.qty %></div>
+                            <div class="col">&euro; <%= item.subtotal.toFixed(2) %></div>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } %>
+            <div class="back-to-shop"><a href="/shop">&leftarrow;</a><a href="/shop" class="text-muted">Back to shop</a></div>
+        </div>
+        <div class="col-md-4 summary">
+            <div>
+                <h5><b>Summary</b></h5>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col" style="padding-left:0;">ITEMS <%= items.length %></div>
+                <div class="col text-right">&euro; <%= total.toFixed(2) %></div>
+            </div>
+            <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
+                <div class="col">TOTAL PRICE</div>
+                <div class="col text-right">&euro; <%= total.toFixed(2) %></div>
+            </div>
+            <button type="button" class="btn btn-primary w-100" onclick="checkout()">CHECKOUT</button>
+        </div>
+    </div>
+</div>
+<script>
+    function checkout() {
+        alert("Successful purchase!");
+        fetch("/cart/checkout", { method: "POST" }).then(() => {
+            window.location.href = "/shop";
+        });
+    }
+</script>
+
+</body>
+</html>
