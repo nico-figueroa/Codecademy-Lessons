@@ -8,11 +8,13 @@
   },
   "jest": {
     "collectCoverage": true,
-    "coverageReporters": ["html"]
+    "coverageReporters": [
+      "html"
+    ]
   },
   "keywords": [],
   "type": "commonjs",
   "devDependencies": {
-    "jest": "^30.4.2"
+    "jest": "^30.5.0"
   }
 }
