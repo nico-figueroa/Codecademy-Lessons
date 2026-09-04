@@ -19,7 +19,7 @@
     "cors": "^2.8.6",
     "cross-env": "^10.1.0",
     "express": "^5.2.1",
-    "mocha": "^11.8.0",
+    "mocha": "^12.0.0",
     "morgan": "^1.12.0",
     "nodemon": "^3.1.14",
     "supertest": "^7.2.2"
@@ -37,6 +37,6 @@
     "react-router": "^8.3.1",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "webpack": "^5.110.1"
+    "webpack": "^5.110.3"
   }
 }
