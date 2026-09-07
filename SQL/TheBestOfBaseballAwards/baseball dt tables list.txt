@@ -1,0 +1,34 @@
+baseball=# \dt
+                 List of tables                                                                                                                                                                                                                                                              
+ Schema |        Name         | Type  |  Owner   
+--------+---------------------+-------+----------
+ public | allstarfull         | table | postgres
+ public | appearances         | table | postgres
+ public | awardsmanagers      | table | postgres
+ public | awardsplayers       | table | postgres
+ public | awardssharemanagers | table | postgres
+ public | awardsshareplayers  | table | postgres
+ public | batting             | table | postgres
+ public | battingpost         | table | postgres
+ public | collegeplaying      | table | postgres
+ public | divisions           | table | postgres
+ public | fielding            | table | postgres
+ public | fieldingof          | table | postgres
+ public | fieldingofsplit     | table | postgres
+ public | fieldingpost        | table | postgres
+ public | halloffame          | table | postgres
+ public | homegames           | table | postgres                                                                                                                                                                                                                                             
+ public | leagues             | table | postgres                                                                                                                                                                                                                                             
+ public | managers            | table | postgres                                                                                                                                                                                                                                             
+ public | managershalf        | table | postgres                                                                                                                                                                                                                                             
+ public | parks               | table | postgres                                                                                                                                                                                                                                             
+ public | people              | table | postgres                                                                                                                                                                                                                                             
+ public | pitching            | table | postgres                                                                                                                                                                                                                                             
+ public | pitchingpost        | table | postgres                                                                                                                                                                                                                                             
+ public | salaries            | table | postgres                                                                                                                                                                                                                                             
+ public | schools             | table | postgres                                                                                                                                                                                                                                             
+ public | seriespost          | table | postgres                                                                                                                                                                                                                                             
+ public | teams               | table | postgres                                                                                                                                                                                                                                             
+ public | teamsfranchises     | table | postgres                                                                                                                                                                                                                                             
+ public | teamshalf           | table | postgres                                                                                                                                                                                                                                             
+(29 rows) 
