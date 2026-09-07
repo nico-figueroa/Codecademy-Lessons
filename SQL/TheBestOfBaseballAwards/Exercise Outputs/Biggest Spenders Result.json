@@ -1,0 +1,194 @@
+[
+ {
+  "yearid": 1985,
+  "teamid": "ATL",
+  "team_name": "Atlanta Braves",
+  "total_salary": "14807000"
+ },
+ {
+  "yearid": 1986,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "18494253"
+ },
+ {
+  "yearid": 1987,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "17099714"
+ },
+ {
+  "yearid": 1988,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "19441152"
+ },
+ {
+  "yearid": 1989,
+  "teamid": "LAN",
+  "team_name": "Los Angeles Dodgers",
+  "total_salary": "21071562"
+ },
+ {
+  "yearid": 1990,
+  "teamid": "KCA",
+  "team_name": "Kansas City Royals",
+  "total_salary": "23361084"
+ },
+ {
+  "yearid": 1991,
+  "teamid": "OAK",
+  "team_name": "Oakland Athletics",
+  "total_salary": "36999167"
+ },
+ {
+  "yearid": 1992,
+  "teamid": "TOR",
+  "team_name": "Toronto Blue Jays",
+  "total_salary": "44788666"
+ },
+ {
+  "yearid": 1993,
+  "teamid": "TOR",
+  "team_name": "Toronto Blue Jays",
+  "total_salary": "47279166"
+ },
+ {
+  "yearid": 1994,
+  "teamid": "ATL",
+  "team_name": "Atlanta Braves",
+  "total_salary": "49383513"
+ },
+ {
+  "yearid": 1995,
+  "teamid": "TOR",
+  "team_name": "Toronto Blue Jays",
+  "total_salary": "50590000"
+ },
+ {
+  "yearid": 1996,
+  "teamid": "BAL",
+  "team_name": "Baltimore Orioles",
+  "total_salary": "54490315"
+ },
+ {
+  "yearid": 1997,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "62241545"
+ },
+ {
+  "yearid": 1998,
+  "teamid": "BAL",
+  "team_name": "Baltimore Orioles",
+  "total_salary": "72355634"
+ },
+ {
+  "yearid": 1999,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "86734359"
+ },
+ {
+  "yearid": 2000,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "92338260"
+ },
+ {
+  "yearid": 2001,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "112287143"
+ },
+ {
+  "yearid": 2002,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "125928583"
+ },
+ {
+  "yearid": 2003,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "152749814"
+ },
+ {
+  "yearid": 2004,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "184193950"
+ },
+ {
+  "yearid": 2005,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "208306817"
+ },
+ {
+  "yearid": 2006,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "194663079"
+ },
+ {
+  "yearid": 2007,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "189259045"
+ },
+ {
+  "yearid": 2008,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "207896789"
+ },
+ {
+  "yearid": 2009,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "201449189"
+ },
+ {
+  "yearid": 2010,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "206333389"
+ },
+ {
+  "yearid": 2011,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "202275028"
+ },
+ {
+  "yearid": 2012,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "196522289"
+ },
+ {
+  "yearid": 2013,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "231978886"
+ },
+ {
+  "yearid": 2014,
+  "teamid": "LAN",
+  "team_name": "Los Angeles Dodgers",
+  "total_salary": "217014600"
+ },
+ {
+  "yearid": 2015,
+  "teamid": "LAN",
+  "team_name": "Los Angeles Dodgers",
+  "total_salary": "215792000"
+ },
+ {
+  "yearid": 2016,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "total_salary": "222997792"
+ }
+]

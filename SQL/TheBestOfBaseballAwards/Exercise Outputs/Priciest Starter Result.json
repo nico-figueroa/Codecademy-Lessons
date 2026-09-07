@@ -1,0 +1,258 @@
+[
+ {
+  "yearid": 1985,
+  "playerid": "carltst01",
+  "pitcher_name": "Steve Carlton",
+  "total_salary": "1075000",
+  "games_started": 16,
+  "cost_per_start": "67187.5"
+ },
+ {
+  "yearid": 1986,
+  "playerid": "deleojo01",
+  "pitcher_name": "Jose DeLeon",
+  "total_salary": "1825000",
+  "games_started": 13,
+  "cost_per_start": "140384.61538461538"
+ },
+ {
+  "yearid": 1987,
+  "playerid": "allenne01",
+  "pitcher_name": "Neil Allen",
+  "total_salary": "1250000",
+  "games_started": 10,
+  "cost_per_start": "125000"
+ },
+ {
+  "yearid": 1988,
+  "playerid": "valenfe01",
+  "pitcher_name": "Fernando Valenzuela",
+  "total_salary": "2050000",
+  "games_started": 22,
+  "cost_per_start": "93181.81818181818"
+ },
+ {
+  "yearid": 1989,
+  "playerid": "violafr01",
+  "pitcher_name": "Frank Viola",
+  "total_salary": "2766666",
+  "games_started": 12,
+  "cost_per_start": "230555.5"
+ },
+ {
+  "yearid": 1990,
+  "playerid": "gubicma01",
+  "pitcher_name": "Mark Gubicza",
+  "total_salary": "2066667",
+  "games_started": 16,
+  "cost_per_start": "129166.6875"
+ },
+ {
+  "yearid": 1991,
+  "playerid": "darwida01",
+  "pitcher_name": "Danny Darwin",
+  "total_salary": "3250000",
+  "games_started": 12,
+  "cost_per_start": "270833.3333333333"
+ },
+ {
+  "yearid": 1992,
+  "playerid": "stiebda01",
+  "pitcher_name": "Dave Stieb",
+  "total_salary": "3250000",
+  "games_started": 14,
+  "cost_per_start": "232142.85714285713"
+ },
+ {
+  "yearid": 1993,
+  "playerid": "belchti01",
+  "pitcher_name": "Tim Belcher",
+  "total_salary": "3825000",
+  "games_started": 11,
+  "cost_per_start": "347727.2727272727"
+ },
+ {
+  "yearid": 1994,
+  "playerid": "blackbu02",
+  "pitcher_name": "Buddy Black",
+  "total_salary": "3250000",
+  "games_started": 10,
+  "cost_per_start": "325000"
+ },
+ {
+  "yearid": 1995,
+  "playerid": "coneda01",
+  "pitcher_name": "David Cone",
+  "total_salary": "8000000",
+  "games_started": 13,
+  "cost_per_start": "615384.6153846154"
+ },
+ {
+  "yearid": 1996,
+  "playerid": "coneda01",
+  "pitcher_name": "David Cone",
+  "total_salary": "4666667",
+  "games_started": 11,
+  "cost_per_start": "424242.45454545453"
+ },
+ {
+  "yearid": 1997,
+  "playerid": "alvarwi01",
+  "pitcher_name": "Wilson Alvarez",
+  "total_salary": "4662500",
+  "games_started": 11,
+  "cost_per_start": "423863.63636363635"
+ },
+ {
+  "yearid": 1998,
+  "playerid": "johnsra05",
+  "pitcher_name": "Randy Johnson",
+  "total_salary": "6000000",
+  "games_started": 11,
+  "cost_per_start": "545454.5454545454"
+ },
+ {
+  "yearid": 1999,
+  "playerid": "stottto01",
+  "pitcher_name": "Todd Stottlemyre",
+  "total_salary": "8000000",
+  "games_started": 17,
+  "cost_per_start": "470588.23529411765"
+ },
+ {
+  "yearid": 2000,
+  "playerid": "hitchst01",
+  "pitcher_name": "Sterling Hitchcock",
+  "total_salary": "6100000",
+  "games_started": 11,
+  "cost_per_start": "554545.4545454546"
+ },
+ {
+  "yearid": 2001,
+  "playerid": "brownke01",
+  "pitcher_name": "Kevin Brown",
+  "total_salary": "15714286",
+  "games_started": 19,
+  "cost_per_start": "827067.6842105263"
+ },
+ {
+  "yearid": 2002,
+  "playerid": "brownke01",
+  "pitcher_name": "Kevin Brown",
+  "total_salary": "15714286",
+  "games_started": 10,
+  "cost_per_start": "1571428.6"
+ },
+ {
+  "yearid": 2003,
+  "playerid": "dreifda01",
+  "pitcher_name": "Darren Dreifort",
+  "total_salary": "12400000",
+  "games_started": 10,
+  "cost_per_start": "1240000"
+ },
+ {
+  "yearid": 2004,
+  "playerid": "parkch01",
+  "pitcher_name": "Chan Ho Park",
+  "total_salary": "14000000",
+  "games_started": 16,
+  "cost_per_start": "875000"
+ },
+ {
+  "yearid": 2005,
+  "playerid": "schilcu01",
+  "pitcher_name": "Curt Schilling",
+  "total_salary": "14500000",
+  "games_started": 11,
+  "cost_per_start": "1318181.8181818181"
+ },
+ {
+  "yearid": 2006,
+  "playerid": "colonba01",
+  "pitcher_name": "Bartolo Colon",
+  "total_salary": "14000000",
+  "games_started": 10,
+  "cost_per_start": "1400000"
+ },
+ {
+  "yearid": 2007,
+  "playerid": "morrima01",
+  "pitcher_name": "Matt Morris",
+  "total_salary": "10037283",
+  "games_started": 11,
+  "cost_per_start": "912480.2727272727"
+ },
+ {
+  "yearid": 2008,
+  "playerid": "hamptmi01",
+  "pitcher_name": "Mike Hampton",
+  "total_salary": "15975184",
+  "games_started": 13,
+  "cost_per_start": "1228860.3076923077"
+ },
+ {
+  "yearid": 2009,
+  "playerid": "myersbr01",
+  "pitcher_name": "Brett Myers",
+  "total_salary": "12083333",
+  "games_started": 10,
+  "cost_per_start": "1208333.3"
+ },
+ {
+  "yearid": 2010,
+  "playerid": "oswalro01",
+  "pitcher_name": "Roy Oswalt",
+  "total_salary": "15000000",
+  "games_started": 12,
+  "cost_per_start": "1250000"
+ },
+ {
+  "yearid": 2011,
+  "playerid": "delarjo01",
+  "pitcher_name": "Jorge De La Rosa",
+  "total_salary": "10000000",
+  "games_started": 10,
+  "cost_per_start": "1000000"
+ },
+ {
+  "yearid": 2012,
+  "playerid": "dempsry01",
+  "pitcher_name": "Ryan Dempster",
+  "total_salary": "14000000",
+  "games_started": 12,
+  "cost_per_start": "1166666.6666666667"
+ },
+ {
+  "yearid": 2013,
+  "playerid": "peavyja01",
+  "pitcher_name": "Jake Peavy",
+  "total_salary": "16157271",
+  "games_started": 10,
+  "cost_per_start": "1615727.1"
+ },
+ {
+  "yearid": 2014,
+  "playerid": "leecl02",
+  "pitcher_name": "Cliff Lee",
+  "total_salary": "25000000",
+  "games_started": 13,
+  "cost_per_start": "1923076.923076923"
+ },
+ {
+  "yearid": 2015,
+  "playerid": "hamelco01",
+  "pitcher_name": "Cole Hamels",
+  "total_salary": "23500000",
+  "games_started": 12,
+  "cost_per_start": "1958333.3333333333"
+ },
+ {
+  "yearid": 2016,
+  "playerid": "shielja02",
+  "pitcher_name": "James Shields",
+  "total_salary": "21000000",
+  "games_started": 11,
+  "cost_per_start": "1909090.9090909092"
+ }
+]

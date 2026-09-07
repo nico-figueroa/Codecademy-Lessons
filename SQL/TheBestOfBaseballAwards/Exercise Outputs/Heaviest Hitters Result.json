@@ -1,0 +1,896 @@
+[
+ {
+  "yearid": 2019,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "215.15"
+ },
+ {
+  "yearid": 2018,
+  "teamid": "DET",
+  "team_name": "Detroit Tigers",
+  "Average Batter Weight": "215.59"
+ },
+ {
+  "yearid": 2017,
+  "teamid": "SFN",
+  "team_name": "San Francisco Giants",
+  "Average Batter Weight": "218.04"
+ },
+ {
+  "yearid": 2016,
+  "teamid": "WAS",
+  "team_name": "Washington Nationals",
+  "Average Batter Weight": "219.02"
+ },
+ {
+  "yearid": 2015,
+  "teamid": "PHI",
+  "team_name": "Philadelphia Phillies",
+  "Average Batter Weight": "219.38"
+ },
+ {
+  "yearid": 2014,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Weight": "220.91"
+ },
+ {
+  "yearid": 2013,
+  "teamid": "SEA",
+  "team_name": "Seattle Mariners",
+  "Average Batter Weight": "218.77"
+ },
+ {
+  "yearid": 2012,
+  "teamid": "CIN",
+  "team_name": "Cincinnati Reds",
+  "Average Batter Weight": "217.50"
+ },
+ {
+  "yearid": 2011,
+  "teamid": "SEA",
+  "team_name": "Seattle Mariners",
+  "Average Batter Weight": "217.81"
+ },
+ {
+  "yearid": 2010,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Weight": "217.63"
+ },
+ {
+  "yearid": 2009,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Weight": "221.33"
+ },
+ {
+  "yearid": 2008,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Weight": "219.74"
+ },
+ {
+  "yearid": 2007,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Weight": "219.02"
+ },
+ {
+  "yearid": 2006,
+  "teamid": "FLO",
+  "team_name": "Florida Marlins",
+  "Average Batter Weight": "216.98"
+ },
+ {
+  "yearid": 2005,
+  "teamid": "TEX",
+  "team_name": "Texas Rangers",
+  "Average Batter Weight": "210.34"
+ },
+ {
+  "yearid": 2004,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Weight": "207.88"
+ },
+ {
+  "yearid": 2003,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Weight": "205.68"
+ },
+ {
+  "yearid": 2002,
+  "teamid": "CLE",
+  "team_name": "Cleveland Indians",
+  "Average Batter Weight": "206.85"
+ },
+ {
+  "yearid": 2001,
+  "teamid": "FLO",
+  "team_name": "Florida Marlins",
+  "Average Batter Weight": "205.88"
+ },
+ {
+  "yearid": 2000,
+  "teamid": "FLO",
+  "team_name": "Florida Marlins",
+  "Average Batter Weight": "203.20"
+ },
+ {
+  "yearid": 1999,
+  "teamid": "MIL",
+  "team_name": "Milwaukee Brewers",
+  "Average Batter Weight": "201.82"
+ },
+ {
+  "yearid": 1998,
+  "teamid": "MIN",
+  "team_name": "Minnesota Twins",
+  "Average Batter Weight": "199.13"
+ },
+ {
+  "yearid": 1997,
+  "teamid": "OAK",
+  "team_name": "Oakland Athletics",
+  "Average Batter Weight": "197.86"
+ },
+ {
+  "yearid": 1996,
+  "teamid": "CIN",
+  "team_name": "Cincinnati Reds",
+  "Average Batter Weight": "195.88"
+ },
+ {
+  "yearid": 1995,
+  "teamid": "PIT",
+  "team_name": "Pittsburgh Pirates",
+  "Average Batter Weight": "198.00"
+ },
+ {
+  "yearid": 1994,
+  "teamid": "TOR",
+  "team_name": "Toronto Blue Jays",
+  "Average Batter Weight": "195.03"
+ },
+ {
+  "yearid": 1993,
+  "teamid": "SEA",
+  "team_name": "Seattle Mariners",
+  "Average Batter Weight": "195.31"
+ },
+ {
+  "yearid": 1992,
+  "teamid": "ML4",
+  "team_name": "Milwaukee Brewers",
+  "Average Batter Weight": "195.09"
+ },
+ {
+  "yearid": 1991,
+  "teamid": "ML4",
+  "team_name": "Milwaukee Brewers",
+  "Average Batter Weight": "194.10"
+ },
+ {
+  "yearid": 1990,
+  "teamid": "CIN",
+  "team_name": "Cincinnati Reds",
+  "Average Batter Weight": "192.88"
+ },
+ {
+  "yearid": 1989,
+  "teamid": "OAK",
+  "team_name": "Oakland Athletics",
+  "Average Batter Weight": "194.12"
+ },
+ {
+  "yearid": 1988,
+  "teamid": "LAN",
+  "team_name": "Los Angeles Dodgers",
+  "Average Batter Weight": "192.50"
+ },
+ {
+  "yearid": 1987,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "191.19"
+ },
+ {
+  "yearid": 1986,
+  "teamid": "SEA",
+  "team_name": "Seattle Mariners",
+  "Average Batter Weight": "192.38"
+ },
+ {
+  "yearid": 1985,
+  "teamid": "SEA",
+  "team_name": "Seattle Mariners",
+  "Average Batter Weight": "191.24"
+ },
+ {
+  "yearid": 1984,
+  "teamid": "SEA",
+  "team_name": "Seattle Mariners",
+  "Average Batter Weight": "193.00"
+ },
+ {
+  "yearid": 1983,
+  "teamid": "SEA",
+  "team_name": "Seattle Mariners",
+  "Average Batter Weight": "190.83"
+ },
+ {
+  "yearid": 1982,
+  "teamid": "TOR",
+  "team_name": "Toronto Blue Jays",
+  "Average Batter Weight": "191.54"
+ },
+ {
+  "yearid": 1981,
+  "teamid": "TOR",
+  "team_name": "Toronto Blue Jays",
+  "Average Batter Weight": "191.54"
+ },
+ {
+  "yearid": 1980,
+  "teamid": "CAL",
+  "team_name": "California Angels",
+  "Average Batter Weight": "192.59"
+ },
+ {
+  "yearid": 1979,
+  "teamid": "CAL",
+  "team_name": "California Angels",
+  "Average Batter Weight": "189.87"
+ },
+ {
+  "yearid": 1978,
+  "teamid": "TOR",
+  "team_name": "Toronto Blue Jays",
+  "Average Batter Weight": "189.49"
+ },
+ {
+  "yearid": 1977,
+  "teamid": "SDN",
+  "team_name": "San Diego Padres",
+  "Average Batter Weight": "190.97"
+ },
+ {
+  "yearid": 1976,
+  "teamid": "CLE",
+  "team_name": "Cleveland Indians",
+  "Average Batter Weight": "191.06"
+ },
+ {
+  "yearid": 1975,
+  "teamid": "CLE",
+  "team_name": "Cleveland Indians",
+  "Average Batter Weight": "191.24"
+ },
+ {
+  "yearid": 1974,
+  "teamid": "DET",
+  "team_name": "Detroit Tigers",
+  "Average Batter Weight": "190.00"
+ },
+ {
+  "yearid": 1973,
+  "teamid": "TEX",
+  "team_name": "Texas Rangers",
+  "Average Batter Weight": "191.38"
+ },
+ {
+  "yearid": 1972,
+  "teamid": "HOU",
+  "team_name": "Houston Astros",
+  "Average Batter Weight": "190.97"
+ },
+ {
+  "yearid": 1971,
+  "teamid": "HOU",
+  "team_name": "Houston Astros",
+  "Average Batter Weight": "189.69"
+ },
+ {
+  "yearid": 1970,
+  "teamid": "WS2",
+  "team_name": "Washington Senators",
+  "Average Batter Weight": "190.68"
+ },
+ {
+  "yearid": 1969,
+  "teamid": "WS2",
+  "team_name": "Washington Senators",
+  "Average Batter Weight": "189.75"
+ },
+ {
+  "yearid": 1968,
+  "teamid": "WS2",
+  "team_name": "Washington Senators",
+  "Average Batter Weight": "191.46"
+ },
+ {
+  "yearid": 1967,
+  "teamid": "BOS",
+  "team_name": "Boston Red Sox",
+  "Average Batter Weight": "190.10"
+ },
+ {
+  "yearid": 1966,
+  "teamid": "BOS",
+  "team_name": "Boston Red Sox",
+  "Average Batter Weight": "190.10"
+ },
+ {
+  "yearid": 1965,
+  "teamid": "WS2",
+  "team_name": "Washington Senators",
+  "Average Batter Weight": "189.23"
+ },
+ {
+  "yearid": 1964,
+  "teamid": "BOS",
+  "team_name": "Boston Red Sox",
+  "Average Batter Weight": "189.47"
+ },
+ {
+  "yearid": 1963,
+  "teamid": "PHI",
+  "team_name": "Philadelphia Phillies",
+  "Average Batter Weight": "188.94"
+ },
+ {
+  "yearid": 1962,
+  "teamid": "BOS",
+  "team_name": "Boston Red Sox",
+  "Average Batter Weight": "189.06"
+ },
+ {
+  "yearid": 1961,
+  "teamid": "BAL",
+  "team_name": "Baltimore Orioles",
+  "Average Batter Weight": "189.44"
+ },
+ {
+  "yearid": 1960,
+  "teamid": "CHN",
+  "team_name": "Chicago Cubs",
+  "Average Batter Weight": "189.72"
+ },
+ {
+  "yearid": 1959,
+  "teamid": "CIN",
+  "team_name": "Cincinnati Redlegs",
+  "Average Batter Weight": "188.28"
+ },
+ {
+  "yearid": 1958,
+  "teamid": "PHI",
+  "team_name": "Philadelphia Phillies",
+  "Average Batter Weight": "189.71"
+ },
+ {
+  "yearid": 1957,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Weight": "188.69"
+ },
+ {
+  "yearid": 1956,
+  "teamid": "CIN",
+  "team_name": "Cincinnati Redlegs",
+  "Average Batter Weight": "189.36"
+ },
+ {
+  "yearid": 1955,
+  "teamid": "BOS",
+  "team_name": "Boston Red Sox",
+  "Average Batter Weight": "187.90"
+ },
+ {
+  "yearid": 1954,
+  "teamid": "DET",
+  "team_name": "Detroit Tigers",
+  "Average Batter Weight": "186.53"
+ },
+ {
+  "yearid": 1953,
+  "teamid": "DET",
+  "team_name": "Detroit Tigers",
+  "Average Batter Weight": "187.35"
+ },
+ {
+  "yearid": 1952,
+  "teamid": "CLE",
+  "team_name": "Cleveland Indians",
+  "Average Batter Weight": "187.39"
+ },
+ {
+  "yearid": 1951,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "186.10"
+ },
+ {
+  "yearid": 1950,
+  "teamid": "CLE",
+  "team_name": "Cleveland Indians",
+  "Average Batter Weight": "187.63"
+ },
+ {
+  "yearid": 1949,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "188.03"
+ },
+ {
+  "yearid": 1948,
+  "teamid": "CLE",
+  "team_name": "Cleveland Indians",
+  "Average Batter Weight": "187.14"
+ },
+ {
+  "yearid": 1947,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "187.46"
+ },
+ {
+  "yearid": 1946,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "189.09"
+ },
+ {
+  "yearid": 1945,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "188.41"
+ },
+ {
+  "yearid": 1944,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "187.25"
+ },
+ {
+  "yearid": 1943,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "186.23"
+ },
+ {
+  "yearid": 1942,
+  "teamid": "CLE",
+  "team_name": "Cleveland Indians",
+  "Average Batter Weight": "187.19"
+ },
+ {
+  "yearid": 1941,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "186.00"
+ },
+ {
+  "yearid": 1940,
+  "teamid": "CLE",
+  "team_name": "Cleveland Indians",
+  "Average Batter Weight": "188.03"
+ },
+ {
+  "yearid": 1939,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "184.53"
+ },
+ {
+  "yearid": 1938,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "184.67"
+ },
+ {
+  "yearid": 1937,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "186.31"
+ },
+ {
+  "yearid": 1936,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "184.29"
+ },
+ {
+  "yearid": 1935,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "182.30"
+ },
+ {
+  "yearid": 1934,
+  "teamid": "CHN",
+  "team_name": "Chicago Cubs",
+  "Average Batter Weight": "185.31"
+ },
+ {
+  "yearid": 1933,
+  "teamid": "PHA",
+  "team_name": "Philadelphia Athletics",
+  "Average Batter Weight": "185.06"
+ },
+ {
+  "yearid": 1932,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "183.56"
+ },
+ {
+  "yearid": 1931,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "183.36"
+ },
+ {
+  "yearid": 1930,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "181.67"
+ },
+ {
+  "yearid": 1929,
+  "teamid": "BRO",
+  "team_name": "Brooklyn Robins",
+  "Average Batter Weight": "180.67"
+ },
+ {
+  "yearid": 1928,
+  "teamid": "CLE",
+  "team_name": "Cleveland Indians",
+  "Average Batter Weight": "182.05"
+ },
+ {
+  "yearid": 1927,
+  "teamid": "CLE",
+  "team_name": "Cleveland Indians",
+  "Average Batter Weight": "181.41"
+ },
+ {
+  "yearid": 1926,
+  "teamid": "DET",
+  "team_name": "Detroit Tigers",
+  "Average Batter Weight": "177.30"
+ },
+ {
+  "yearid": 1925,
+  "teamid": "BRO",
+  "team_name": "Brooklyn Robins",
+  "Average Batter Weight": "179.86"
+ },
+ {
+  "yearid": 1924,
+  "teamid": "DET",
+  "team_name": "Detroit Tigers",
+  "Average Batter Weight": "179.57"
+ },
+ {
+  "yearid": 1923,
+  "teamid": "DET",
+  "team_name": "Detroit Tigers",
+  "Average Batter Weight": "177.43"
+ },
+ {
+  "yearid": 1922,
+  "teamid": "BRO",
+  "team_name": "Brooklyn Robins",
+  "Average Batter Weight": "176.58"
+ },
+ {
+  "yearid": 1921,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "177.00"
+ },
+ {
+  "yearid": 1920,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "177.62"
+ },
+ {
+  "yearid": 1919,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Weight": "175.60"
+ },
+ {
+  "yearid": 1918,
+  "teamid": "DET",
+  "team_name": "Detroit Tigers",
+  "Average Batter Weight": "175.11"
+ },
+ {
+  "yearid": 1917,
+  "teamid": "CIN",
+  "team_name": "Cincinnati Reds",
+  "Average Batter Weight": "177.00"
+ },
+ {
+  "yearid": 1916,
+  "teamid": "BRO",
+  "team_name": "Brooklyn Robins",
+  "Average Batter Weight": "176.19"
+ },
+ {
+  "yearid": 1915,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "178.08"
+ },
+ {
+  "yearid": 1914,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "180.21"
+ },
+ {
+  "yearid": 1913,
+  "teamid": "BRO",
+  "team_name": "Brooklyn Superbas",
+  "Average Batter Weight": "178.30"
+ },
+ {
+  "yearid": 1912,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "179.32"
+ },
+ {
+  "yearid": 1911,
+  "teamid": "CLE",
+  "team_name": "Cleveland Naps",
+  "Average Batter Weight": "178.16"
+ },
+ {
+  "yearid": 1910,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "178.57"
+ },
+ {
+  "yearid": 1909,
+  "teamid": "CIN",
+  "team_name": "Cincinnati Reds",
+  "Average Batter Weight": "179.91"
+ },
+ {
+  "yearid": 1908,
+  "teamid": "SLA",
+  "team_name": "St. Louis Browns",
+  "Average Batter Weight": "179.52"
+ },
+ {
+  "yearid": 1907,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "177.67"
+ },
+ {
+  "yearid": 1906,
+  "teamid": "DET",
+  "team_name": "Detroit Tigers",
+  "Average Batter Weight": "179.25"
+ },
+ {
+  "yearid": 1905,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "177.24"
+ },
+ {
+  "yearid": 1904,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "181.18"
+ },
+ {
+  "yearid": 1903,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "178.89"
+ },
+ {
+  "yearid": 1902,
+  "teamid": "BLA",
+  "team_name": "Baltimore Orioles",
+  "Average Batter Weight": "179.03"
+ },
+ {
+  "yearid": 1901,
+  "teamid": "PIT",
+  "team_name": "Pittsburgh Pirates",
+  "Average Batter Weight": "175.96"
+ },
+ {
+  "yearid": 1900,
+  "teamid": "PHI",
+  "team_name": "Philadelphia Phillies",
+  "Average Batter Weight": "177.23"
+ },
+ {
+  "yearid": 1899,
+  "teamid": "BLN",
+  "team_name": "Baltimore Orioles",
+  "Average Batter Weight": "175.09"
+ },
+ {
+  "yearid": 1898,
+  "teamid": "CHN",
+  "team_name": "Chicago Orphans",
+  "Average Batter Weight": "179.14"
+ },
+ {
+  "yearid": 1897,
+  "teamid": "CHN",
+  "team_name": "Chicago Colts",
+  "Average Batter Weight": "178.24"
+ },
+ {
+  "yearid": 1896,
+  "teamid": "CHN",
+  "team_name": "Chicago Colts",
+  "Average Batter Weight": "177.09"
+ },
+ {
+  "yearid": 1895,
+  "teamid": "CHN",
+  "team_name": "Chicago Colts",
+  "Average Batter Weight": "177.04"
+ },
+ {
+  "yearid": 1894,
+  "teamid": "BLN",
+  "team_name": "Baltimore Orioles",
+  "Average Batter Weight": "174.53"
+ },
+ {
+  "yearid": 1893,
+  "teamid": "LS3",
+  "team_name": "Louisville Colonels",
+  "Average Batter Weight": "177.32"
+ },
+ {
+  "yearid": 1892,
+  "teamid": "PHI",
+  "team_name": "Philadelphia Phillies",
+  "Average Batter Weight": "177.95"
+ },
+ {
+  "yearid": 1891,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "177.96"
+ },
+ {
+  "yearid": 1890,
+  "teamid": "NYP",
+  "team_name": "New York Giants",
+  "Average Batter Weight": "180.72"
+ },
+ {
+  "yearid": 1889,
+  "teamid": "CHN",
+  "team_name": "Chicago White Stockings",
+  "Average Batter Weight": "178.84"
+ },
+ {
+  "yearid": 1888,
+  "teamid": "CHN",
+  "team_name": "Chicago White Stockings",
+  "Average Batter Weight": "178.90"
+ },
+ {
+  "yearid": 1887,
+  "teamid": "PIT",
+  "team_name": "Pittsburg Alleghenys",
+  "Average Batter Weight": "175.31"
+ },
+ {
+  "yearid": 1886,
+  "teamid": "BR3",
+  "team_name": "Brooklyn Grays",
+  "Average Batter Weight": "177.74"
+ },
+ {
+  "yearid": 1885,
+  "teamid": "CHN",
+  "team_name": "Chicago White Stockings",
+  "Average Batter Weight": "176.58"
+ },
+ {
+  "yearid": 1884,
+  "teamid": "CL2",
+  "team_name": "Cleveland Blues",
+  "Average Batter Weight": "177.38"
+ },
+ {
+  "yearid": 1883,
+  "teamid": "NY4",
+  "team_name": "New York Metropolitans",
+  "Average Batter Weight": "184.69"
+ },
+ {
+  "yearid": 1882,
+  "teamid": "TRN",
+  "team_name": "Troy Trojans",
+  "Average Batter Weight": "181.77"
+ },
+ {
+  "yearid": 1881,
+  "teamid": "CL2",
+  "team_name": "Cleveland Blues",
+  "Average Batter Weight": "178.39"
+ },
+ {
+  "yearid": 1880,
+  "teamid": "TRN",
+  "team_name": "Troy Trojans",
+  "Average Batter Weight": "174.16"
+ },
+ {
+  "yearid": 1879,
+  "teamid": "CHN",
+  "team_name": "Chicago White Stockings",
+  "Average Batter Weight": "182.36"
+ },
+ {
+  "yearid": 1878,
+  "teamid": "IN1",
+  "team_name": "Indianapolis Blues",
+  "Average Batter Weight": "173.82"
+ },
+ {
+  "yearid": 1877,
+  "teamid": "CHN",
+  "team_name": "Chicago White Stockings",
+  "Average Batter Weight": "172.67"
+ },
+ {
+  "yearid": 1876,
+  "teamid": "CHN",
+  "team_name": "Chicago White Stockings",
+  "Average Batter Weight": "174.91"
+ },
+ {
+  "yearid": 1875,
+  "teamid": "KEO",
+  "team_name": "Keokuk Westerns",
+  "Average Batter Weight": "167.30"
+ },
+ {
+  "yearid": 1874,
+  "teamid": "HR1",
+  "team_name": "Hartford Dark Blues",
+  "Average Batter Weight": "170.00"
+ },
+ {
+  "yearid": 1873,
+  "teamid": "BR2",
+  "team_name": "Brooklyn Atlantics",
+  "Average Batter Weight": "173.50"
+ },
+ {
+  "yearid": 1872,
+  "teamid": "MID",
+  "team_name": "Middletown Mansfields",
+  "Average Batter Weight": "171.33"
+ },
+ {
+  "yearid": 1871,
+  "teamid": "RC1",
+  "team_name": "Rockford Forest Citys",
+  "Average Batter Weight": "165.82"
+ }
+]

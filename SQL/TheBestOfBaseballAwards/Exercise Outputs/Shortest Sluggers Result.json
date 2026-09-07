@@ -1,0 +1,896 @@
+[
+ {
+  "yearid": 1871,
+  "teamid": "WS3",
+  "team_name": "Washington Olympics",
+  "Average Batter Height": "67.85"
+ },
+ {
+  "yearid": 1872,
+  "teamid": "MID",
+  "team_name": "Middletown Mansfields",
+  "Average Batter Height": "66.57"
+ },
+ {
+  "yearid": 1873,
+  "teamid": "BL4",
+  "team_name": "Baltimore Marylands",
+  "Average Batter Height": "67.57"
+ },
+ {
+  "yearid": 1874,
+  "teamid": "PH1",
+  "team_name": "Philadelphia Athletics",
+  "Average Batter Height": "68.23"
+ },
+ {
+  "yearid": 1875,
+  "teamid": "WS6",
+  "team_name": "Washington Nationals",
+  "Average Batter Height": "68.00"
+ },
+ {
+  "yearid": 1876,
+  "teamid": "SL3",
+  "team_name": "St. Louis Brown Stockings",
+  "Average Batter Height": "67.25"
+ },
+ {
+  "yearid": 1877,
+  "teamid": "SL3",
+  "team_name": "St. Louis Brown Stockings",
+  "Average Batter Height": "67.25"
+ },
+ {
+  "yearid": 1878,
+  "teamid": "IN1",
+  "team_name": "Indianapolis Blues",
+  "Average Batter Height": "67.27"
+ },
+ {
+  "yearid": 1879,
+  "teamid": "BFN",
+  "team_name": "Buffalo Bisons",
+  "Average Batter Height": "68.67"
+ },
+ {
+  "yearid": 1880,
+  "teamid": "BFN",
+  "team_name": "Buffalo Bisons",
+  "Average Batter Height": "68.81"
+ },
+ {
+  "yearid": 1881,
+  "teamid": "PRO",
+  "team_name": "Providence Grays",
+  "Average Batter Height": "68.62"
+ },
+ {
+  "yearid": 1882,
+  "teamid": "SL4",
+  "team_name": "St. Louis Brown Stockings",
+  "Average Batter Height": "68.53"
+ },
+ {
+  "yearid": 1883,
+  "teamid": "PH4",
+  "team_name": "Philadelphia Athletics",
+  "Average Batter Height": "67.92"
+ },
+ {
+  "yearid": 1884,
+  "teamid": "NY4",
+  "team_name": "New York Metropolitans",
+  "Average Batter Height": "68.36"
+ },
+ {
+  "yearid": 1885,
+  "teamid": "NY4",
+  "team_name": "New York Metropolitans",
+  "Average Batter Height": "68.56"
+ },
+ {
+  "yearid": 1886,
+  "teamid": "WS8",
+  "team_name": "Washington Nationals",
+  "Average Batter Height": "68.81"
+ },
+ {
+  "yearid": 1887,
+  "teamid": "CL3",
+  "team_name": "Cleveland Blues",
+  "Average Batter Height": "68.48"
+ },
+ {
+  "yearid": 1888,
+  "teamid": "PH4",
+  "team_name": "Philadelphia Athletics",
+  "Average Batter Height": "68.68"
+ },
+ {
+  "yearid": 1889,
+  "teamid": "PH4",
+  "team_name": "Philadelphia Athletics",
+  "Average Batter Height": "69.12"
+ },
+ {
+  "yearid": 1890,
+  "teamid": "BL3",
+  "team_name": "Baltimore Orioles",
+  "Average Batter Height": "68.69"
+ },
+ {
+  "yearid": 1891,
+  "teamid": "BL3",
+  "team_name": "Baltimore Orioles",
+  "Average Batter Height": "68.88"
+ },
+ {
+  "yearid": 1892,
+  "teamid": "CL4",
+  "team_name": "Cleveland Spiders",
+  "Average Batter Height": "69.33"
+ },
+ {
+  "yearid": 1893,
+  "teamid": "CL4",
+  "team_name": "Cleveland Spiders",
+  "Average Batter Height": "69.52"
+ },
+ {
+  "yearid": 1894,
+  "teamid": "BSN",
+  "team_name": "Boston Beaneaters",
+  "Average Batter Height": "69.00"
+ },
+ {
+  "yearid": 1895,
+  "teamid": "NY1",
+  "team_name": "New York Giants",
+  "Average Batter Height": "69.42"
+ },
+ {
+  "yearid": 1896,
+  "teamid": "LS3",
+  "team_name": "Louisville Colonels",
+  "Average Batter Height": "69.09"
+ },
+ {
+  "yearid": 1897,
+  "teamid": "BLN",
+  "team_name": "Baltimore Orioles",
+  "Average Batter Height": "69.15"
+ },
+ {
+  "yearid": 1898,
+  "teamid": "LS3",
+  "team_name": "Louisville Colonels",
+  "Average Batter Height": "69.33"
+ },
+ {
+  "yearid": 1899,
+  "teamid": "LS3",
+  "team_name": "Louisville Colonels",
+  "Average Batter Height": "69.17"
+ },
+ {
+  "yearid": 1900,
+  "teamid": "BRO",
+  "team_name": "Brooklyn Superbas",
+  "Average Batter Height": "69.45"
+ },
+ {
+  "yearid": 1901,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Height": "69.24"
+ },
+ {
+  "yearid": 1902,
+  "teamid": "PHI",
+  "team_name": "Philadelphia Phillies",
+  "Average Batter Height": "69.74"
+ },
+ {
+  "yearid": 1903,
+  "teamid": "WS1",
+  "team_name": "Washington Senators",
+  "Average Batter Height": "69.48"
+ },
+ {
+  "yearid": 1904,
+  "teamid": "PHI",
+  "team_name": "Philadelphia Phillies",
+  "Average Batter Height": "69.43"
+ },
+ {
+  "yearid": 1905,
+  "teamid": "PHA",
+  "team_name": "Philadelphia Athletics",
+  "Average Batter Height": "69.85"
+ },
+ {
+  "yearid": 1906,
+  "teamid": "SLA",
+  "team_name": "St. Louis Browns",
+  "Average Batter Height": "69.58"
+ },
+ {
+  "yearid": 1907,
+  "teamid": "BRO",
+  "team_name": "Brooklyn Superbas",
+  "Average Batter Height": "69.74"
+ },
+ {
+  "yearid": 1908,
+  "teamid": "PHI",
+  "team_name": "Philadelphia Phillies",
+  "Average Batter Height": "70.07"
+ },
+ {
+  "yearid": 1909,
+  "teamid": "BRO",
+  "team_name": "Brooklyn Superbas",
+  "Average Batter Height": "70.10"
+ },
+ {
+  "yearid": 1910,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Height": "70.03"
+ },
+ {
+  "yearid": 1911,
+  "teamid": "BRO",
+  "team_name": "Brooklyn Dodgers",
+  "Average Batter Height": "70.31"
+ },
+ {
+  "yearid": 1912,
+  "teamid": "SLA",
+  "team_name": "St. Louis Browns",
+  "Average Batter Height": "70.27"
+ },
+ {
+  "yearid": 1913,
+  "teamid": "PHA",
+  "team_name": "Philadelphia Athletics",
+  "Average Batter Height": "70.22"
+ },
+ {
+  "yearid": 1914,
+  "teamid": "PTF",
+  "team_name": "Pittsburgh Rebels",
+  "Average Batter Height": "69.71"
+ },
+ {
+  "yearid": 1915,
+  "teamid": "PTF",
+  "team_name": "Pittsburgh Rebels",
+  "Average Batter Height": "69.71"
+ },
+ {
+  "yearid": 1916,
+  "teamid": "PIT",
+  "team_name": "Pittsburgh Pirates",
+  "Average Batter Height": "70.44"
+ },
+ {
+  "yearid": 1917,
+  "teamid": "PHI",
+  "team_name": "Philadelphia Phillies",
+  "Average Batter Height": "70.17"
+ },
+ {
+  "yearid": 1918,
+  "teamid": "BSN",
+  "team_name": "Boston Braves",
+  "Average Batter Height": "70.11"
+ },
+ {
+  "yearid": 1919,
+  "teamid": "CIN",
+  "team_name": "Cincinnati Reds",
+  "Average Batter Height": "70.11"
+ },
+ {
+  "yearid": 1920,
+  "teamid": "BOS",
+  "team_name": "Boston Red Sox",
+  "Average Batter Height": "70.00"
+ },
+ {
+  "yearid": 1921,
+  "teamid": "BOS",
+  "team_name": "Boston Red Sox",
+  "Average Batter Height": "70.00"
+ },
+ {
+  "yearid": 1922,
+  "teamid": "PIT",
+  "team_name": "Pittsburgh Pirates",
+  "Average Batter Height": "70.15"
+ },
+ {
+  "yearid": 1923,
+  "teamid": "PIT",
+  "team_name": "Pittsburgh Pirates",
+  "Average Batter Height": "70.06"
+ },
+ {
+  "yearid": 1924,
+  "teamid": "BSN",
+  "team_name": "Boston Braves",
+  "Average Batter Height": "70.36"
+ },
+ {
+  "yearid": 1925,
+  "teamid": "CHN",
+  "team_name": "Chicago Cubs",
+  "Average Batter Height": "70.38"
+ },
+ {
+  "yearid": 1926,
+  "teamid": "CIN",
+  "team_name": "Cincinnati Reds",
+  "Average Batter Height": "70.18"
+ },
+ {
+  "yearid": 1927,
+  "teamid": "CIN",
+  "team_name": "Cincinnati Reds",
+  "Average Batter Height": "69.90"
+ },
+ {
+  "yearid": 1928,
+  "teamid": "SLN",
+  "team_name": "St. Louis Cardinals",
+  "Average Batter Height": "70.39"
+ },
+ {
+  "yearid": 1929,
+  "teamid": "BSN",
+  "team_name": "Boston Braves",
+  "Average Batter Height": "70.19"
+ },
+ {
+  "yearid": 1930,
+  "teamid": "SLN",
+  "team_name": "St. Louis Cardinals",
+  "Average Batter Height": "70.52"
+ },
+ {
+  "yearid": 1931,
+  "teamid": "SLN",
+  "team_name": "St. Louis Cardinals",
+  "Average Batter Height": "70.42"
+ },
+ {
+  "yearid": 1932,
+  "teamid": "SLA",
+  "team_name": "St. Louis Browns",
+  "Average Batter Height": "70.79"
+ },
+ {
+  "yearid": 1933,
+  "teamid": "CIN",
+  "team_name": "Cincinnati Reds",
+  "Average Batter Height": "70.64"
+ },
+ {
+  "yearid": 1934,
+  "teamid": "BRO",
+  "team_name": "Brooklyn Dodgers",
+  "Average Batter Height": "70.94"
+ },
+ {
+  "yearid": 1935,
+  "teamid": "SLN",
+  "team_name": "St. Louis Cardinals",
+  "Average Batter Height": "71.06"
+ },
+ {
+  "yearid": 1936,
+  "teamid": "BSN",
+  "team_name": "Boston Bees",
+  "Average Batter Height": "70.89"
+ },
+ {
+  "yearid": 1937,
+  "teamid": "BSN",
+  "team_name": "Boston Bees",
+  "Average Batter Height": "70.73"
+ },
+ {
+  "yearid": 1938,
+  "teamid": "BSN",
+  "team_name": "Boston Bees",
+  "Average Batter Height": "71.21"
+ },
+ {
+  "yearid": 1939,
+  "teamid": "BSN",
+  "team_name": "Boston Bees",
+  "Average Batter Height": "71.08"
+ },
+ {
+  "yearid": 1940,
+  "teamid": "PIT",
+  "team_name": "Pittsburgh Pirates",
+  "Average Batter Height": "71.31"
+ },
+ {
+  "yearid": 1941,
+  "teamid": "SLA",
+  "team_name": "St. Louis Browns",
+  "Average Batter Height": "71.51"
+ },
+ {
+  "yearid": 1942,
+  "teamid": "SLA",
+  "team_name": "St. Louis Browns",
+  "Average Batter Height": "71.74"
+ },
+ {
+  "yearid": 1943,
+  "teamid": "SLA",
+  "team_name": "St. Louis Browns",
+  "Average Batter Height": "71.38"
+ },
+ {
+  "yearid": 1944,
+  "teamid": "PHA",
+  "team_name": "Philadelphia Athletics",
+  "Average Batter Height": "71.03"
+ },
+ {
+  "yearid": 1945,
+  "teamid": "WS1",
+  "team_name": "Washington Senators",
+  "Average Batter Height": "71.15"
+ },
+ {
+  "yearid": 1946,
+  "teamid": "PIT",
+  "team_name": "Pittsburgh Pirates",
+  "Average Batter Height": "71.67"
+ },
+ {
+  "yearid": 1947,
+  "teamid": "PIT",
+  "team_name": "Pittsburgh Pirates",
+  "Average Batter Height": "71.71"
+ },
+ {
+  "yearid": 1948,
+  "teamid": "WS1",
+  "team_name": "Washington Senators",
+  "Average Batter Height": "71.51"
+ },
+ {
+  "yearid": 1949,
+  "teamid": "PHA",
+  "team_name": "Philadelphia Athletics",
+  "Average Batter Height": "71.39"
+ },
+ {
+  "yearid": 1950,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Height": "71.55"
+ },
+ {
+  "yearid": 1951,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Height": "71.59"
+ },
+ {
+  "yearid": 1952,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Height": "71.56"
+ },
+ {
+  "yearid": 1953,
+  "teamid": "WS1",
+  "team_name": "Washington Senators",
+  "Average Batter Height": "71.67"
+ },
+ {
+  "yearid": 1954,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Height": "71.71"
+ },
+ {
+  "yearid": 1955,
+  "teamid": "BAL",
+  "team_name": "Baltimore Orioles",
+  "Average Batter Height": "71.96"
+ },
+ {
+  "yearid": 1956,
+  "teamid": "KC1",
+  "team_name": "Kansas City Athletics",
+  "Average Batter Height": "71.73"
+ },
+ {
+  "yearid": 1957,
+  "teamid": "BRO",
+  "team_name": "Brooklyn Dodgers",
+  "Average Batter Height": "71.91"
+ },
+ {
+  "yearid": 1958,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Height": "71.75"
+ },
+ {
+  "yearid": 1959,
+  "teamid": "LAN",
+  "team_name": "Los Angeles Dodgers",
+  "Average Batter Height": "72.21"
+ },
+ {
+  "yearid": 1960,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Height": "72.13"
+ },
+ {
+  "yearid": 1961,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Height": "72.10"
+ },
+ {
+  "yearid": 1962,
+  "teamid": "SLN",
+  "team_name": "St. Louis Cardinals",
+  "Average Batter Height": "71.81"
+ },
+ {
+  "yearid": 1963,
+  "teamid": "KC1",
+  "team_name": "Kansas City Athletics",
+  "Average Batter Height": "72.37"
+ },
+ {
+  "yearid": 1964,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Height": "72.16"
+ },
+ {
+  "yearid": 1965,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Height": "72.09"
+ },
+ {
+  "yearid": 1966,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Height": "72.15"
+ },
+ {
+  "yearid": 1967,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Height": "72.27"
+ },
+ {
+  "yearid": 1968,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Height": "72.21"
+ },
+ {
+  "yearid": 1969,
+  "teamid": "BAL",
+  "team_name": "Baltimore Orioles",
+  "Average Batter Height": "72.00"
+ },
+ {
+  "yearid": 1970,
+  "teamid": "BAL",
+  "team_name": "Baltimore Orioles",
+  "Average Batter Height": "72.03"
+ },
+ {
+  "yearid": 1971,
+  "teamid": "BAL",
+  "team_name": "Baltimore Orioles",
+  "Average Batter Height": "72.23"
+ },
+ {
+  "yearid": 1972,
+  "teamid": "PIT",
+  "team_name": "Pittsburgh Pirates",
+  "Average Batter Height": "72.24"
+ },
+ {
+  "yearid": 1973,
+  "teamid": "MON",
+  "team_name": "Montreal Expos",
+  "Average Batter Height": "72.20"
+ },
+ {
+  "yearid": 1974,
+  "teamid": "ATL",
+  "team_name": "Atlanta Braves",
+  "Average Batter Height": "72.17"
+ },
+ {
+  "yearid": 1975,
+  "teamid": "ATL",
+  "team_name": "Atlanta Braves",
+  "Average Batter Height": "72.23"
+ },
+ {
+  "yearid": 1976,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Height": "72.05"
+ },
+ {
+  "yearid": 1977,
+  "teamid": "SLN",
+  "team_name": "St. Louis Cardinals",
+  "Average Batter Height": "72.43"
+ },
+ {
+  "yearid": 1978,
+  "teamid": "CHA",
+  "team_name": "Chicago White Sox",
+  "Average Batter Height": "72.42"
+ },
+ {
+  "yearid": 1979,
+  "teamid": "CIN",
+  "team_name": "Cincinnati Reds",
+  "Average Batter Height": "72.51"
+ },
+ {
+  "yearid": 1980,
+  "teamid": "NYA",
+  "team_name": "New York Yankees",
+  "Average Batter Height": "72.51"
+ },
+ {
+  "yearid": 1981,
+  "teamid": "ATL",
+  "team_name": "Atlanta Braves",
+  "Average Batter Height": "72.33"
+ },
+ {
+  "yearid": 1982,
+  "teamid": "SDN",
+  "team_name": "San Diego Padres",
+  "Average Batter Height": "72.58"
+ },
+ {
+  "yearid": 1983,
+  "teamid": "BAL",
+  "team_name": "Baltimore Orioles",
+  "Average Batter Height": "72.59"
+ },
+ {
+  "yearid": 1984,
+  "teamid": "ATL",
+  "team_name": "Atlanta Braves",
+  "Average Batter Height": "72.76"
+ },
+ {
+  "yearid": 1985,
+  "teamid": "SLN",
+  "team_name": "St. Louis Cardinals",
+  "Average Batter Height": "72.73"
+ },
+ {
+  "yearid": 1986,
+  "teamid": "KCA",
+  "team_name": "Kansas City Royals",
+  "Average Batter Height": "72.61"
+ },
+ {
+  "yearid": 1987,
+  "teamid": "SLN",
+  "team_name": "St. Louis Cardinals",
+  "Average Batter Height": "72.79"
+ },
+ {
+  "yearid": 1988,
+  "teamid": "KCA",
+  "team_name": "Kansas City Royals",
+  "Average Batter Height": "72.88"
+ },
+ {
+  "yearid": 1989,
+  "teamid": "CHN",
+  "team_name": "Chicago Cubs",
+  "Average Batter Height": "72.83"
+ },
+ {
+  "yearid": 1990,
+  "teamid": "MIN",
+  "team_name": "Minnesota Twins",
+  "Average Batter Height": "72.85"
+ },
+ {
+  "yearid": 1991,
+  "teamid": "SLN",
+  "team_name": "St. Louis Cardinals",
+  "Average Batter Height": "72.50"
+ },
+ {
+  "yearid": 1992,
+  "teamid": "KCA",
+  "team_name": "Kansas City Royals",
+  "Average Batter Height": "72.69"
+ },
+ {
+  "yearid": 1993,
+  "teamid": "KCA",
+  "team_name": "Kansas City Royals",
+  "Average Batter Height": "72.79"
+ },
+ {
+  "yearid": 1994,
+  "teamid": "SLN",
+  "team_name": "St. Louis Cardinals",
+  "Average Batter Height": "72.92"
+ },
+ {
+  "yearid": 1995,
+  "teamid": "SLN",
+  "team_name": "St. Louis Cardinals",
+  "Average Batter Height": "72.72"
+ },
+ {
+  "yearid": 1996,
+  "teamid": "KCA",
+  "team_name": "Kansas City Royals",
+  "Average Batter Height": "73.10"
+ },
+ {
+  "yearid": 1997,
+  "teamid": "NYN",
+  "team_name": "New York Mets",
+  "Average Batter Height": "72.56"
+ },
+ {
+  "yearid": 1998,
+  "teamid": "NYN",
+  "team_name": "New York Mets",
+  "Average Batter Height": "72.70"
+ },
+ {
+  "yearid": 1999,
+  "teamid": "BOS",
+  "team_name": "Boston Red Sox",
+  "Average Batter Height": "72.58"
+ },
+ {
+  "yearid": 2000,
+  "teamid": "NYN",
+  "team_name": "New York Mets",
+  "Average Batter Height": "72.68"
+ },
+ {
+  "yearid": 2001,
+  "teamid": "NYN",
+  "team_name": "New York Mets",
+  "Average Batter Height": "72.80"
+ },
+ {
+  "yearid": 2002,
+  "teamid": "OAK",
+  "team_name": "Oakland Athletics",
+  "Average Batter Height": "72.98"
+ },
+ {
+  "yearid": 2003,
+  "teamid": "LAN",
+  "team_name": "Los Angeles Dodgers",
+  "Average Batter Height": "72.93"
+ },
+ {
+  "yearid": 2004,
+  "teamid": "KCA",
+  "team_name": "Kansas City Royals",
+  "Average Batter Height": "73.00"
+ },
+ {
+  "yearid": 2005,
+  "teamid": "SDN",
+  "team_name": "San Diego Padres",
+  "Average Batter Height": "72.67"
+ },
+ {
+  "yearid": 2006,
+  "teamid": "PHI",
+  "team_name": "Philadelphia Phillies",
+  "Average Batter Height": "72.73"
+ },
+ {
+  "yearid": 2007,
+  "teamid": "OAK",
+  "team_name": "Oakland Athletics",
+  "Average Batter Height": "73.02"
+ },
+ {
+  "yearid": 2008,
+  "teamid": "SFN",
+  "team_name": "San Francisco Giants",
+  "Average Batter Height": "72.82"
+ },
+ {
+  "yearid": 2009,
+  "teamid": "NYN",
+  "team_name": "New York Mets",
+  "Average Batter Height": "72.96"
+ },
+ {
+  "yearid": 2010,
+  "teamid": "LAN",
+  "team_name": "Los Angeles Dodgers",
+  "Average Batter Height": "73.00"
+ },
+ {
+  "yearid": 2011,
+  "teamid": "HOU",
+  "team_name": "Houston Astros",
+  "Average Batter Height": "73.04"
+ },
+ {
+  "yearid": 2012,
+  "teamid": "KCA",
+  "team_name": "Kansas City Royals",
+  "Average Batter Height": "72.87"
+ },
+ {
+  "yearid": 2013,
+  "teamid": "KCA",
+  "team_name": "Kansas City Royals",
+  "Average Batter Height": "73.02"
+ },
+ {
+  "yearid": 2014,
+  "teamid": "KCA",
+  "team_name": "Kansas City Royals",
+  "Average Batter Height": "72.90"
+ },
+ {
+  "yearid": 2015,
+  "teamid": "BOS",
+  "team_name": "Boston Red Sox",
+  "Average Batter Height": "73.08"
+ },
+ {
+  "yearid": 2016,
+  "teamid": "BOS",
+  "team_name": "Boston Red Sox",
+  "Average Batter Height": "73.00"
+ },
+ {
+  "yearid": 2017,
+  "teamid": "SEA",
+  "team_name": "Seattle Mariners",
+  "Average Batter Height": "73.15"
+ },
+ {
+  "yearid": 2018,
+  "teamid": "BOS",
+  "team_name": "Boston Red Sox",
+  "Average Batter Height": "72.89"
+ },
+ {
+  "yearid": 2019,
+  "teamid": "BOS",
+  "team_name": "Boston Red Sox",
+  "Average Batter Height": "72.89"
+ }
+]
