@@ -7354,10 +7354,10 @@ prelude-ls@~1.1.2:
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.1.2.tgz"
   integrity sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==
 
-prettier@^3.9.6:
-  version "3.9.6"
-  resolved "https://registry.npmjs.org/prettier/-/prettier-3.9.6.tgz"
-  integrity sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==
+prettier@^3.9.7:
+  version "3.9.7"
+  resolved "https://registry.npmjs.org/prettier/-/prettier-3.9.7.tgz"
+  integrity sha512-T3mF5P7HFzZVLDQuCUNtJj6WK1pcpLMweMNUVwGb01bLNkH9AkKxtZvmInw8K6bnn2O3d6/5RHl6zSHiBAD0Og==
 
 pretty-bytes@^5.3.0, pretty-bytes@^5.4.1:
   version "5.6.0"
@@ -7568,17 +7568,17 @@ react-refresh@^0.11.0, "react-refresh@>=0.10.0 <1.0.0":
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.11.0.tgz"
   integrity sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==
 
-react-router-dom@^7.18.3:
-  version "7.18.3"
-  resolved "https://registry.npmjs.org/react-router-dom/-/react-router-dom-7.18.3.tgz"
-  integrity sha512-ytVbyBBM7vMfRCam25r0WMhSVSom909A8p+8m0/f1w853dz/xfFu6etAT2SEbVoSnI+ZoPRDqIsQXVT89gp7kg==
+react-router-dom@^7.18.4:
+  version "7.18.4"
+  resolved "https://registry.npmjs.org/react-router-dom/-/react-router-dom-7.18.4.tgz"
+  integrity sha512-yrfmJHIpDG7taCpqKjT1G5B6q3O2K+RN8/fgNf0lTjCwiPbQ0ei6vXX9ZjQR+7ld8Tr7Z5xmyMnZ8YJrphWQUw==
   dependencies:
-    react-router "7.18.3"
+    react-router "7.18.4"
 
-react-router@7.18.3:
-  version "7.18.3"
-  resolved "https://registry.npmjs.org/react-router/-/react-router-7.18.3.tgz"
-  integrity sha512-gyXgtdr5uACJ5b1Q4udzjVV+tb/rlHIMJKuJ0e89R4Kzgz47z/rgP0dIKxktqIEUhDHluGTPJJH/wRha7CyqsA==
+react-router@7.18.4:
+  version "7.18.4"
+  resolved "https://registry.npmjs.org/react-router/-/react-router-7.18.4.tgz"
+  integrity sha512-PUPQcMhMGRAslLcvtlPz/kmzBEWPhLdgLFrL7pLNepBL6dX0lWj4WD2cUYVgYCuT3jxvghYFg81cDTj44DhetQ==
   dependencies:
     cookie "^1.0.1"
     set-cookie-parser "^2.6.0"
@@ -9006,10 +9006,10 @@ wbuf@^1.1.0, wbuf@^1.7.3:
   dependencies:
     minimalistic-assert "^1.0.0"
 
-web-vitals@^6.2.1:
-  version "6.2.1"
-  resolved "https://registry.npmjs.org/web-vitals/-/web-vitals-6.2.1.tgz"
-  integrity sha512-rLcLXA2sx6+9dE88NHFubwTtGxpK4yYBLj6qHPdFoCaLr0cXGb4efOqtKLlm4loGA4OEKHIQKMKzZkKyOh5ctw==
+web-vitals@^6.2.2:
+  version "6.2.2"
+  resolved "https://registry.npmjs.org/web-vitals/-/web-vitals-6.2.2.tgz"
+  integrity sha512-oto5x6dLEgrRqfcWed+pZEUb2q6ikbFmqF54CRDhI/QGbn+qxC49b4C4OkbH+kb9C3a8shpFD3SgR9kRcs80ZQ==
 
 webidl-conversions@^4.0.2:
   version "4.0.2"
