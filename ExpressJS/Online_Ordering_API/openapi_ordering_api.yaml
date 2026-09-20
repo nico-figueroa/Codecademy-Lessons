@@ -1,0 +1,130 @@
+openapi: 3.1.0
+info:
+  title: Store Orders API
+  version: 1.0.0
+  description: API for retrieving, creating, updating, and deleting store orders.
+
+servers:
+  - url: http://localhost:3000
+
+paths:
+  /orders:
+    get:
+      summary: Retrieve all orders
+      description: Returns the full list of orders.
+      tags: [Orders]
+      responses:
+        '200':
+          description: A list of orders.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrdersResponse'
+              examples:
+                sample:
+                  summary: Example order list
+                  value:
+                    orders:
+                      - id: "001"
+                        name: "Sample Order"
+                        state: "pending"
+
+  /neworder:
+    post:
+      summary: Create a new order
+      description: Adds a new order to the system.
+      tags: [Orders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+            examples:
+              newOrder:
+                summary: Example new order
+                value:
+                  id: "003"
+                  name: "New Order"
+                  state: "pending"
+      responses:
+        '200':
+          description: Order successfully created.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: Success
+
+  /update/{id}:
+    put:
+      summary: Update an order's state
+      description: Updates the state of an existing order.
+      tags: [Orders]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the order to update.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+            examples:
+              updateState:
+                summary: New state value
+                value: complete
+      responses:
+        '200':
+          description: Order successfully updated.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: Success
+
+  /delete/{id}:
+    delete:
+      summary: Delete an order
+      description: Deletes an order with the specified ID.
+      tags: [Orders]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the order to delete.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order successfully deleted.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: Success
+
+components:
+  schemas:
+    Order:
+      type: object
+      required: [id, name, state]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        state:
+          type: string
+
+    OrdersResponse:
+      type: object
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
