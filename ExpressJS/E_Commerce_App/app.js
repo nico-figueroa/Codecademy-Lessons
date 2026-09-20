@@ -1,10 +1,10 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
+import pool from './db.js';
+import indexRouter from './routes/index';
+import usersRouter from './routes/users';
 
 var app = express();
 
@@ -17,20 +17,33 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-module.exports = app;
+export default app;
+
+pool.connect()
+  .then(async client => {
+    try {
+      await client
+        .query('SELECT NOW()');
+      client.release();
+      console.log('Database connection established');
+    } catch (err_1) {
+      client.release();
+      console.error('Database connection error', err_1);
+    }
+  });
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('Welcome to the E-Commerce App!');
 });
 
 app.post('/', (req, res) => {
   res.send('Got a POST request');
 });
 
-app.put('/user', (req, res) => {
-  res.send('Got a PUT request at /user');
+app.put('/users', (req, res) => {
+  res.send('Got a PUT request at /users');
 });
 
-app.delete('/user', (req, res) => {
-  res.send('Got a DELETE request at /user');
+app.delete('/users', (req, res) => {
+  res.send('Got a DELETE request at /users');
 });
