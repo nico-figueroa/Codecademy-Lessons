@@ -1,5 +1,12 @@
-import pool from '../db.js';
+import pool from "../db.js";
 
+// Controller for managing payments in the e-commerce application
+// Provides functions to create a payment and retrieve a specific payment
+// Ensures that users can only access their own payments unless they have an admin role
+// Maintains transactional integrity when creating payments
+
+// Creates a new payment for an order, ensuring the user has access rights and maintaining transactional integrity
+// Retrieves a specific payment by ID, ensuring the user has access rights
 export async function createPayment(req, res) {
   const { orderId, provider, dummyToken } = req.body;
   const userId = req.user.userId;
@@ -14,22 +21,22 @@ export async function createPayment(req, res) {
        payment_status AS "paymentStatus"
      FROM orders
      WHERE id = $1`,
-    [orderId]
+    [orderId],
   );
 
   if (orderRes.rowCount === 0) {
-    return res.status(404).json({ error: 'Order not found' });
+    return res.status(404).json({ error: "Order not found" });
   }
 
   const order = orderRes.rows[0];
 
-  if (role !== 'admin' && order.userId !== userId) {
-    return res.status(403).json({ error: 'Forbidden' });
+  if (role !== "admin" && order.userId !== userId) {
+    return res.status(403).json({ error: "Forbidden" });
   }
 
-  const isApproved = dummyToken === 'test_approved';
-  const paymentStatus = isApproved ? 'captured' : 'failed';
-  const orderPaymentStatus = isApproved ? 'paid' : 'failed';
+  const isApproved = dummyToken === "test_approved";
+  const paymentStatus = isApproved ? "captured" : "failed";
+  const orderPaymentStatus = isApproved ? "paid" : "failed";
 
   const paymentRes = await pool.query(
     `INSERT INTO payments (
@@ -50,7 +57,14 @@ export async function createPayment(req, res) {
        status,
        dummy_token AS "dummyToken",
        created_at AS "createdAt"`,
-    [orderId, order.totalAmount, order.currency, provider, paymentStatus, dummyToken]
+    [
+      orderId,
+      order.totalAmount,
+      order.currency,
+      provider,
+      paymentStatus,
+      dummyToken,
+    ],
   );
 
   await pool.query(
@@ -60,15 +74,17 @@ export async function createPayment(req, res) {
        payment_reference = $4,
          updated_at = NOW()
      WHERE id = $1`,
-    [orderId, orderPaymentStatus, provider, paymentRes.rows[0].id]
+    [orderId, orderPaymentStatus, provider, paymentRes.rows[0].id],
   );
 
   res.status(201).json({
     ...paymentRes.rows[0],
-    outcome: isApproved ? 'approved' : 'declined'
+    outcome: isApproved ? "approved" : "declined",
   });
 }
 
+// Ensures that users can only access their own payments unless they have an admin role
+// Retrieves a specific payment by ID, ensuring the user has access rights
 export async function getPayment(req, res) {
   const { paymentId } = req.params;
   const userId = req.user.userId;
@@ -86,28 +102,28 @@ export async function getPayment(req, res) {
        created_at AS "createdAt"
      FROM payments
      WHERE id = $1`,
-    [paymentId]
+    [paymentId],
   );
 
   if (paymentRes.rowCount === 0) {
-    return res.status(404).json({ error: 'Payment not found' });
+    return res.status(404).json({ error: "Payment not found" });
   }
 
   const payment = paymentRes.rows[0];
 
   const orderRes = await pool.query(
     `SELECT user_id AS "userId" FROM orders WHERE id = $1`,
-    [payment.orderId]
+    [payment.orderId],
   );
 
   if (orderRes.rowCount === 0) {
-    return res.status(404).json({ error: 'Order not found for payment' });
+    return res.status(404).json({ error: "Order not found for payment" });
   }
 
   const order = orderRes.rows[0];
 
-  if (role !== 'admin' && order.userId !== userId) {
-    return res.status(403).json({ error: 'Forbidden' });
+  if (role !== "admin" && order.userId !== userId) {
+    return res.status(403).json({ error: "Forbidden" });
   }
 
   res.json(payment);

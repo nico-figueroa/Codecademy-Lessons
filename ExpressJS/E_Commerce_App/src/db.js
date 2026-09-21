@@ -1,12 +1,12 @@
-import pkg from 'pg';
-import { logQuery } from './utils/dbLogger.js';
+import pkg from "pg";
+import { logQuery } from "./utils/dbLogger.js";
 
 const { Pool } = pkg;
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
-  allowExitOnIdle: process.env.NODE_ENV === 'test',
+  ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
+  allowExitOnIdle: process.env.NODE_ENV === "test",
 });
 
 // Wrap pool.query to add logging
@@ -27,9 +27,9 @@ pool.query = async (sql, params = []) => {
 
     console.error(
       `\n❌ SQL Error (${duration.toFixed(2)} ms)\n` +
-      `  SQL: ${sql}\n` +
-      `  Params: ${JSON.stringify(params)}\n` +
-      `  Error: ${err.message}\n`
+        `  SQL: ${sql}\n` +
+        `  Params: ${JSON.stringify(params)}\n` +
+        `  Error: ${err.message}\n`,
     );
 
     throw err;

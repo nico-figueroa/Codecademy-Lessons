@@ -1,5 +1,11 @@
-import pool from '../db.js';
+import pool from "../db.js";
 
+// Controller for managing products in the e-commerce application
+// Provides functions to list products, create a new product, retrieve a specific product, update a product, and delete a product
+// Ensures that only active products are listed
+// Maintains data integrity when creating, updating, or deleting products
+
+// Lists all active products, ensuring only active products are returned
 export async function listProducts(req, res) {
   const result = await pool.query(
     `SELECT
@@ -15,13 +21,21 @@ export async function listProducts(req, res) {
        updated_at AS "updatedAt"
      FROM products
      WHERE is_active = TRUE
-     ORDER BY created_at DESC`
+     ORDER BY created_at DESC`,
   );
   res.json(result.rows);
 }
 
+// Creates a new product with the provided details
 export async function createProduct(req, res) {
-  const { name, description, sku, price, currency = 'USD', stock = 0 } = req.body;
+  const {
+    name,
+    description,
+    sku,
+    price,
+    currency = "USD",
+    stock = 0,
+  } = req.body;
 
   const result = await pool.query(
     `INSERT INTO products (name, description, sku, price, currency, stock)
@@ -37,12 +51,13 @@ export async function createProduct(req, res) {
        is_active AS "isActive",
        created_at AS "createdAt",
        updated_at AS "updatedAt"`,
-    [name, description, sku, price, currency, stock]
+    [name, description, sku, price, currency, stock],
   );
 
   res.status(201).json(result.rows[0]);
 }
 
+// Retrieves a specific product by ID
 export async function getProduct(req, res) {
   const { productId } = req.params;
 
@@ -60,16 +75,17 @@ export async function getProduct(req, res) {
        updated_at AS "updatedAt"
      FROM products
      WHERE id = $1`,
-    [productId]
+    [productId],
   );
 
   if (result.rowCount === 0) {
-    return res.status(404).json({ error: 'Product not found' });
+    return res.status(404).json({ error: "Product not found" });
   }
 
   res.json(result.rows[0]);
 }
 
+// Updates an existing product with the provided details
 export async function updateProduct(req, res) {
   const { productId } = req.params;
   const { name, description, sku, price, currency, stock, isActive } = req.body;
@@ -97,16 +113,17 @@ export async function updateProduct(req, res) {
        is_active AS "isActive",
        created_at AS "createdAt",
        updated_at AS "updatedAt"`,
-    [productId, name, description, sku, price, currency, stock, isActive]
+    [productId, name, description, sku, price, currency, stock, isActive],
   );
 
   if (result.rowCount === 0) {
-    return res.status(404).json({ error: 'Product not found' });
+    return res.status(404).json({ error: "Product not found" });
   }
 
   res.json(result.rows[0]);
 }
 
+// Soft deletes a product by setting its active status to false
 export async function deleteProduct(req, res) {
   const { productId } = req.params;
 
@@ -115,11 +132,11 @@ export async function deleteProduct(req, res) {
      SET is_active = FALSE,
          updated_at = NOW()
      WHERE id = $1`,
-    [productId]
+    [productId],
   );
 
   if (result.rowCount === 0) {
-    return res.status(404).json({ error: 'Product not found' });
+    return res.status(404).json({ error: "Product not found" });
   }
 
   res.status(204).send();

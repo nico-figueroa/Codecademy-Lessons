@@ -1,11 +1,12 @@
-import pool from '../db.js';
+import pool from "../db.js";
 
+// Controller functions for managing shopping carts and cart items
 async function getOrCreateCartForUser(userId) {
   const existing = await pool.query(
     `SELECT id, user_id AS "userId", currency, created_at AS "createdAt", updated_at AS "updatedAt"
      FROM carts
      WHERE user_id = $1`,
-    [userId]
+    [userId],
   );
 
   if (existing.rowCount > 0) {
@@ -16,18 +17,19 @@ async function getOrCreateCartForUser(userId) {
     `INSERT INTO carts (user_id, currency)
      VALUES ($1, 'USD')
      RETURNING id, user_id AS "userId", currency, created_at AS "createdAt", updated_at AS "updatedAt"`,
-    [userId]
+    [userId],
   );
 
   return created.rows[0];
 }
 
+// Helper function to build a comprehensive cart response including items and total amount
 async function buildCartResponse(cartId) {
   const cartRes = await pool.query(
     `SELECT id, user_id AS "userId", currency, created_at AS "createdAt", updated_at AS "updatedAt"
      FROM carts
      WHERE id = $1`,
-    [cartId]
+    [cartId],
   );
 
   if (cartRes.rowCount === 0) return null;
@@ -42,14 +44,14 @@ async function buildCartResponse(cartId) {
        currency
      FROM cart_items
      WHERE cart_id = $1`,
-    [cartId]
+    [cartId],
   );
 
   const totalRes = await pool.query(
     `SELECT COALESCE(SUM(quantity * unit_price), 0) AS "totalAmount"
      FROM cart_items
      WHERE cart_id = $1`,
-    [cartId]
+    [cartId],
   );
 
   const cart = cartRes.rows[0];
@@ -59,6 +61,7 @@ async function buildCartResponse(cartId) {
   return cart;
 }
 
+// Retrieves the current user's cart, creating one if it doesn't exist, and returns the full cart response
 export async function getMyCart(req, res) {
   const userId = req.user.userId;
 
@@ -68,20 +71,19 @@ export async function getMyCart(req, res) {
   res.json(fullCart);
 }
 
+// Creates a new cart for the current user or resets the existing one by deleting all its items, then returns the full cart response
 export async function createOrResetCart(req, res) {
   const userId = req.user.userId;
 
   const cart = await getOrCreateCartForUser(userId);
 
-  await pool.query(
-    `DELETE FROM cart_items WHERE cart_id = $1`,
-    [cart.id]
-  );
+  await pool.query(`DELETE FROM cart_items WHERE cart_id = $1`, [cart.id]);
 
   const fullCart = await buildCartResponse(cart.id);
   res.status(201).json(fullCart);
 }
 
+// Adds an item to the current user's cart, updating the quantity if the item already exists, and returns the full cart response
 export async function addItem(req, res) {
   const userId = req.user.userId;
   const { productId, quantity } = req.body;
@@ -90,10 +92,10 @@ export async function addItem(req, res) {
 
   const productRes = await pool.query(
     `SELECT price, currency FROM products WHERE id = $1 AND is_active = TRUE`,
-    [productId]
+    [productId],
   );
   if (productRes.rowCount === 0) {
-    return res.status(404).json({ error: 'Product not found or inactive' });
+    return res.status(404).json({ error: "Product not found or inactive" });
   }
 
   const { price, currency } = productRes.rows[0];
@@ -108,13 +110,14 @@ export async function addItem(req, res) {
        unit_price = EXCLUDED.unit_price,
        currency = EXCLUDED.currency,
        updated_at = NOW()`,
-    [cart.id, productId, quantity, price, currency]
+    [cart.id, productId, quantity, price, currency],
   );
 
   const fullCart = await buildCartResponse(cart.id);
   res.status(201).json(fullCart);
 }
 
+// Updates the quantity of a specific item in the current user's cart and returns the full cart response
 export async function updateItem(req, res) {
   const userId = req.user.userId;
   const { itemId } = req.params;
@@ -128,17 +131,18 @@ export async function updateItem(req, res) {
          updated_at = NOW()
      WHERE id = $1 AND cart_id = $3
      RETURNING id`,
-    [itemId, quantity, cart.id]
+    [itemId, quantity, cart.id],
   );
 
   if (result.rowCount === 0) {
-    return res.status(404).json({ error: 'Cart item not found' });
+    return res.status(404).json({ error: "Cart item not found" });
   }
 
   const fullCart = await buildCartResponse(cart.id);
   res.json(fullCart);
 }
 
+// Removes a specific item from the current user's cart and returns the full cart response
 export async function removeItem(req, res) {
   const userId = req.user.userId;
   const { itemId } = req.params;
@@ -148,11 +152,11 @@ export async function removeItem(req, res) {
   const result = await pool.query(
     `DELETE FROM cart_items
      WHERE id = $1 AND cart_id = $2`,
-    [itemId, cart.id]
+    [itemId, cart.id],
   );
 
   if (result.rowCount === 0) {
-    return res.status(404).json({ error: 'Cart item not found' });
+    return res.status(404).json({ error: "Cart item not found" });
   }
 
   const fullCart = await buildCartResponse(cart.id);

@@ -1,6 +1,11 @@
-import pool from '../db.js';
-import { hashPassword } from '../utils/password.js';
+import pool from "../db.js";
+import { hashPassword } from "../utils/password.js";
+// Controller for managing users in the e-commerce application
+// Provides functions to list users, create a new user, retrieve a specific user, update a user, and delete a user
+// Ensures that only active users are listed
+// Maintains data integrity when creating, updating, or deleting users
 
+// Lists all active users, ensuring only active users are returned
 export async function listUsers(req, res) {
   const result = await pool.query(
     `SELECT
@@ -11,13 +16,15 @@ export async function listUsers(req, res) {
        created_at AS "createdAt",
        updated_at AS "updatedAt"
      FROM users
-     ORDER BY created_at DESC`
+     WHERE is_active = TRUE
+     ORDER BY created_at DESC`,
   );
   res.json(result.rows);
 }
 
+// Creates a new user with the provided details
 export async function createUser(req, res) {
-  const { email, password, role = 'customer' } = req.body;
+  const { email, password, role = "customer" } = req.body;
 
   const passwordHash = await hashPassword(password);
 
@@ -31,12 +38,13 @@ export async function createUser(req, res) {
        is_active AS "isActive",
        created_at AS "createdAt",
        updated_at AS "updatedAt"`,
-    [email, passwordHash, role]
+    [email, passwordHash, role],
   );
 
   res.status(201).json(result.rows[0]);
 }
 
+// Retrieves a specific user by ID
 export async function getUser(req, res) {
   const { userId } = req.params;
 
@@ -50,16 +58,17 @@ export async function getUser(req, res) {
        updated_at AS "updatedAt"
      FROM users
      WHERE id = $1`,
-    [userId]
+    [userId],
   );
 
   if (result.rowCount === 0) {
-    return res.status(404).json({ error: 'User not found' });
+    return res.status(404).json({ error: "User not found" });
   }
 
   res.json(result.rows[0]);
 }
 
+// Updates an existing user with the provided details
 export async function updateUser(req, res) {
   const { userId } = req.params;
   const { email, role, isActive } = req.body;
@@ -79,16 +88,17 @@ export async function updateUser(req, res) {
        is_active AS "isActive",
        created_at AS "createdAt",
        updated_at AS "updatedAt"`,
-    [userId, email, role, isActive]
+    [userId, email, role, isActive],
   );
 
   if (result.rowCount === 0) {
-    return res.status(404).json({ error: 'User not found' });
+    return res.status(404).json({ error: "User not found" });
   }
 
   res.json(result.rows[0]);
 }
 
+// Soft deletes a user by setting its active status to false
 export async function deleteUser(req, res) {
   const { userId } = req.params;
 
@@ -97,11 +107,11 @@ export async function deleteUser(req, res) {
      SET is_active = FALSE,
          updated_at = NOW()
      WHERE id = $1`,
-    [userId]
+    [userId],
   );
 
   if (result.rowCount === 0) {
-    return res.status(404).json({ error: 'User not found' });
+    return res.status(404).json({ error: "User not found" });
   }
 
   res.status(204).send();

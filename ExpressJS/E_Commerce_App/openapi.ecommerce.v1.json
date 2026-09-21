@@ -16,7 +16,10 @@
     { "name": "Carts" },
     { "name": "Orders" },
     { "name": "Payments" },
-    { "name": "Documentation", "description": "Public API documentation resources." }
+    {
+      "name": "Documentation",
+      "description": "Public API documentation resources."
+    }
   ],
   "paths": {
     "/openapi.json": {
@@ -29,7 +32,10 @@
             "description": "OpenAPI document",
             "content": {
               "application/json": {
-                "schema": { "type": "object", "description": "OpenAPI 3.1 document" }
+                "schema": {
+                  "type": "object",
+                  "description": "OpenAPI 3.1 document"
+                }
               }
             }
           }
@@ -63,7 +69,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/UserRegistrationRequest" }
+              "schema": {
+                "$ref": "#/components/schemas/UserRegistrationRequest"
+              }
             }
           }
         },
@@ -748,7 +756,11 @@
         "required": ["state"],
         "properties": {
           "state": { "type": "string", "format": "uuid" },
-          "mockSubject": { "type": "string", "description": "Optional stable identifier for a simulated OAuth provider account.", "default": "demo-user" }
+          "mockSubject": {
+            "type": "string",
+            "description": "Optional stable identifier for a simulated OAuth provider account.",
+            "default": "demo-user"
+          }
         }
       },
 

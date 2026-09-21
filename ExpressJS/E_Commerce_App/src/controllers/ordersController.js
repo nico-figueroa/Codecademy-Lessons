@@ -1,11 +1,19 @@
-import pool from '../db.js';
+import pool from "../db.js";
 
+// Controller for managing orders in the e-commerce application
+// Provides functions to list orders, retrieve a specific order, and place a new order
+// Ensures that users can only access their own orders unless they have an admin role
+// Maintains transactional integrity when placing orders
+
+// Lists all orders for the current user or all orders if the user is an admin
+// Retrieves a specific order by ID, ensuring the user has access rights
+// Places a new order based on the current user's cart, ensuring transactional integrity
 export async function listOrders(req, res) {
   const userId = req.user.userId;
   const role = req.user.role;
 
   const query =
-    role === 'admin'
+    role === "admin"
       ? `SELECT
            id,
            user_id AS "userId",
@@ -34,11 +42,14 @@ export async function listOrders(req, res) {
          WHERE user_id = $1
          ORDER BY created_at DESC`;
 
-  const params = role === 'admin' ? [] : [userId];
+  const params = role === "admin" ? [] : [userId];
 
   const result = await pool.query(query, params);
   res.json(result.rows);
 }
+
+// Retrieves a specific order by ID, ensuring the user has access rights
+// Places a new order based on the current user's cart, ensuring transactional integrity
 
 export async function getOrder(req, res) {
   const { orderId } = req.params;
@@ -59,17 +70,17 @@ export async function getOrder(req, res) {
        updated_at AS "updatedAt"
      FROM orders
      WHERE id = $1`,
-    [orderId]
+    [orderId],
   );
 
   if (orderRes.rowCount === 0) {
-    return res.status(404).json({ error: 'Order not found' });
+    return res.status(404).json({ error: "Order not found" });
   }
 
   const order = orderRes.rows[0];
 
-  if (role !== 'admin' && order.userId !== userId) {
-    return res.status(403).json({ error: 'Forbidden' });
+  if (role !== "admin" && order.userId !== userId) {
+    return res.status(403).json({ error: "Forbidden" });
   }
 
   const itemsRes = await pool.query(
@@ -82,29 +93,30 @@ export async function getOrder(req, res) {
        currency
      FROM order_items
      WHERE order_id = $1`,
-    [orderId]
+    [orderId],
   );
 
   order.items = itemsRes.rows;
   res.json(order);
 }
 
+// Ensures that users can only access their own orders unless they have an admin role
 export async function placeOrder(req, res) {
   const userId = req.user.userId;
 
   const client = await pool.connect();
   try {
-    await client.query('BEGIN');
+    await client.query("BEGIN");
 
     const cartRes = await client.query(
       `SELECT id, currency
        FROM carts
        WHERE user_id = $1`,
-      [userId]
+      [userId],
     );
     if (cartRes.rowCount === 0) {
-      await client.query('ROLLBACK');
-      return res.status(400).json({ error: 'No cart for user' });
+      await client.query("ROLLBACK");
+      return res.status(400).json({ error: "No cart for user" });
     }
 
     const cart = cartRes.rows[0];
@@ -118,18 +130,18 @@ export async function placeOrder(req, res) {
          currency
        FROM cart_items
        WHERE cart_id = $1`,
-      [cart.id]
+      [cart.id],
     );
     if (itemsRes.rowCount === 0) {
-      await client.query('ROLLBACK');
-      return res.status(400).json({ error: 'Cart is empty' });
+      await client.query("ROLLBACK");
+      return res.status(400).json({ error: "Cart is empty" });
     }
 
     const totalRes = await client.query(
       `SELECT COALESCE(SUM(quantity * unit_price), 0) AS total
        FROM cart_items
        WHERE cart_id = $1`,
-      [cart.id]
+      [cart.id],
     );
     const totalAmount = Number(totalRes.rows[0].total || 0);
 
@@ -142,18 +154,17 @@ export async function placeOrder(req, res) {
          payment_status
        )
        VALUES ($1, 'pending', $2, $3, 'unpaid')
-       RETURNING
-         id,
-         user_id AS "userId",
-         status,
-         total_amount AS "totalAmount",
-         currency,
-         payment_status AS "paymentStatus",
-         payment_provider AS "paymentProvider",
-         payment_reference AS "paymentReference",
-         created_at AS "createdAt",
-         updated_at AS "updatedAt"`,
-      [userId, totalAmount, cart.currency]
+       RETURNING id,
+                 user_id AS "userId",
+                 status,
+                 total_amount AS "totalAmount",
+                 currency,
+                 payment_status AS "paymentStatus",
+                 payment_provider AS "paymentProvider",
+                 payment_reference AS "paymentReference",
+                 created_at AS "createdAt",
+                 updated_at AS "updatedAt"`,
+      [userId, totalAmount, cart.currency],
     );
 
     const order = orderRes.rows[0];
@@ -168,16 +179,19 @@ export async function placeOrder(req, res) {
            currency
          )
          VALUES ($1, $2, $3, $4, $5)`,
-        [order.id, item.product_id, item.quantity, item.unit_price, item.currency]
+        [
+          order.id,
+          item.product_id,
+          item.quantity,
+          item.unit_price,
+          item.currency,
+        ],
       );
     }
 
-    await client.query(
-      `DELETE FROM cart_items WHERE cart_id = $1`,
-      [cart.id]
-    );
+    await client.query(`DELETE FROM cart_items WHERE cart_id = $1`, [cart.id]);
 
-    await client.query('COMMIT');
+    await client.query("COMMIT");
 
     const orderItemsRes = await pool.query(
       `SELECT
@@ -189,20 +203,21 @@ export async function placeOrder(req, res) {
          currency
        FROM order_items
        WHERE order_id = $1`,
-      [order.id]
+      [order.id],
     );
 
     order.items = orderItemsRes.rows;
     res.status(201).json(order);
   } catch (err) {
-    await client.query('ROLLBACK');
-    console.error('placeOrder error', err);
-    res.status(500).json({ error: 'Failed to place order' });
+    await client.query("ROLLBACK");
+    console.error("placeOrder error", err);
+    res.status(500).json({ error: "Failed to place order" });
   } finally {
     client.release();
   }
 }
 
+// Updates the status of an existing order, ensuring the user has access rights
 export async function updateOrder(req, res) {
   const { orderId } = req.params;
   const { status } = req.body;
@@ -223,16 +238,17 @@ export async function updateOrder(req, res) {
        payment_reference AS "paymentReference",
        created_at AS "createdAt",
        updated_at AS "updatedAt"`,
-    [orderId, status]
+    [orderId, status],
   );
 
   if (result.rowCount === 0) {
-    return res.status(404).json({ error: 'Order not found' });
+    return res.status(404).json({ error: "Order not found" });
   }
 
   res.json(result.rows[0]);
 }
 
+// Cancels an existing order, ensuring the user has access rights
 export async function cancelOrder(req, res) {
   const { orderId } = req.params;
 
@@ -241,11 +257,11 @@ export async function cancelOrder(req, res) {
      SET status = 'cancelled',
          updated_at = NOW()
      WHERE id = $1`,
-    [orderId]
+    [orderId],
   );
 
   if (result.rowCount === 0) {
-    return res.status(404).json({ error: 'Order not found' });
+    return res.status(404).json({ error: "Order not found" });
   }
 
   res.status(204).send();

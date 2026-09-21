@@ -1,6 +1,6 @@
-const dotenv = require('dotenv');
-const path = require('path');
+const dotenv = require("dotenv");
+const path = require("path");
 
 dotenv.config({
-  path: path.join(process.cwd(), 'src', 'tests', 'setup', '.env.test')
+  path: path.join(process.cwd(), "src", "tests", "setup", ".env.test"),
 });
