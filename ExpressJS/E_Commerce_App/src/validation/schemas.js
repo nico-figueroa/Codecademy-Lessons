@@ -18,6 +18,22 @@ export const LoginSchema = z.object({
   }),
 });
 
+export const OAuthCallbackSchema = z.object({
+  body: z.object({
+    state: z.string().uuid(),
+    mockSubject: z.string().min(1).optional(),
+  }),
+  params: z.object({
+    provider: z.enum(['google', 'microsoft']),
+  }),
+});
+
+export const OAuthStartSchema = z.object({
+  params: z.object({
+    provider: z.enum(['google', 'microsoft']),
+  }),
+});
+
 // =========================
 // USERS
 // =========================

@@ -39,11 +39,13 @@ describe('Payments API', () => {
       .send({
         orderId,
         provider: 'testpay',
-        dummyToken: 'xyz123'
+        dummyToken: 'test_approved'
       });
 
     expect(res.status).toBe(201);
     expect(res.body.orderId).toBe(orderId);
+    expect(res.body.status).toBe('captured');
+    expect(res.body.outcome).toBe('approved');
   });
 
   test('Customer can retrieve payment', async () => {
@@ -59,5 +61,37 @@ describe('Payments API', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.id).toBe(paymentId);
+  });
+
+  test('Customer can record a declined payment', async () => {
+    const products = await request(app).get('/products');
+
+    await request(app)
+      .post('/carts/me/items')
+      .set('Authorization', `Bearer ${customerToken}`)
+      .send({ productId: products.body[0].id, quantity: 1 });
+
+    const orderRes = await request(app)
+      .post('/orders')
+      .set('Authorization', `Bearer ${customerToken}`);
+
+    const paymentRes = await request(app)
+      .post('/payments')
+      .set('Authorization', `Bearer ${customerToken}`)
+      .send({
+        orderId: orderRes.body.id,
+        provider: 'testpay',
+        dummyToken: 'test_declined'
+      });
+
+    expect(paymentRes.status).toBe(201);
+    expect(paymentRes.body.status).toBe('failed');
+    expect(paymentRes.body.outcome).toBe('declined');
+
+    const updatedOrder = await request(app)
+      .get(`/orders/${orderRes.body.id}`)
+      .set('Authorization', `Bearer ${customerToken}`);
+
+    expect(updatedOrder.body.paymentStatus).toBe('failed');
   });
 });

@@ -1,5 +1,12 @@
-import pool from '../db.js';
-import { hashPassword } from '../utils/password.js';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const directory = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(directory, '..', '.env') });
+
+const { default: pool } = await import('../db.js');
+const { hashPassword } = await import('../utils/password.js');
 
 async function seedDev() {
   console.log('🌱 Seeding development database...');
@@ -22,6 +29,12 @@ async function seedDev() {
   );
 
   await pool.query(
+    `INSERT INTO users (email, password_hash, role)
+     VALUES ('customer@example.com', $1, 'customer')`,
+    [passwordHash]
+  );
+
+  await pool.query(
     `INSERT INTO products (name, description, price, currency, stock)
      VALUES
        ('Laptop', 'High performance laptop', 1299.99, 'USD', 10),
@@ -30,7 +43,11 @@ async function seedDev() {
   );
 
   console.log('🌱 Development database seeded.');
-  process.exit(0);
+  await pool.end();
 }
 
-seedDev();
+seedDev().catch(async (error) => {
+  console.error('Failed to seed development database:', error);
+  await pool.end();
+  process.exitCode = 1;
+});

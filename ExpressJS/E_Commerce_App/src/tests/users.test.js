@@ -2,6 +2,7 @@ import request from 'supertest';
 import app from '../app.js';
 
 let adminToken;
+let customerToken;
 
 beforeAll(async () => {
   const res = await request(app)
@@ -12,6 +13,14 @@ beforeAll(async () => {
     });
 
   adminToken = res.body.accessToken;
+
+  const customerLogin = await request(app)
+    .post('/auth/login')
+    .send({
+      email: 'customer@example.com',
+      password: 'Password123!'
+    });
+  customerToken = customerLogin.body.accessToken;
 });
 
 describe('Users API', () => {
@@ -29,13 +38,13 @@ describe('Users API', () => {
       .post('/users')
       .set('Authorization', `Bearer ${adminToken}`)
       .send({
-        email: 'newuser@example.com',
+        email: 'admin-created@example.com',
         password: 'Password123!',
         role: 'customer'
       });
 
     expect(res.status).toBe(201);
-    expect(res.body.email).toBe('newuser@example.com');
+    expect(res.body.email).toBe('admin-created@example.com');
   });
 
   test('Admin can update a user', async () => {
@@ -52,5 +61,13 @@ describe('Users API', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.role).toBe('vendor');
+  });
+
+  test('Customer cannot access user administration', async () => {
+    const res = await request(app)
+      .get('/users')
+      .set('Authorization', `Bearer ${customerToken}`);
+
+    expect(res.status).toBe(403);
   });
 });

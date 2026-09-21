@@ -1,7 +1,10 @@
 import express from 'express';
+import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import swaggerUi from 'swagger-ui-express';
 import pool from './db.js';
 
 // ROUTES
@@ -15,6 +18,10 @@ import paymentsRouter from './routes/payments.js';
 import { errorHandler } from './middleware/errorMiddleware.js';
 
 const app = express();
+const directory = path.dirname(fileURLToPath(import.meta.url));
+const openApiDocument = JSON.parse(
+  fs.readFileSync(path.join(directory, '..', 'openapi.ecommerce.v1.json'), 'utf8')
+);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -26,6 +33,14 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 app.get('/', (req, res) => {
   res.json({ message: 'E-commerce API is running' });
 });
+
+app.get('/openapi.json', (req, res) => {
+  res.json(openApiDocument);
+});
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openApiDocument, {
+  customSiteTitle: 'Mercantile API Documentation'
+}));
 
 // API routes
 app.use('/auth', authRouter);

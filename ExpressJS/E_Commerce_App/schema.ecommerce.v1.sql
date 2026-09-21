@@ -1,13 +1,26 @@
 -- Generic E-commerce API schema
 -- PostgreSQL + UUIDs + hybrid soft/hard delete model
 
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE OR REPLACE FUNCTION uuid_v4()
+RETURNS UUID
+LANGUAGE SQL
+VOLATILE
+AS $$
+    SELECT (
+        substr(md5(random()::text || clock_timestamp()::text), 1, 8) || '-' ||
+        substr(md5(random()::text || clock_timestamp()::text), 9, 4) || '-4' ||
+        substr(md5(random()::text || clock_timestamp()::text), 14, 3) || '-' ||
+        substr('89ab', floor(random() * 4)::integer + 1, 1) ||
+        substr(md5(random()::text || clock_timestamp()::text), 18, 3) || '-' ||
+        substr(md5(random()::text || clock_timestamp()::text), 21, 12)
+    )::uuid;
+$$;
 
 -- ============================
 -- USERS
 -- ============================
 CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuid_v4(),
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL CHECK (role IN ('customer', 'admin', 'vendor')),
@@ -20,7 +33,7 @@ CREATE TABLE users (
 -- OAUTH ACCOUNTS
 -- ============================
 CREATE TABLE oauth_accounts (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuid_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     provider VARCHAR(50) NOT NULL CHECK (provider IN ('google', 'microsoft')),
     provider_user_id VARCHAR(255) NOT NULL,
@@ -32,7 +45,7 @@ CREATE TABLE oauth_accounts (
 -- PRODUCTS (soft delete)
 -- ============================
 CREATE TABLE products (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuid_v4(),
     name VARCHAR(255) NOT NULL,
     description TEXT,
     sku VARCHAR(100) UNIQUE,
@@ -48,7 +61,7 @@ CREATE TABLE products (
 -- CARTS (one active cart per user)
 -- ============================
 CREATE TABLE carts (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuid_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     currency VARCHAR(10) NOT NULL DEFAULT 'USD',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -60,7 +73,7 @@ CREATE TABLE carts (
 -- CART ITEMS
 -- ============================
 CREATE TABLE cart_items (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuid_v4(),
     cart_id UUID NOT NULL REFERENCES carts(id) ON DELETE CASCADE,
     product_id UUID NOT NULL REFERENCES products(id),
     quantity INTEGER NOT NULL CHECK (quantity > 0),
@@ -75,7 +88,7 @@ CREATE TABLE cart_items (
 -- ORDERS
 -- ============================
 CREATE TABLE orders (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuid_v4(),
     user_id UUID NOT NULL REFERENCES users(id),
     status VARCHAR(20) NOT NULL CHECK (status IN ('pending', 'paid', 'shipped', 'completed', 'cancelled')),
     total_amount NUMERIC(10,2) NOT NULL,
@@ -91,7 +104,7 @@ CREATE TABLE orders (
 -- ORDER ITEMS
 -- ============================
 CREATE TABLE order_items (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuid_v4(),
     order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
     product_id UUID NOT NULL REFERENCES products(id),
     quantity INTEGER NOT NULL CHECK (quantity > 0),
@@ -105,7 +118,7 @@ CREATE TABLE order_items (
 -- PAYMENTS (production-like)
 -- ============================
 CREATE TABLE payments (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT uuid_v4(),
     order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
     amount NUMERIC(10,2) NOT NULL,
     currency VARCHAR(10) NOT NULL,

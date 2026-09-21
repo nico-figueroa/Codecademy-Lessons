@@ -15,9 +15,46 @@
     { "name": "Products" },
     { "name": "Carts" },
     { "name": "Orders" },
-    { "name": "Payments" }
+    { "name": "Payments" },
+    { "name": "Documentation", "description": "Public API documentation resources." }
   ],
   "paths": {
+    "/openapi.json": {
+      "get": {
+        "tags": ["Documentation"],
+        "summary": "Get the OpenAPI document",
+        "description": "Returns this API's OpenAPI 3.1 contract as JSON.",
+        "responses": {
+          "200": {
+            "description": "OpenAPI document",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object", "description": "OpenAPI 3.1 document" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/api-docs/": {
+      "get": {
+        "tags": ["Documentation"],
+        "summary": "Open interactive Swagger UI",
+        "description": "Serves a browser-based Swagger UI for this API's OpenAPI document.",
+        "responses": {
+          "200": {
+            "description": "Swagger UI HTML page",
+            "content": {
+              "text/html": {
+                "schema": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+
     "/auth/register": {
       "post": {
         "tags": ["Auth"],
@@ -71,7 +108,8 @@
     "/auth/oauth/{provider}/start": {
       "post": {
         "tags": ["Auth"],
-        "summary": "Start OAuth login flow",
+        "summary": "Start dummy OAuth login flow",
+        "description": "Creates a single-use state token for the local dummy OAuth simulator. No external identity provider is contacted.",
         "parameters": [
           {
             "in": "path",
@@ -99,7 +137,8 @@
     "/auth/oauth/{provider}/callback": {
       "post": {
         "tags": ["Auth"],
-        "summary": "Complete OAuth login flow",
+        "summary": "Complete dummy OAuth login flow",
+        "description": "Exchanges a valid, unexpired state token for a JWT. The optional mockSubject identifies a simulated provider user.",
         "parameters": [
           {
             "in": "path",
@@ -111,6 +150,14 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/OAuthCallbackRequest" }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OAuth login successful",
@@ -127,7 +174,8 @@
     "/users": {
       "get": {
         "tags": ["Users"],
-        "summary": "List users",
+        "summary": "List users (admin only)",
+        "x-required-role": "admin",
         "security": [{ "bearerAuth": [] }],
         "responses": {
           "200": {
@@ -146,6 +194,7 @@
       "post": {
         "tags": ["Users"],
         "summary": "Create user (admin)",
+        "x-required-role": "admin",
         "security": [{ "bearerAuth": [] }],
         "requestBody": {
           "required": true,
@@ -171,7 +220,8 @@
     "/users/{userId}": {
       "get": {
         "tags": ["Users"],
-        "summary": "Get user by ID",
+        "summary": "Get user by ID (admin only)",
+        "x-required-role": "admin",
         "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
@@ -195,7 +245,8 @@
 
       "put": {
         "tags": ["Users"],
-        "summary": "Update user",
+        "summary": "Update user (admin only)",
+        "x-required-role": "admin",
         "security": [{ "bearerAuth": [] }],
         "parameters": [
           {
@@ -227,7 +278,8 @@
 
       "delete": {
         "tags": ["Users"],
-        "summary": "Soft delete user",
+        "summary": "Soft delete user (admin only)",
+        "x-required-role": "admin",
         "security": [{ "bearerAuth": [] }],
         "responses": {
           "204": { "description": "User soft deleted" }
@@ -684,7 +736,19 @@
       "OAuthStartResponse": {
         "type": "object",
         "properties": {
-          "authorizationUrl": { "type": "string" }
+          "authorizationUrl": { "type": "string", "format": "uri" },
+          "state": { "type": "string", "format": "uuid" },
+          "expiresIn": { "type": "integer", "default": 600 },
+          "mode": { "type": "string", "enum": ["dummy"] }
+        }
+      },
+
+      "OAuthCallbackRequest": {
+        "type": "object",
+        "required": ["state"],
+        "properties": {
+          "state": { "type": "string", "format": "uuid" },
+          "mockSubject": { "type": "string", "description": "Optional stable identifier for a simulated OAuth provider account.", "default": "demo-user" }
         }
       },
 
@@ -706,14 +770,14 @@
 
       "ProductCreateRequest": {
         "type": "object",
-        "required": ["name", "price", "currency", "stock"],
+        "required": ["name", "price"],
         "properties": {
           "name": { "type": "string" },
           "description": { "type": "string" },
           "sku": { "type": "string" },
           "price": { "type": "number", "format": "float" },
-          "currency": { "type": "string" },
-          "stock": { "type": "integer" }
+          "currency": { "type": "string", "default": "USD" },
+          "stock": { "type": "integer", "default": 0 }
         }
       },
 
@@ -834,6 +898,11 @@
           "status": {
             "type": "string",
             "enum": ["pending", "authorized", "captured", "failed"]
+          },
+          "outcome": {
+            "type": "string",
+            "description": "Result of the dummy payment simulator.",
+            "enum": ["approved", "declined"]
           },
           "dummyToken": { "type": "string" },
           "createdAt": { "type": "string", "format": "date-time" }

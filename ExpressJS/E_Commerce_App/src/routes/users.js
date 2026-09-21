@@ -13,11 +13,13 @@ import { UserCreateSchema, UserUpdateSchema } from '../validation/schemas.js';
 
 const router = express.Router();
 
-router.get('/', authRequired, adminOnly, listUsers);
-router.post('/', authRequired, adminOnly, validate(UserCreateSchema), createUser);
+router.use(authRequired, adminOnly);
 
-router.get('/:userId', authRequired, getUser);
-router.put('/:userId', authRequired, validate(UserUpdateSchema), updateUser);
-router.delete('/:userId', authRequired, deleteUser);
+router.get('/', listUsers);
+router.post('/', validate(UserCreateSchema), createUser);
+
+router.get('/:userId', getUser);
+router.put('/:userId', validate(UserUpdateSchema), updateUser);
+router.delete('/:userId', deleteUser);
 
 export default router;

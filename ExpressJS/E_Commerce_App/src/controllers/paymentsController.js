@@ -27,6 +27,10 @@ export async function createPayment(req, res) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
+  const isApproved = dummyToken === 'test_approved';
+  const paymentStatus = isApproved ? 'captured' : 'failed';
+  const orderPaymentStatus = isApproved ? 'paid' : 'failed';
+
   const paymentRes = await pool.query(
     `INSERT INTO payments (
        order_id,
@@ -36,7 +40,7 @@ export async function createPayment(req, res) {
        status,
        dummy_token
      )
-     VALUES ($1, $2, $3, $4, 'pending', $5)
+    VALUES ($1, $2, $3, $4, $5, $6)
      RETURNING
        id,
        order_id AS "orderId",
@@ -46,21 +50,23 @@ export async function createPayment(req, res) {
        status,
        dummy_token AS "dummyToken",
        created_at AS "createdAt"`,
-    [orderId, order.totalAmount, order.currency, provider, dummyToken]
+    [orderId, order.totalAmount, order.currency, provider, paymentStatus, dummyToken]
   );
 
-  // Optionally update order payment_status
   await pool.query(
     `UPDATE orders
-     SET payment_status = 'paid',
-         payment_provider = $2,
-         payment_reference = $3,
+     SET payment_status = $2,
+         payment_provider = $3,
+       payment_reference = $4,
          updated_at = NOW()
      WHERE id = $1`,
-    [orderId, provider, paymentRes.rows[0].id]
+    [orderId, orderPaymentStatus, provider, paymentRes.rows[0].id]
   );
 
-  res.status(201).json(paymentRes.rows[0]);
+  res.status(201).json({
+    ...paymentRes.rows[0],
+    outcome: isApproved ? 'approved' : 'declined'
+  });
 }
 
 export async function getPayment(req, res) {
