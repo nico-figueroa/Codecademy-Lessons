@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+import dotenv from "dotenv";
+import http from "http";
+import path from "path";
+import open from "open";
+import { fileURLToPath } from "url";
+
+const directory = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(directory, "..", "src", ".env") });
+
+const { default: app } = await import("../src/app.js");
+const port = Number.parseInt(process.env.PORT || "3000", 10);
+const server = http.createServer(app);
+
+server.listen(port, () => {
+  console.log(`E-commerce API listening at http://localhost:${port}`);
+  open(`http://localhost:${port}`);
+});
+
+server.on("error", (error) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(`Port ${port} is already in use`);
+  } else if (error.code === "EACCES") {
+    console.error(`Port ${port} requires elevated privileges`);
+  } else {
+    console.error(error);
+  }
+  process.exit(1);
+});
