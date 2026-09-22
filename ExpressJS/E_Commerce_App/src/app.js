@@ -60,16 +60,18 @@ app.use("/payments", paymentsRouter);
 // Error handling middleware
 app.use(errorHandler);
 
-// DB connection test
-pool.connect().then(async (client) => {
-  try {
-    await client.query("SELECT NOW()");
-    client.release();
-    console.log("Database connection established");
-  } catch (err) {
-    client.release();
-    console.error("Database connection error", err);
-  }
-});
+// DB connection test (skipped during tests to avoid logging after the test run finishes)
+if (process.env.NODE_ENV !== "test") {
+  pool.connect().then(async (client) => {
+    try {
+      await client.query("SELECT NOW()");
+      client.release();
+      console.log("Database connection established");
+    } catch (err) {
+      client.release();
+      console.error("Database connection error", err);
+    }
+  });
+}
 
 export default app;
