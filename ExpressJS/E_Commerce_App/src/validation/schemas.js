@@ -95,9 +95,9 @@ export const ProductCreateSchema = z.object({
     name: z.string(),
     description: z.string().optional(),
     sku: z.string().optional(),
-    price: z.number(),
+    price: z.number().nonnegative(),
     currency: z.string().optional(),
-    stock: z.number().int().optional(),
+    stock: z.number().int().nonnegative().optional(),
   }),
 });
 
@@ -111,9 +111,9 @@ export const ProductUpdateSchema = z.object({
     name: z.string().optional(),
     description: z.string().optional(),
     sku: z.string().optional(),
-    price: z.number().optional(),
+    price: z.number().nonnegative().optional(),
     currency: z.string().optional(),
-    stock: z.number().int().optional(),
+    stock: z.number().int().nonnegative().optional(),
     isActive: z.boolean().optional(),
   }),
 });

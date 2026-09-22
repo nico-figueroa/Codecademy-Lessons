@@ -1,5 +1,5 @@
 import pkg from "pg";
-import { logQuery } from "./utils/dbLogger.js";
+import { logQuery, logQueryError } from "./utils/dbLogger.js";
 
 const { Pool } = pkg;
 
@@ -24,13 +24,7 @@ pool.query = async (sql, params = []) => {
     return result;
   } catch (err) {
     const duration = performance.now() - start;
-
-    console.error(
-      `\n❌ SQL Error (${duration.toFixed(2)} ms)\n` +
-        `  SQL: ${sql}\n` +
-        `  Params: ${JSON.stringify(params)}\n` +
-        `  Error: ${err.message}\n`,
-    );
+    logQueryError(sql, params, duration, err);
 
     throw err;
   }

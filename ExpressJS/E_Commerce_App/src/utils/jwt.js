@@ -1,6 +1,10 @@
 import jwt from "jsonwebtoken";
 
-const SECRET = process.env.JWT_SECRET || "dev-secret";
+const SECRET = process.env.JWT_SECRET;
+
+if (!SECRET) {
+  throw new Error("JWT_SECRET must be set");
+}
 
 // Utility functions for generating and verifying JSON Web Tokens (JWTs)
 

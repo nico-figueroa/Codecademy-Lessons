@@ -20,6 +20,9 @@ describe("Auth API", () => {
 
     expect(res.status).toBe(201);
     expect(res.body.email).toBe("newuser@example.com");
+    expect(res.body.isActive).toBe(true);
+    expect(res.body.createdAt).toBeDefined();
+    expect(res.body.updatedAt).toBeDefined();
   });
 
   test("Dummy OAuth issues a token after a valid state callback", async () => {

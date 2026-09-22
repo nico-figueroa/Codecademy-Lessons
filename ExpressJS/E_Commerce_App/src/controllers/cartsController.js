@@ -1,6 +1,15 @@
 import pool from "../db.js";
 
 // Controller functions for managing shopping carts and cart items
+async function getActiveProduct(productId) {
+  return pool.query(
+    `SELECT id, price, currency, stock
+     FROM products
+     WHERE id = $1 AND is_active = TRUE`,
+    [productId],
+  );
+}
+
 async function getOrCreateCartForUser(userId) {
   const existing = await pool.query(
     `SELECT id, user_id AS "userId", currency, created_at AS "createdAt", updated_at AS "updatedAt"
@@ -90,15 +99,24 @@ export async function addItem(req, res) {
 
   const cart = await getOrCreateCartForUser(userId);
 
-  const productRes = await pool.query(
-    `SELECT price, currency FROM products WHERE id = $1 AND is_active = TRUE`,
-    [productId],
-  );
+  const productRes = await getActiveProduct(productId);
   if (productRes.rowCount === 0) {
     return res.status(404).json({ error: "Product not found or inactive" });
   }
 
-  const { price, currency } = productRes.rows[0];
+  const existingItemRes = await pool.query(
+    `SELECT quantity
+     FROM cart_items
+     WHERE cart_id = $1 AND product_id = $2`,
+    [cart.id, productId],
+  );
+  const existingQuantity = existingItemRes.rows[0]?.quantity || 0;
+  const nextQuantity = existingQuantity + quantity;
+  const { price, currency, stock } = productRes.rows[0];
+
+  if (nextQuantity > stock) {
+    return res.status(409).json({ error: "Requested quantity exceeds stock" });
+  }
 
   // upsert on (cart_id, product_id)
   await pool.query(
@@ -106,11 +124,11 @@ export async function addItem(req, res) {
      VALUES ($1, $2, $3, $4, $5)
      ON CONFLICT (cart_id, product_id)
      DO UPDATE SET
-       quantity = cart_items.quantity + EXCLUDED.quantity,
+       quantity = EXCLUDED.quantity,
        unit_price = EXCLUDED.unit_price,
        currency = EXCLUDED.currency,
        updated_at = NOW()`,
-    [cart.id, productId, quantity, price, currency],
+    [cart.id, productId, nextQuantity, price, currency],
   );
 
   const fullCart = await buildCartResponse(cart.id);
@@ -124,8 +142,25 @@ export async function updateItem(req, res) {
   const { quantity } = req.body;
 
   const cart = await getOrCreateCartForUser(userId);
+  const itemRes = await pool.query(
+    `SELECT p.stock
+     FROM cart_items ci
+     JOIN products p ON p.id = ci.product_id
+     WHERE ci.id = $1
+       AND ci.cart_id = $2
+       AND p.is_active = TRUE`,
+    [itemId, cart.id],
+  );
 
-  const result = await pool.query(
+  if (itemRes.rowCount === 0) {
+    return res.status(404).json({ error: "Cart item not found" });
+  }
+
+  if (quantity > itemRes.rows[0].stock) {
+    return res.status(409).json({ error: "Requested quantity exceeds stock" });
+  }
+
+  await pool.query(
     `UPDATE cart_items
      SET quantity = $2,
          updated_at = NOW()
@@ -133,10 +168,6 @@ export async function updateItem(req, res) {
      RETURNING id`,
     [itemId, quantity, cart.id],
   );
-
-  if (result.rowCount === 0) {
-    return res.status(404).json({ error: "Cart item not found" });
-  }
 
   const fullCart = await buildCartResponse(cart.id);
   res.json(fullCart);

@@ -787,9 +787,9 @@
           "name": { "type": "string" },
           "description": { "type": "string" },
           "sku": { "type": "string" },
-          "price": { "type": "number", "format": "float" },
+          "price": { "type": "number", "format": "float", "minimum": 0 },
           "currency": { "type": "string", "default": "USD" },
-          "stock": { "type": "integer", "default": 0 }
+          "stock": { "type": "integer", "default": 0, "minimum": 0 }
         }
       },
 
@@ -799,9 +799,9 @@
           "name": { "type": "string" },
           "description": { "type": "string" },
           "sku": { "type": "string" },
-          "price": { "type": "number", "format": "float" },
+          "price": { "type": "number", "format": "float", "minimum": 0 },
           "currency": { "type": "string" },
-          "stock": { "type": "integer" },
+          "stock": { "type": "integer", "minimum": 0 },
           "isActive": { "type": "boolean" }
         }
       },

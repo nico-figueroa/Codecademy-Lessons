@@ -25,7 +25,13 @@ export async function register(req, res) {
   const result = await pool.query(
     `INSERT INTO users (email, password_hash, role)
      VALUES ($1, $2, 'customer')
-     RETURNING id, email, role, is_active, created_at, updated_at`,
+     RETURNING
+       id,
+       email,
+       role,
+       is_active AS "isActive",
+       created_at AS "createdAt",
+       updated_at AS "updatedAt"`,
     [email, hashed],
   );
 

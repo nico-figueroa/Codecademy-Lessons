@@ -74,7 +74,7 @@ export async function getProduct(req, res) {
        created_at AS "createdAt",
        updated_at AS "updatedAt"
      FROM products
-     WHERE id = $1`,
+    WHERE id = $1 AND is_active = TRUE`,
     [productId],
   );
 

@@ -1,20 +1,44 @@
+import pool from "../db.js";
 import { verifyToken } from "../utils/jwt.js";
 
 // Middleware for handling authentication and authorization
 // Provides functions to enforce authentication and restrict access to admin users only
 
 // Enforces authentication by verifying the presence and validity of a JWT token in the request headers
-export function authRequired(req, res, next) {
+export async function authRequired(req, res, next) {
   const header = req.headers.authorization;
-  if (!header) return res.status(401).json({ error: "Missing token" });
+  if (!header?.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Missing token" });
+  }
 
   const token = header.split(" ")[1];
   try {
     const payload = verifyToken(token);
-    req.user = payload;
+    const userRes = await pool.query(
+      `SELECT id, role, is_active AS "isActive"
+       FROM users
+       WHERE id = $1`,
+      [payload.userId],
+    );
+
+    if (userRes.rowCount === 0 || !userRes.rows[0].isActive) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    req.user = {
+      userId: userRes.rows[0].id,
+      role: userRes.rows[0].role,
+    };
     next();
-  } catch {
-    res.status(401).json({ error: "Invalid token" });
+  } catch (error) {
+    if (
+      error.name === "JsonWebTokenError" ||
+      error.name === "TokenExpiredError" ||
+      error.name === "NotBeforeError"
+    ) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+    next(error);
   }
 }
 // Restricts access to admin users only

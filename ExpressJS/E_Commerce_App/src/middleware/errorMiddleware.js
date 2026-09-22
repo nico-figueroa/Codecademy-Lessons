@@ -7,7 +7,11 @@ export function errorHandler(err, req, res, next) {
   // If the error already has a status, use it
   const status = err.status || (err.code === "23505" ? 409 : 500);
   const message =
-    err.code === "23505" ? "Resource already exists" : err.message;
+    err.code === "23505"
+      ? "Resource already exists"
+      : status >= 500
+        ? "Internal Server Error"
+        : err.message;
 
   // Standard JSON error response
   res.status(status).json({

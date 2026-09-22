@@ -157,6 +157,15 @@ function formatPrice(value, currency = "USD") {
   );
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 async function establishSession(result, message) {
   state.token = result.accessToken;
   state.role = JSON.parse(atob(result.accessToken.split(".")[1])).role;
@@ -175,7 +184,7 @@ async function loadProducts() {
       ? products
           .map(
             (product) =>
-              `<article class="product"><div><p class="sku">${product.sku || "Catalog item"}</p><h3>${product.name}</h3><p>${product.description || "No description provided."}</p></div><div class="product-footer"><strong>${formatPrice(product.price, product.currency)}</strong><span>${product.stock} in stock</span>${state.token ? `<button class="button add-cart" data-id="${product.id}">Add to cart</button>` : ""}${state.role === "admin" ? `<button class="text-button archive-product" data-id="${product.id}">Archive</button>` : ""}</div></article>`,
+              `<article class="product"><div><p class="sku">${escapeHtml(product.sku || "Catalog item")}</p><h3>${escapeHtml(product.name)}</h3><p>${escapeHtml(product.description || "No description provided.")}</p></div><div class="product-footer"><strong>${formatPrice(product.price, product.currency)}</strong><span>${product.stock} in stock</span>${state.token ? `<button class="button add-cart" data-id="${product.id}">Add to cart</button>` : ""}${state.role === "admin" ? `<button class="text-button archive-product" data-id="${product.id}">Archive</button>` : ""}</div></article>`,
           )
           .join("")
       : '<div class="empty-state">No active products.</div>';
@@ -203,7 +212,7 @@ async function loadOrders() {
       ? orders
           .map(
             (order) =>
-              `<div class="order"><strong>${formatPrice(order.totalAmount, order.currency)}</strong><span>${order.status} / ${order.paymentStatus}</span><small>${order.id}</small><div>${order.paymentReference ? `<button class="text-button view-payment" data-id="${order.paymentReference}">View payment</button>` : `<button class="text-button pay-order" data-id="${order.id}">Pay order</button>`}${order.status === "pending" ? `<button class="text-button cancel-order" data-id="${order.id}">Cancel</button>` : ""}</div></div>`,
+              `<div class="order"><strong>${formatPrice(order.totalAmount, order.currency)}</strong><span>${escapeHtml(order.status)} / ${escapeHtml(order.paymentStatus)}</span><small>${escapeHtml(order.id)}</small><div>${order.paymentReference ? `<button class="text-button view-payment" data-id="${order.paymentReference}">View payment</button>` : `<button class="text-button pay-order" data-id="${order.id}">Pay order</button>`}${order.status === "pending" ? `<button class="text-button cancel-order" data-id="${order.id}">Cancel</button>` : ""}</div></div>`,
           )
           .join("")
       : '<div class="empty-state">No orders yet.</div>';
@@ -219,7 +228,7 @@ async function loadUsers() {
       users
         .map(
           (user) =>
-            `<div class="user"><span>${user.email}</span><small>${user.role}</small></div>`,
+            `<div class="user"><span>${escapeHtml(user.email)}</span><small>${escapeHtml(user.role)}</small></div>`,
         )
         .join("") || '<div class="empty-state">No users.</div>';
   } catch (error) {

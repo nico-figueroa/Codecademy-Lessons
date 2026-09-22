@@ -45,7 +45,7 @@ app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(openApiDocument, {
-    customSiteTitle: "E-commerce API Documentation",
+    customSiteTitle: "Mercantile API Documentation",
   }),
 );
 
