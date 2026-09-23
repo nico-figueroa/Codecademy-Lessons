@@ -1,0 +1,107 @@
+.App{
+  width: 70%;
+  margin: auto;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.column{
+  width: 50%;
+  float: left;
+}
+
+h1, h2{
+  text-align: center;
+}
+
+h3{
+  margin: 10px;
+}
+
+p{
+  margin: 10px 0px;
+}
+
+ul{
+  list-style: none;
+  padding: 0px;
+}
+
+#restaurants{
+  margin: 7%;
+}
+
+.restaurant-buttons{
+  margin-top: 5px;
+}
+
+.restaurant-list{
+  margin-bottom: 12px;
+  text-align: center;
+  background-color: #FFF3AD;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+#add-new{
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.starred-restaurant{
+  text-align: center;
+  color: white;
+  background-color: #553E4E;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+}
+
+#categories {
+  margin: 7%;
+}
+
+.category-list {
+  margin-bottom: 12px;
+  text-align: center;
+  background-color: #d9f7be;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.category-buttons {
+  margin-top: 5px;
+}
+
+select {
+  margin-top: 5px;
+  padding: 4px;
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.restaurant-category {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+#categories-view {
+  margin: 7%;
+}
+
+.category-group {
+  background-color: #e8f5ff;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+}
+
+.category-restaurant {
+  margin-bottom: 8px;
+}
+
+.unassign-btn {
+  margin-left: 10px;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
