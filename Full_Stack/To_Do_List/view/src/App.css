@@ -1,0 +1,104 @@
+.App {
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Center the list and keep numbering aligned */
+ol {
+  counter-reset: todo-counter;
+  list-style: none;
+  margin: 20px auto;
+  padding: 0;
+  width: fit-content;
+  text-align: left;
+}
+
+/* Each todo item row */
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px; /* space between text and buttons */
+  padding: 8px 0;
+  counter-increment: todo-counter;
+}
+
+/* Number styling */
+.todo-item::before {
+  content: counter(todo-counter) ". ";
+  font-weight: bold;
+  color: #333;
+  margin-right: 8px;
+}
+
+/* Task text */
+.todo-text {
+  font-size: 18px;
+  margin-right: 12px; /* space between text and buttons */
+}
+
+/* Edit input field */
+.edit-input {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Buttons */
+.edit-btn,
+.delete-btn,
+.save-btn,
+.cancel-btn {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-left: 6px; /* space between buttons */
+}
+
+/* Button colors */
+.edit-btn {
+  background: #4a90e2;
+  color: white;
+}
+
+.edit-btn:hover {
+  background: #357ab8;
+}
+
+.delete-btn {
+  background: #e74c3c;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #c0392b;
+}
+
+.save-btn {
+  background: #2ecc71;
+  color: white;
+}
+
+.save-btn:hover {
+  background: #27ae60;
+}
+
+.cancel-btn {
+  background: #bdc3c7;
+  color: #2c3e50;
+}
+
+.cancel-btn:hover {
+  background: #95a5a6;
+}
+
+/* Optional: subtle hover effect for list items */
+.todo-item:hover {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+}
