@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { getPets } from '../../api/petfinder';
 import Hero from '../../components/hero';
+import Pet from '../../components/pet';
 import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 
 const HomePage = () => {
   const [data, setData] = useState(null);
@@ -32,30 +32,7 @@ const HomePage = () => {
       {data.length ? (
         <div className="grid">
           {data.map((animal) => (
-            <Link 
-              key={animal.id} 
-              to={`/${animal.type.toLowerCase()}/${animal.id}`}
-              className="pet"
-            >
-              <article>
-                <div className="pet-image-container">
-                  {
-                    <img
-                      className="pet-image"
-                      src={
-                        animal.photos[0]?.medium ||
-                        '/missing-animal.png'
-                      }
-                      alt=""
-                    />
-                  }
-                </div>
-                <h3>{animal.name}</h3>
-                <p>Breed: {animal.breeds.primary}</p>
-                <p>Color: {animal.colors.primary}</p>
-                <p>Gender: {animal.gender}</p>
-              </article>
-            </Link>
+            <Pet key={animal.id} animal={animal} />
           ))}
         </div>
       ) : (

@@ -42,10 +42,11 @@ const PetDetailsPage = () => {
             <div className="pet-image-container">
               <img
                 className="pet-image"
-                src={
-                  data.photos[0]?.medium || 'https://i.imgur.com/aEcJUFK.png'
-                }
-                alt=""
+                src={data.photos[0]?.medium || '/missing-animal.png'}
+                onError={(event) => {
+                  event.currentTarget.src = '/missing-animal.png';
+                }}
+                alt={data.name}
               />
             </div>
             <div>

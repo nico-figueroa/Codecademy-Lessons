@@ -4,18 +4,15 @@ const Hero = ({ image, displayText }) => {
   const type = ''
 
   return (
-    <div
-      className="hero-container"
-      style={{
-        backgroundImage: `linear-gradient(black, black), url("${
-          image || 'pets-hero.png'
-        }")
-          `,
-        backgroundBlendMode: 'saturation',
-        backgroundSize: 'cover',
-        backgroundColor: '#0000008f'
-      }}
-    >
+    <div className="hero-container">
+      <img
+        className="hero-image"
+        src={image || '/pets-hero.png'}
+        onError={(event) => {
+          event.currentTarget.src = '/pets-hero.png';
+        }}
+        alt=""
+      />
       <h2>{displayText || getHeroTitle(type)}</h2>
     </div>
   );

@@ -1,15 +1,16 @@
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import types from './data/types.json';
 import animals from './data/animals.json';
 import details from './data/details.json';
 
 export const handlers = [
-  rest.get('/types', (_req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(types));
+  http.get('/types', () => {
+    return HttpResponse.json(types);
   }),
-  rest.get('/animals', (req, res, ctx) => {
-    const type = req.url.searchParams.get('type');
-    const query = req.url.searchParams.get('query');
+  http.get('/animals', ({ request }) => {
+    const url = new URL(request.url);
+    const type = url.searchParams.get('type') ?? '';
+    const query = url.searchParams.get('query') ?? '';
     let response = animals.animals;
 
     if (type !== '') {
@@ -26,16 +27,16 @@ export const handlers = [
           animal.name.toLowerCase().includes(query.toLowerCase())
       );
     }
-    return res(ctx.status(200), ctx.json(response));
+    return HttpResponse.json(response);
   }),
-  rest.get('/animals/:id', (req, res, ctx) => {
-    const { id } = req.params;
+  http.get('/animals/:id', ({ params }) => {
+    const id = String(params.id);
     let response = details[id];
 
     if (!response) {
-      return res(ctx.status(404));
+      return new HttpResponse(null, { status: 404 });
     }
 
-    return res(ctx.status(200), ctx.json(response));
+    return HttpResponse.json(response);
   })
 ];
