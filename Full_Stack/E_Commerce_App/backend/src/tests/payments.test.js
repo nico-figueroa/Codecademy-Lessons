@@ -164,6 +164,23 @@ describe("Payments API", () => {
     expect(stripeClient.paymentIntents.create).not.toHaveBeenCalled();
   });
 
+  test("A Stripe API failure surfaces the real provider message", async () => {
+    const orderId = await placeOrder(customerToken);
+    const stripeError = Object.assign(new Error("Invalid API Key provided: sk_test_***"), {
+      type: "StripeAuthenticationError",
+      code: "api_key_invalid",
+    });
+    stripeClient.paymentIntents.create = jest.fn().mockRejectedValue(stripeError);
+
+    const res = await request(app)
+      .post("/payments/intent")
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({ orderId });
+
+    expect(res.status).toBe(502);
+    expect(res.body.error).toBe("Payment provider error: Invalid API Key provided: sk_test_***");
+  });
+
   test("Creating a PaymentIntent for an already-paid order is rejected", async () => {
     const orderId = await placeOrder(customerToken);
     const intent = fakePaymentIntent();

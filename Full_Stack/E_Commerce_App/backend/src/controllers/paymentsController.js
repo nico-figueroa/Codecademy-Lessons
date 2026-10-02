@@ -155,6 +155,14 @@ export async function createPaymentIntent(req, res) {
     });
   } catch (error) {
     await client.query("ROLLBACK");
+    // Stripe API errors carry a human-readable message (invalid key, amount, etc.)
+    if (typeof error?.type === "string" && error.type.startsWith("Stripe")) {
+      console.error("Stripe error:", error.type, error.code, error.message);
+      return res.status(502).json({
+        error: `Payment provider error: ${error.message}`,
+        details: error.code ?? error.type,
+      });
+    }
     throw error;
   } finally {
     client.release();
