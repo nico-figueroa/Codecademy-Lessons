@@ -252,7 +252,18 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "required": false,
+            "name": "includeInactive",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Admin only: include deactivated users"
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -949,6 +960,9 @@
           {
             "bearerAuth": []
           }
+        ],
+        "tags": [
+          "Auth"
         ]
       },
       "put": {
@@ -1010,7 +1024,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/auth/oauth/pending/{ticket}": {
@@ -1034,6 +1051,9 @@
               "format": "uuid"
             }
           }
+        ],
+        "tags": [
+          "Auth"
         ]
       }
     },
@@ -1063,7 +1083,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/auth/oauth/discard": {
@@ -1089,7 +1112,10 @@
               }
             }
           }
-        }
+        },
+        "tags": [
+          "Auth"
+        ]
       }
     },
     "/products/admin/all": {
@@ -1104,6 +1130,9 @@
           {
             "bearerAuth": []
           }
+        ],
+        "tags": [
+          "Products"
         ]
       }
     },
@@ -1142,6 +1171,9 @@
               "format": "uuid"
             }
           }
+        ],
+        "tags": [
+          "Orders"
         ]
       }
     }
@@ -1184,6 +1216,35 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "address": {
+            "type": "object",
+            "properties": {
+              "state": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "line2": {
+                "type": "string"
+              },
+              "postalCode": {
+                "type": "string"
+              },
+              "line1": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -1219,6 +1280,35 @@
                   "admin",
                   "vendor"
                 ]
+              },
+              "name": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              },
+              "address": {
+                "type": "object",
+                "properties": {
+                  "state": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "line2": {
+                    "type": "string"
+                  },
+                  "postalCode": {
+                    "type": "string"
+                  },
+                  "line1": {
+                    "type": "string"
+                  },
+                  "country": {
+                    "type": "string"
+                  }
+                }
               }
             }
           }
@@ -1241,6 +1331,40 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "address": {
+            "type": "object",
+            "properties": {
+              "state": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "line2": {
+                "type": "string"
+              },
+              "postalCode": {
+                "type": "string"
+              },
+              "line1": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              }
+            }
+          },
+          "password": {
+            "minLength": 8,
+            "type": "string",
+            "description": "Admin password reset"
           }
         }
       },
@@ -1600,6 +1724,11 @@
               "completed",
               "cancelled"
             ]
+          },
+          "userId": {
+            "format": "uuid",
+            "type": "string",
+            "description": "Admin only: reassign an unpaid order to another active user"
           }
         }
       },

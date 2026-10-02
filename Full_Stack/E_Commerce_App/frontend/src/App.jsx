@@ -16,6 +16,7 @@ import OrderDetailPage from "./pages/OrderDetailPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import OAuthConfirmPage from "./pages/OAuthConfirmPage.jsx";
 import AdminProductsPage from "./pages/AdminProductsPage.jsx";
+import AdminUsersPage from "./pages/AdminUsersPage.jsx";
 import AdminOrdersPage from "./pages/AdminOrdersPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 
@@ -45,6 +46,7 @@ function App() {
               <Route element={<ProtectedRoute adminOnly />}>
                 <Route path="/admin/products" element={<AdminProductsPage />} />
                 <Route path="/admin/orders" element={<AdminOrdersPage />} />
+                <Route path="/admin/users" element={<AdminUsersPage />} />
               </Route>
 
               <Route path="*" element={<NotFoundPage />} />

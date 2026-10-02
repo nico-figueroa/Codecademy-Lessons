@@ -73,15 +73,34 @@ export async function createPaymentIntent(req, res) {
     let paymentId;
     let clientSecret;
 
+    let reusable = null;
     if (existingRes.rowCount > 0) {
-      // Reuse the existing in-flight PaymentIntent (e.g. the user refreshed
-      // the checkout page) instead of creating a duplicate.
       const existingPayment = existingRes.rows[0];
       const intent = await stripeClient.paymentIntents.retrieve(
         existingPayment.stripePaymentIntentId,
       );
-      paymentId = existingPayment.id;
-      clientSecret = intent.client_secret;
+      if (intent.status === "succeeded") {
+        await client.query("ROLLBACK");
+        return res
+          .status(409)
+          .json({ error: "Payment already completed; refresh the order" });
+      }
+      if (intent.status === "canceled") {
+        // Stale intent can't render a payment form; retire it and start fresh.
+        await client.query(
+          `UPDATE payments SET status = 'failed', updated_at = NOW() WHERE id = $1`,
+          [existingPayment.id],
+        );
+      } else {
+        reusable = { id: existingPayment.id, intent };
+      }
+    }
+
+    if (reusable) {
+      // Reuse the existing in-flight PaymentIntent (e.g. the user refreshed
+      // the checkout page) instead of creating a duplicate.
+      paymentId = reusable.id;
+      clientSecret = reusable.intent.client_secret;
     } else {
       const intent = await stripeClient.paymentIntents.create({
         amount: toStripeAmount(order.totalAmount),

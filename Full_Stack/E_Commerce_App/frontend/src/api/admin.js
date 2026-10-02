@@ -23,3 +23,25 @@ export function updateOrderStatus(orderId, status) {
 export function createShipment(orderId) {
   return client.post(`/orders/${orderId}/shipment`).then((res) => res.data);
 }
+
+export function fetchUsers() {
+  return client
+    .get("/users", { params: { includeInactive: true } })
+    .then((res) => res.data);
+}
+
+export function createUser(user) {
+  return client.post("/users", user).then((res) => res.data);
+}
+
+export function updateUser(userId, changes) {
+  return client.put(`/users/${userId}`, changes).then((res) => res.data);
+}
+
+export function deactivateUser(userId) {
+  return client.delete(`/users/${userId}`);
+}
+
+export function assignOrder(orderId, userId) {
+  return client.put(`/orders/${orderId}`, { userId }).then((res) => res.data);
+}

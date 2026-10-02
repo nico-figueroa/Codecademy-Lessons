@@ -358,12 +358,12 @@ export async function placeOrder(req, res) {
 // Updates the status of an existing order, ensuring the user has access rights
 export async function updateOrder(req, res) {
   const { orderId } = req.params;
-  const { status } = req.body;
+  const { status, userId: newOwnerId } = req.body;
   const userId = req.user.userId;
   const role = req.user.role;
 
   const orderRes = await pool.query(
-    `SELECT id, user_id AS "userId", status
+    `SELECT id, user_id AS "userId", status, payment_status AS "paymentStatus"
      FROM orders
      WHERE id = $1`,
     [orderId],
@@ -374,6 +374,29 @@ export async function updateOrder(req, res) {
   }
 
   const order = orderRes.rows[0];
+
+  if (newOwnerId !== undefined) {
+    if (role !== "admin") {
+      return res.status(403).json({ error: "Only admins can reassign orders" });
+    }
+    if (order.paymentStatus === "paid") {
+      return res
+        .status(409)
+        .json({ error: "A paid order cannot be reassigned" });
+    }
+    const ownerRes = await pool.query(
+      `SELECT id FROM users WHERE id = $1 AND is_active = TRUE`,
+      [newOwnerId],
+    );
+    if (ownerRes.rowCount === 0) {
+      return res.status(404).json({ error: "Assignee not found or inactive" });
+    }
+    await pool.query(
+      `UPDATE orders SET user_id = $2, updated_at = NOW() WHERE id = $1`,
+      [orderId, newOwnerId],
+    );
+    order.userId = newOwnerId;
+  }
 
   if (role !== "admin") {
     if (order.userId !== userId) {

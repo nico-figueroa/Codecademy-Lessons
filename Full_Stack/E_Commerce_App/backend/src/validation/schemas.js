@@ -112,11 +112,23 @@ export const ProfileUpdateSchema = z.object({
  * Ensures that the email is a valid email address, the password has a minimum length of 8 characters,
  * and the role is either 'customer', 'admin', or 'vendor' (optional).
  */
+const UserAddressShape = z.object({
+  line1: z.string().max(255).optional(),
+  line2: z.string().max(255).optional(),
+  city: z.string().max(100).optional(),
+  state: z.string().max(100).optional(),
+  postalCode: z.string().max(20).optional(),
+  country: z.string().length(2).optional(),
+});
+
 export const UserCreateSchema = z.object({
   body: z.object({
     email: z.string().email(),
     password: z.string().min(8),
     role: z.enum(["customer", "admin", "vendor"]).optional(),
+    name: z.string().max(255).optional(),
+    phone: z.string().max(50).optional(),
+    address: UserAddressShape.optional(),
   }),
 });
 /**
@@ -129,6 +141,10 @@ export const UserUpdateSchema = z.object({
     email: z.string().email().optional(),
     role: z.enum(["customer", "admin", "vendor"]).optional(),
     isActive: z.boolean().optional(),
+    password: z.string().min(8).optional(),
+    name: z.string().max(255).optional(),
+    phone: z.string().max(50).optional(),
+    address: UserAddressShape.optional(),
   }),
 });
 
@@ -220,6 +236,7 @@ export const OrderUpdateSchema = z.object({
     status: z
       .enum(["pending", "paid", "shipped", "completed", "cancelled"])
       .optional(),
+    userId: z.string().uuid().optional(),
   }),
 });
 

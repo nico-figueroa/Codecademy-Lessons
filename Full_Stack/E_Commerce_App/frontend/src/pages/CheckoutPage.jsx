@@ -13,6 +13,8 @@ import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import Alert from "../components/Alert.jsx";
 import { formatMoney } from "../utils/formatMoney.js";
 import { useCart } from "../context/CartContext.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
+import { assignOrder, fetchUsers } from "../api/admin.js";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "");
 
@@ -22,7 +24,13 @@ const POLL_TIMEOUT_MS = 20000;
 export default function CheckoutPage() {
   const { orderId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
 
+  const [users, setUsers] = useState([]);
+  const [assigneeId, setAssigneeId] = useState("");
+  const [needsAssignee, setNeedsAssignee] = useState(false);
+  const [isAssigning, setIsAssigning] = useState(false);
   const [order, setOrder] = useState(null);
   const [paymentId, setPaymentId] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
@@ -43,6 +51,15 @@ export default function CheckoutPage() {
           return;
         }
 
+        if (isAdmin) {
+          const allUsers = await fetchUsers();
+          if (!isMounted) return;
+          setUsers(allUsers.filter((u) => u.isActive));
+          setAssigneeId(fetchedOrder.userId || "");
+          setNeedsAssignee(true);
+          return;
+        }
+
         const intent = await createPaymentIntent(orderId);
         if (!isMounted) return;
         setPaymentId(intent.paymentId);
@@ -58,16 +75,78 @@ export default function CheckoutPage() {
     return () => {
       isMounted = false;
     };
-  }, [orderId, navigate]);
+  }, [orderId, navigate, isAdmin]);
+
+  async function handleAssign(event) {
+    event.preventDefault();
+    setIsAssigning(true);
+    setError(null);
+    try {
+      if (assigneeId && assigneeId !== order.userId) {
+        const updated = await assignOrder(orderId, assigneeId);
+        setOrder((prev) => ({ ...prev, ...updated }));
+      }
+      const intent = await createPaymentIntent(orderId);
+      setPaymentId(intent.paymentId);
+      setClientSecret(intent.clientSecret);
+      setNeedsAssignee(false);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsAssigning(false);
+    }
+  }
 
   if (isLoading) {
     return <LoadingSpinner label="Preparing checkout…" />;
   }
 
-  if (error) {
+  if (error && !needsAssignee) {
     return (
       <div className="mx-auto max-w-xl px-4 py-16 sm:px-0">
         <Alert variant="error">{error}</Alert>
+      </div>
+    );
+  }
+
+  if (order && needsAssignee) {
+    return (
+      <div className="mx-auto max-w-xl px-4 py-12 sm:px-0">
+        <h1 className="font-display text-2xl font-bold text-slate-900">Assign order</h1>
+        <p className="mt-1 text-sm text-slate-500">
+          Order #{order.id.slice(0, 8)} &middot; {formatMoney(order.totalAmount, order.currency)}
+        </p>
+        {error && <Alert variant="error">{error}</Alert>}
+        <form
+          onSubmit={handleAssign}
+          aria-label="Assign order"
+          className="mt-6 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+        >
+          <label htmlFor="assignee" className="text-sm font-medium text-slate-700">
+            Assign to user and pay on their behalf
+          </label>
+          <select
+            id="assignee"
+            required
+            value={assigneeId}
+            onChange={(e) => setAssigneeId(e.target.value)}
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          >
+            <option value="" disabled>Select a user…</option>
+            {users.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.name ? `${u.name} (${u.email})` : u.email}
+              </option>
+            ))}
+          </select>
+          <button
+            type="submit"
+            disabled={isAssigning || !assigneeId}
+            className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
+          >
+            {isAssigning ? "Preparing…" : "Assign & continue"}
+          </button>
+        </form>
       </div>
     );
   }

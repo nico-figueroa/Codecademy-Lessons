@@ -31,8 +31,7 @@ E_Commerce_App/
   `/orders`, `/users`. Full OpenAPI docs served at `/api-docs` when running.
 - Scripts run **from inside `backend/`**: `npm install`, `npm start`,
   `npm run dev` (watch), `npm test`, `npm run seed:dev`. `npm start` /
-  `npm run dev` open the backend (`/` links to `/api-docs`) and the
-  frontend (`FRONTEND_URL`) in your browser; set `OPEN_BROWSER=false` to
+  `npm run dev` open the backend (`/` links to `/api-docs`) in your browser; set `OPEN_BROWSER=false` to
   disable (always disabled when `NODE_ENV=production`).
 - Existing databases: apply `migration_002_profiles_addresses_shipments.sql`
   (profiles, delivery addresses, shipments).
@@ -152,3 +151,7 @@ only rebuilds/redeploys that service when files under its folder change.
   here.
 - GitHub OAuth is real (not mocked): signing in links your actual GitHub
   account identity (name/email) to a user record in this app's database.
+
+### Admin: users and pay-on-behalf
+
+Admins get a **Manage users** page (`/admin/users`) with full CRUD (create, edit profile/role, reset password, deactivate/reactivate; admins cannot deactivate or delete themselves). From **Manage orders**, *Take payment* on a pending order asks which user to assign the order to, then opens the Stripe payment form and pays on that user's behalf (`PUT /orders/{id}` with `userId`, admin only).

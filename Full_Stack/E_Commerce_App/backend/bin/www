@@ -14,11 +14,10 @@ const server = http.createServer(app);
 
 server.listen(port, () => {
   console.log(`E-commerce API listening at http://localhost:${port}`);
-  // Local convenience only: open the API landing page and the frontend.
+  // Local convenience only: open the API landing page.
   // Skipped in production (Render) or when OPEN_BROWSER=false.
   if (process.env.NODE_ENV !== "production" && process.env.OPEN_BROWSER !== "false") {
     open(`http://localhost:${port}`);
-    if (process.env.FRONTEND_URL) open(process.env.FRONTEND_URL);
   }
 });
 

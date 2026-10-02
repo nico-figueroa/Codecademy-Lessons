@@ -55,6 +55,9 @@ export default function Navbar() {
               <NavLink to="/admin/orders" className={linkClasses}>
                 Manage orders
               </NavLink>
+              <NavLink to="/admin/users" className={linkClasses}>
+              Manage users
+              </NavLink>
             </>
           )}
 
