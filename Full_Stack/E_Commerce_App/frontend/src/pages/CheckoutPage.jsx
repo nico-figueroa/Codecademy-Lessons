@@ -12,6 +12,7 @@ import { createPaymentIntent, fetchPayment } from "../api/payments.js";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import Alert from "../components/Alert.jsx";
 import { formatMoney } from "../utils/formatMoney.js";
+import { useCart } from "../context/CartContext.jsx";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "");
 
@@ -96,6 +97,7 @@ function PaymentForm({ orderId, paymentId }) {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
+  const { refresh: refreshCart } = useCart();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
@@ -108,6 +110,11 @@ function PaymentForm({ orderId, paymentId }) {
       while (Date.now() < deadline) {
         const payment = await fetchPayment(paymentId);
         if (payment.status === "captured") {
+          // The webhook clears the purchased items from the cart once
+          // payment is confirmed - refresh local cart state so the navbar
+          // badge/cart page reflect that immediately instead of going stale
+          // until the next unrelated cart action.
+          await refreshCart();
           navigate(`/orders/${orderId}`, { replace: true });
           return;
         }
@@ -126,7 +133,7 @@ function PaymentForm({ orderId, paymentId }) {
     } finally {
       setIsConfirming(false);
     }
-  }, [paymentId, orderId, navigate]);
+  }, [paymentId, orderId, navigate, refreshCart]);
 
   async function handleSubmit(event) {
     event.preventDefault();

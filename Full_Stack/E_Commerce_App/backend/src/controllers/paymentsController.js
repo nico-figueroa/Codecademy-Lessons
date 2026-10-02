@@ -220,14 +220,33 @@ export async function handleStripeWebhook(req, res) {
       );
 
       if (updateRes.rowCount > 0) {
-        await pool.query(
+        const orderId = updateRes.rows[0].orderId;
+
+        const orderUpdateRes = await pool.query(
           `UPDATE orders
            SET payment_status = 'paid',
                status = CASE WHEN status = 'pending' THEN 'paid' ELSE status END,
                updated_at = NOW()
-           WHERE id = $1`,
-          [updateRes.rows[0].orderId],
+           WHERE id = $1
+           RETURNING user_id AS "userId"`,
+          [orderId],
         );
+
+        if (orderUpdateRes.rowCount > 0) {
+          // Now that payment is confirmed, remove only the purchased items
+          // from the customer's cart. Scoping by the order's product IDs
+          // (rather than wiping the whole cart) protects anything the
+          // customer added after placing this order but before payment
+          // resolved.
+          await pool.query(
+            `DELETE FROM cart_items
+             WHERE cart_id = (SELECT id FROM carts WHERE user_id = $1)
+               AND product_id IN (
+                 SELECT product_id FROM order_items WHERE order_id = $2
+               )`,
+            [orderUpdateRes.rows[0].userId, orderId],
+          );
+        }
       }
     } else if (event.type === "payment_intent.payment_failed") {
       const failureMessage =

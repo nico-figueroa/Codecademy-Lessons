@@ -229,7 +229,12 @@ export async function placeOrder(req, res) {
       );
     }
 
-    await client.query(`DELETE FROM cart_items WHERE cart_id = $1`, [cart.id]);
+    // Intentionally do NOT clear the cart here. The order is "pending"
+    // until Stripe confirms payment, and a declined/fraudulent card should
+    // leave the customer's selections staged in their cart to retry or keep
+    // shopping. The cart is only cleared once the Stripe webhook confirms a
+    // successful payment (see paymentsController.handleStripeWebhook), or
+    // when the user explicitly clears/removes items themselves.
 
     await client.query("COMMIT");
     committed = true;

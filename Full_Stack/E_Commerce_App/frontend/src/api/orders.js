@@ -1,8 +1,10 @@
 import client from "./client.js";
 
 // Places an order from the current cart contents. The backend snapshots the
-// cart into an order (status "pending", paymentStatus "unpaid") and empties
-// the cart as part of the same transaction.
+// cart into an order (status "pending", paymentStatus "unpaid"). The cart
+// itself is left untouched at this point - items are only removed once
+// Stripe confirms the payment succeeded, so a declined/failed card leaves
+// the customer's selections staged in their cart.
 export function placeOrder() {
   return client.post("/orders").then((res) => res.data);
 }

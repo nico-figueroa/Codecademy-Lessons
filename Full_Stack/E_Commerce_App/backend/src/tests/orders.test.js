@@ -127,4 +127,30 @@ describe("Orders API", () => {
     );
     expect(productAfterCancel.stock).toBe(productBefore.stock);
   });
+
+  test("Placing an order does not clear the cart (only a successful payment should)", async () => {
+    await request(app)
+      .post("/carts/me")
+      .set("Authorization", authHeader(customerToken));
+
+    await request(app)
+      .post("/carts/me/items")
+      .set("Authorization", authHeader(customerToken))
+      .send({ productId: stockedProductId, quantity: 1 });
+
+    const cartBefore = await request(app)
+      .get("/carts/me")
+      .set("Authorization", authHeader(customerToken));
+    expect(cartBefore.body.items.length).toBeGreaterThan(0);
+
+    const placed = await request(app)
+      .post("/orders")
+      .set("Authorization", authHeader(customerToken));
+    expect(placed.status).toBe(201);
+
+    const cartAfter = await request(app)
+      .get("/carts/me")
+      .set("Authorization", authHeader(customerToken));
+    expect(cartAfter.body.items.length).toBe(cartBefore.body.items.length);
+  });
 });

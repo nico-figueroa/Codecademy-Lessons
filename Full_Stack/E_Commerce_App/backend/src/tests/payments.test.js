@@ -247,6 +247,108 @@ describe("Payments API", () => {
     expect(order.body.paymentStatus).toBe("failed");
   });
 
+  test("A successful payment clears only the purchased items from the cart", async () => {
+    await request(app)
+      .post("/carts/me")
+      .set("Authorization", `Bearer ${customerToken}`);
+
+    const products = await request(app).get("/products");
+    const productId = products.body[0].id;
+
+    await request(app)
+      .post("/carts/me/items")
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({ productId, quantity: 1 });
+
+    const orderRes = await request(app)
+      .post("/orders")
+      .set("Authorization", `Bearer ${customerToken}`);
+    const orderId = orderRes.body.id;
+
+    const intent = fakePaymentIntent();
+    stripeClient.paymentIntents.create = jest.fn().mockResolvedValue(intent);
+
+    await request(app)
+      .post("/payments/intent")
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({ orderId });
+
+    const cartBeforePayment = await request(app)
+      .get("/carts/me")
+      .set("Authorization", `Bearer ${customerToken}`);
+    expect(
+      cartBeforePayment.body.items.some((item) => item.productId === productId),
+    ).toBe(true);
+
+    stripeClient.webhooks.constructEvent = jest.fn().mockReturnValue({
+      type: "payment_intent.succeeded",
+      data: { object: { id: intent.id } },
+    });
+
+    await request(app)
+      .post("/payments/webhook")
+      .set("Content-Type", "application/json")
+      .set("stripe-signature", "test-signature")
+      .send(JSON.stringify({ any: "payload" }));
+
+    const cartAfterPayment = await request(app)
+      .get("/carts/me")
+      .set("Authorization", `Bearer ${customerToken}`);
+    expect(
+      cartAfterPayment.body.items.some((item) => item.productId === productId),
+    ).toBe(false);
+  });
+
+  test("A failed payment leaves the cart untouched", async () => {
+    await request(app)
+      .post("/carts/me")
+      .set("Authorization", `Bearer ${customerToken}`);
+
+    const products = await request(app).get("/products");
+    const productId = products.body[0].id;
+
+    await request(app)
+      .post("/carts/me/items")
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({ productId, quantity: 1 });
+
+    const orderRes = await request(app)
+      .post("/orders")
+      .set("Authorization", `Bearer ${customerToken}`);
+    const orderId = orderRes.body.id;
+
+    const intent = fakePaymentIntent();
+    stripeClient.paymentIntents.create = jest.fn().mockResolvedValue(intent);
+
+    await request(app)
+      .post("/payments/intent")
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({ orderId });
+
+    stripeClient.webhooks.constructEvent = jest.fn().mockReturnValue({
+      type: "payment_intent.payment_failed",
+      data: {
+        object: {
+          id: intent.id,
+          last_payment_error: { message: "Your card was declined." },
+        },
+      },
+    });
+
+    await request(app)
+      .post("/payments/webhook")
+      .set("Content-Type", "application/json")
+      .set("stripe-signature", "test-signature")
+      .send(JSON.stringify({ any: "payload" }));
+
+    const cartAfterFailure = await request(app)
+      .get("/carts/me")
+      .set("Authorization", `Bearer ${customerToken}`);
+    expect(
+      cartAfterFailure.body.items.some((item) => item.productId === productId),
+    ).toBe(true);
+  });
+
   test("Stripe webhook rejects requests with an invalid signature", async () => {
     stripeClient.webhooks.constructEvent = jest.fn().mockImplementation(() => {
       throw new Error("Invalid signature");
