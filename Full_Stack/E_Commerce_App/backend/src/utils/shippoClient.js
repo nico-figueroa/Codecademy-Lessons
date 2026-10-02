@@ -18,6 +18,24 @@ function fromAddress() {
   };
 }
 
+// `userMessage` is safe to show in the UI; `message` keeps the raw detail for logs.
+export class ShippoError extends Error {
+  constructor(message, userMessage) {
+    super(message);
+    this.userMessage = userMessage;
+  }
+}
+
+function readableMessages(messages) {
+  if (!Array.isArray(messages)) {
+    return typeof messages?.detail === "string" ? messages.detail : "";
+  }
+  return messages
+    .map((m) => m?.text || m?.detail)
+    .filter(Boolean)
+    .join(" ");
+}
+
 async function call(path, body) {
   const res = await fetch(`${API}${path}`, {
     method: "POST",
@@ -29,7 +47,10 @@ async function call(path, body) {
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error(`Shippo ${path} failed (${res.status}): ${JSON.stringify(data)}`);
+    throw new ShippoError(
+      `Shippo ${path} failed (${res.status}): ${JSON.stringify(data)}`,
+      readableMessages(data.messages ?? data) || `Shippo rejected the request (${res.status})`,
+    );
   }
   return data;
 }
@@ -81,7 +102,13 @@ const shippoClient = {
     });
 
     const rates = (shipment.rates || []).filter((r) => r.amount);
-    if (rates.length === 0) throw new Error("Shippo returned no rates");
+    if (rates.length === 0) {
+      throw new ShippoError(
+        "Shippo returned no rates",
+        readableMessages(shipment.messages) ||
+          "No shipping rates are available for this address.",
+      );
+    }
     rates.sort((a, b) => Number(a.amount) - Number(b.amount));
 
     // Try rates cheapest-first; skip carriers that aren't activated on the account
@@ -99,9 +126,12 @@ const shippoClient = {
         tx = attempt;
         break;
       }
-      lastError = `Shippo label failed (${candidate.provider}): ${JSON.stringify(attempt.messages)}`;
+      lastError = new ShippoError(
+        `Shippo label failed (${candidate.provider}): ${JSON.stringify(attempt.messages)}`,
+        readableMessages(attempt.messages) || "Shippo could not create a label.",
+      );
     }
-    if (!tx) throw new Error(lastError);
+    if (!tx) throw lastError;
 
     return {
       provider: "shippo",

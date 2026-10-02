@@ -711,7 +711,10 @@ export async function createShipment(req, res) {
     label = await shippoClient.createLabel(order.shippingAddress);
   } catch (err) {
     console.error("Shipment creation failed:", err.message);
-    return res.status(502).json({ error: "Shipping provider error", details: err.message });
+    return res.status(502).json({
+      error: `Shipping failed: ${err.userMessage || "the shipping provider is unavailable."}`,
+      details: err.message,
+    });
   }
 
   const client = await pool.connect();
