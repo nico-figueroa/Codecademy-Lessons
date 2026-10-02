@@ -107,7 +107,7 @@ function PaymentForm({ orderId, paymentId }) {
     try {
       while (Date.now() < deadline) {
         const payment = await fetchPayment(paymentId);
-        if (payment.status === "succeeded") {
+        if (payment.status === "captured") {
           navigate(`/orders/${orderId}`, { replace: true });
           return;
         }
