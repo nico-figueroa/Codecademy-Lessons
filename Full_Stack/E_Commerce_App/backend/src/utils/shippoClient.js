@@ -83,16 +83,25 @@ const shippoClient = {
     const rates = (shipment.rates || []).filter((r) => r.amount);
     if (rates.length === 0) throw new Error("Shippo returned no rates");
     rates.sort((a, b) => Number(a.amount) - Number(b.amount));
-    const rate = rates[0];
 
-    const tx = await call("/transactions/", {
-      rate: rate.object_id,
-      label_file_type: "PDF",
-      async: false,
-    });
-    if (tx.status !== "SUCCESS") {
-      throw new Error(`Shippo label failed: ${JSON.stringify(tx.messages)}`);
+    // Try rates cheapest-first; skip carriers that aren't activated on the account
+    let rate;
+    let tx;
+    let lastError;
+    for (const candidate of rates) {
+      const attempt = await call("/transactions/", {
+        rate: candidate.object_id,
+        label_file_type: "PDF",
+        async: false,
+      });
+      if (attempt.status === "SUCCESS") {
+        rate = candidate;
+        tx = attempt;
+        break;
+      }
+      lastError = `Shippo label failed (${candidate.provider}): ${JSON.stringify(attempt.messages)}`;
     }
+    if (!tx) throw new Error(lastError);
 
     return {
       provider: "shippo",
