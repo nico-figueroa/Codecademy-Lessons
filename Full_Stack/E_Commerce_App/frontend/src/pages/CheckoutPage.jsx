@@ -1,0 +1,170 @@
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  Elements,
+  PaymentElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import { fetchOrder } from "../api/orders.js";
+import { createPaymentIntent, fetchPayment } from "../api/payments.js";
+import LoadingSpinner from "../components/LoadingSpinner.jsx";
+import Alert from "../components/Alert.jsx";
+import { formatMoney } from "../utils/formatMoney.js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "");
+
+const POLL_INTERVAL_MS = 1500;
+const POLL_TIMEOUT_MS = 20000;
+
+export default function CheckoutPage() {
+  const { orderId } = useParams();
+  const navigate = useNavigate();
+
+  const [order, setOrder] = useState(null);
+  const [paymentId, setPaymentId] = useState(null);
+  const [clientSecret, setClientSecret] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function load() {
+      try {
+        const fetchedOrder = await fetchOrder(orderId);
+        if (!isMounted) return;
+        setOrder(fetchedOrder);
+
+        if (fetchedOrder.paymentStatus === "paid") {
+          navigate(`/orders/${orderId}`, { replace: true });
+          return;
+        }
+
+        const intent = await createPaymentIntent(orderId);
+        if (!isMounted) return;
+        setPaymentId(intent.paymentId);
+        setClientSecret(intent.clientSecret);
+      } catch (err) {
+        if (isMounted) setError(err.message);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    }
+
+    load();
+    return () => {
+      isMounted = false;
+    };
+  }, [orderId, navigate]);
+
+  if (isLoading) {
+    return <LoadingSpinner label="Preparing checkout…" />;
+  }
+
+  if (error) {
+    return (
+      <div className="mx-auto max-w-xl px-4 py-16 sm:px-0">
+        <Alert variant="error">{error}</Alert>
+      </div>
+    );
+  }
+
+  if (!order || !clientSecret) return null;
+
+  const options = { clientSecret, appearance: { theme: "stripe" } };
+
+  return (
+    <div className="mx-auto max-w-xl px-4 py-12 sm:px-0">
+      <h1 className="font-display text-2xl font-bold text-slate-900">Checkout</h1>
+      <p className="mt-1 text-sm text-slate-500">
+        Order #{order.id.slice(0, 8)} &middot;{" "}
+        {formatMoney(order.totalAmount, order.currency)}
+      </p>
+
+      <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <Elements stripe={stripePromise} options={options}>
+          <PaymentForm orderId={orderId} paymentId={paymentId} />
+        </Elements>
+      </div>
+    </div>
+  );
+}
+
+function PaymentForm({ orderId, paymentId }) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const navigate = useNavigate();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [error, setError] = useState(null);
+
+  const pollForOutcome = useCallback(async () => {
+    const deadline = Date.now() + POLL_TIMEOUT_MS;
+    setIsConfirming(true);
+    try {
+      while (Date.now() < deadline) {
+        const payment = await fetchPayment(paymentId);
+        if (payment.status === "succeeded") {
+          navigate(`/orders/${orderId}`, { replace: true });
+          return;
+        }
+        if (payment.status === "failed" || payment.status === "canceled") {
+          setError(
+            payment.failureMessage ||
+              "Payment failed. Please try again with a different card.",
+          );
+          return;
+        }
+        await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL_MS));
+      }
+      setError(
+        "We're still confirming your payment. Check your order history shortly for the final status.",
+      );
+    } finally {
+      setIsConfirming(false);
+    }
+  }, [paymentId, orderId, navigate]);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    if (!stripe || !elements) return;
+
+    setIsSubmitting(true);
+    setError(null);
+
+    const { error: confirmError } = await stripe.confirmPayment({
+      elements,
+      redirect: "if_required",
+    });
+
+    setIsSubmitting(false);
+
+    if (confirmError) {
+      setError(confirmError.message || "Payment failed. Please try again.");
+      return;
+    }
+
+    // Stripe's client-side result is informational only - the webhook is
+    // the authoritative source of truth, so poll our backend for it.
+    await pollForOutcome();
+  }
+
+  const busy = isSubmitting || isConfirming;
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <PaymentElement />
+      {error && <Alert variant="error">{error}</Alert>}
+      <button
+        type="submit"
+        disabled={!stripe || busy}
+        className="mt-2 rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {isSubmitting ? "Processing…" : isConfirming ? "Confirming payment…" : "Pay now"}
+      </button>
+    </form>
+  );
+}
