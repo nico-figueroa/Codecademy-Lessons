@@ -1,4 +1,5 @@
 import pool from "../db.js";
+import { isStaff } from "../middleware/authMiddleware.js";
 import stripeClient from "../utils/stripeClient.js";
 
 // Controller for managing Stripe-backed payments in the e-commerce
@@ -51,7 +52,7 @@ export async function createPaymentIntent(req, res) {
 
     const order = orderRes.rows[0];
 
-    if (role !== "admin" && order.userId !== userId) {
+    if (!isStaff(role) && order.userId !== userId) {
       await client.query("ROLLBACK");
       return res.status(403).json({ error: "Forbidden" });
     }
@@ -282,7 +283,7 @@ export async function getPayment(req, res) {
 
   const order = orderRes.rows[0];
 
-  if (role !== "admin" && order.userId !== userId) {
+  if (!isStaff(role) && order.userId !== userId) {
     return res.status(403).json({ error: "Forbidden" });
   }
 

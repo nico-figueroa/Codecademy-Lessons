@@ -110,3 +110,15 @@ describe("Order detail", () => {
     expect(await screen.findByText(/dddddddd/)).toBeInTheDocument();
   });
 });
+
+describe("Vendor access", () => {
+  const VENDOR = { ...CUSTOMER, id: "u3", email: "vendor@example.com", role: "vendor" };
+
+  it("sees product and order management but not user management", async () => {
+    admin.fetchAllProducts.mockResolvedValue(PRODUCTS);
+    renderApp("/admin/products", { user: VENDOR });
+    expect(await screen.findByRole("link", { name: "Manage products" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Manage orders" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Manage users" })).not.toBeInTheDocument();
+  });
+});

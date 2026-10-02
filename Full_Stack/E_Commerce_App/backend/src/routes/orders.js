@@ -1,5 +1,5 @@
 import express from "express";
-import { authRequired, adminOnly } from "../middleware/authMiddleware.js";
+import { authRequired, staffOnly } from "../middleware/authMiddleware.js";
 import {
   listOrders,
   placeOrder,
@@ -21,6 +21,6 @@ router.get("/:orderId", authRequired, getOrder); // Route to get details of a sp
 router.put("/:orderId", authRequired, validate(OrderUpdateSchema), updateOrder); // Route to update a specific order
 router.delete("/:orderId", authRequired, cancelOrder); // Route to cancel a specific order
 
-router.post("/:orderId/shipment", authRequired, adminOnly, createShipment); // Admin: create a shipment/label
+router.post("/:orderId/shipment", authRequired, staffOnly, createShipment); // Admin: create a shipment/label
 
 export default router;

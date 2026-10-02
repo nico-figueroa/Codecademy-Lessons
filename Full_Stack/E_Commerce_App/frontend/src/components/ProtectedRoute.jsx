@@ -5,7 +5,7 @@ import LoadingSpinner from "./LoadingSpinner.jsx";
 // Wraps routes that require an authenticated session (cart, checkout, order
 // history). Unauthenticated visitors are redirected to /login, remembering
 // where they were headed so they can resume after signing in.
-export default function ProtectedRoute({ adminOnly = false }) {
+export default function ProtectedRoute({ adminOnly = false, staffOnly = false }) {
   const { isAuthenticated, isLoading, user } = useAuth();
   const location = useLocation();
 
@@ -21,6 +21,10 @@ export default function ProtectedRoute({ adminOnly = false }) {
   }
 
   if (adminOnly && user?.role !== "admin") {
+    return <Navigate to="/" replace />;
+  }
+
+  if (staffOnly && user?.role !== "admin" && user?.role !== "vendor") {
     return <Navigate to="/" replace />;
   }
 

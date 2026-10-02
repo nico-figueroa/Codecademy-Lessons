@@ -48,3 +48,15 @@ export function adminOnly(req, res, next) {
   }
   next();
 }
+
+// Staff (admin or vendor) manage products and orders; only admins manage users
+export function isStaff(role) {
+  return role === "admin" || role === "vendor";
+}
+
+export function staffOnly(req, res, next) {
+  if (!isStaff(req.user.role)) {
+    return res.status(403).json({ error: "Staff only" });
+  }
+  next();
+}

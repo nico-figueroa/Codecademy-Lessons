@@ -1,5 +1,5 @@
 import express from "express";
-import { authRequired, adminOnly } from "../middleware/authMiddleware.js";
+import { authRequired, staffOnly } from "../middleware/authMiddleware.js";
 import {
   listProducts,
   listAllProducts,
@@ -21,20 +21,20 @@ router.get("/", listProducts); // Route to list all products
 router.post(
   "/",
   authRequired,
-  adminOnly,
+  staffOnly,
   validate(ProductCreateSchema),
   createProduct,
 ); // Route to create a new product
 
-router.get("/admin/all", authRequired, adminOnly, listAllProducts); // Admin: all products incl. inactive
+router.get("/admin/all", authRequired, staffOnly, listAllProducts); // Admin: all products incl. inactive
 router.get("/:productId", getProduct); // Route to get details of a specific product
 router.put(
   "/:productId",
   authRequired,
-  adminOnly,
+  staffOnly,
   validate(ProductUpdateSchema),
   updateProduct,
 ); // Route to update a specific product
-router.delete("/:productId", authRequired, adminOnly, deleteProduct); // Route to delete a specific product
+router.delete("/:productId", authRequired, staffOnly, deleteProduct); // Route to delete a specific product
 
 export default router;

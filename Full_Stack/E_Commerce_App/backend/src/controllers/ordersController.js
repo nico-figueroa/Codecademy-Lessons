@@ -1,4 +1,5 @@
 import pool from "../db.js";
+import { isStaff } from "../middleware/authMiddleware.js";
 import shippoClient from "../utils/shippoClient.js";
 
 export const SHIPMENT_COLUMNS = `
@@ -80,7 +81,7 @@ export async function listOrders(req, res) {
   const role = req.user.role;
 
   const query =
-    role === "admin"
+    isStaff(role)
       ? `SELECT
            id,
            user_id AS "userId",
@@ -109,7 +110,7 @@ export async function listOrders(req, res) {
          WHERE user_id = $1
          ORDER BY created_at DESC`;
 
-  const params = role === "admin" ? [] : [userId];
+  const params = isStaff(role) ? [] : [userId];
 
   const result = await pool.query(query, params);
   res.json(result.rows.map(shapeOrder));
@@ -146,7 +147,7 @@ export async function getOrder(req, res) {
 
   const order = shapeOrder(orderRes.rows[0]);
 
-  if (role !== "admin" && order.userId !== userId) {
+  if (!isStaff(role) && order.userId !== userId) {
     return res.status(403).json({ error: "Forbidden" });
   }
 
@@ -398,7 +399,7 @@ export async function updateOrder(req, res) {
     order.userId = newOwnerId;
   }
 
-  if (role !== "admin") {
+  if (!isStaff(role)) {
     if (order.userId !== userId) {
       return res.status(403).json({ error: "Forbidden" });
     }
@@ -424,7 +425,7 @@ export async function updateOrder(req, res) {
       );
       const lockedOrder = lockedOrderRes.rows[0];
 
-      if (role !== "admin" && lockedOrder.userId !== userId) {
+      if (!isStaff(role) && lockedOrder.userId !== userId) {
         await client.query("ROLLBACK");
         return res.status(403).json({ error: "Forbidden" });
       }
@@ -498,7 +499,7 @@ export async function cancelOrder(req, res) {
       `SELECT id, user_id AS "userId", status
        FROM orders
        WHERE id = $1
-         AND ($2 = 'admin' OR user_id = $3)
+         AND ($2 IN ('admin','vendor') OR user_id = $3)
        FOR UPDATE`,
       [orderId, role, userId],
     );

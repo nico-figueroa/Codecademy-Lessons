@@ -43,9 +43,11 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
               </Route>
 
-              <Route element={<ProtectedRoute adminOnly />}>
+              <Route element={<ProtectedRoute staffOnly />}>
                 <Route path="/admin/products" element={<AdminProductsPage />} />
                 <Route path="/admin/orders" element={<AdminOrdersPage />} />
+              </Route>
+              <Route element={<ProtectedRoute adminOnly />}>
                 <Route path="/admin/users" element={<AdminUsersPage />} />
               </Route>
 
