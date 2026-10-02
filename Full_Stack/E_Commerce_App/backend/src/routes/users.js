@@ -1,7 +1,8 @@
 import express from "express";
-import { authRequired, adminOnly } from "../middleware/authMiddleware.js";
+import { authRequired, adminOnly, staffOnly } from "../middleware/authMiddleware.js";
 import {
   listUsers,
+  lookupUsers,
   createUser,
   getUser,
   updateUser,
@@ -13,7 +14,12 @@ import { UserCreateSchema, UserUpdateSchema } from "../validation/schemas.js";
 
 const router = express.Router();
 
-router.use(authRequired, adminOnly); // Apply authentication and admin-only middleware to all routes in this router
+router.use(authRequired);
+
+// Staff (admin or vendor): minimal customer list for assigning orders
+router.get("/lookup", staffOnly, lookupUsers);
+
+router.use(adminOnly); // Everything below is admin-only
 
 router.get("/", listUsers); // Route to list all users
 router.post("/", validate(UserCreateSchema), createUser); // Route to create a new user

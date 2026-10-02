@@ -45,3 +45,23 @@ export function deactivateUser(userId) {
 export function assignOrder(orderId, userId) {
   return client.put(`/orders/${orderId}`, { userId }).then((res) => res.data);
 }
+
+export function fetchUserLookup() {
+  return client.get("/users/lookup").then((res) => res.data);
+}
+
+export function updateOrder(orderId, changes) {
+  return client.put(`/orders/${orderId}`, changes).then((res) => res.data);
+}
+
+export function createManualShipment(orderId, shipment) {
+  return client.post(`/orders/${orderId}/shipment`, shipment).then((res) => res.data);
+}
+
+export function updateShipment(orderId, changes) {
+  return client.put(`/orders/${orderId}/shipment`, changes).then((res) => res.data);
+}
+
+export function deleteShipment(orderId) {
+  return client.delete(`/orders/${orderId}/shipment`);
+}

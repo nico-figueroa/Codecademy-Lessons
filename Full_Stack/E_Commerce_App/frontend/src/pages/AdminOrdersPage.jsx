@@ -4,6 +4,7 @@ import { fetchOrders, fetchOrder } from "../api/orders.js";
 import { createShipment, updateOrderStatus } from "../api/admin.js";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import Alert from "../components/Alert.jsx";
+import OrderEditor from "../components/OrderEditor.jsx";
 import { ORDER_STATUSES, STATUS_STYLES } from "../utils/orderStatus.js";
 import { formatMoney } from "../utils/formatMoney.js";
 
@@ -12,6 +13,7 @@ export default function AdminOrdersPage() {
   const [shipments, setShipments] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editingId, setEditingId] = useState(null);
 
   const load = useCallback(async () => {
     try {
@@ -99,6 +101,16 @@ export default function AdminOrdersPage() {
                     className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-indigo-500">
                     Create shipment
                   </button>
+                )}
+                <button type="button" aria-expanded={editingId === o.id}
+                  onClick={() => setEditingId(editingId === o.id ? null : o.id)}
+                  className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
+                  {editingId === o.id ? "Close" : `Edit order ${o.id.slice(0, 8)}`}
+                </button>
+                {editingId === o.id && (
+                  <div className="-mx-5 -mb-5 basis-full">
+                    <OrderEditor orderId={o.id} onSaved={load} />
+                  </div>
                 )}
               </li>
             );

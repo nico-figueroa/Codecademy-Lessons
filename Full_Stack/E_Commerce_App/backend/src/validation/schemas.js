@@ -237,6 +237,27 @@ export const OrderUpdateSchema = z.object({
       .enum(["pending", "paid", "shipped", "completed", "cancelled"])
       .optional(),
     userId: z.string().uuid().optional(),
+    paymentStatus: z.enum(["unpaid", "paid", "failed"]).optional(),
+    shippingAddress: AddressSchema.optional(),
+    items: z
+      .array(
+        z.object({
+          productId: z.string().uuid(),
+          quantity: z.number().int().min(0).max(1000),
+        }),
+      )
+      .min(1)
+      .optional(),
+  }),
+});
+
+export const ShipmentUpdateSchema = z.object({
+  body: z.object({
+    carrier: z.string().trim().max(100).optional(),
+    service: z.string().trim().max(100).optional(),
+    trackingNumber: z.string().trim().max(255).optional(),
+    trackingUrl: z.string().trim().url().max(2000).optional().or(z.literal("")),
+    status: z.enum(["pre_transit", "in_transit", "delivered", "failed"]).optional(),
   }),
 });
 

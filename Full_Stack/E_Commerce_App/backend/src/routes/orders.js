@@ -7,10 +7,12 @@ import {
   updateOrder,
   cancelOrder,
   createShipment,
+  updateShipment,
+  deleteShipment,
 } from "../controllers/ordersController.js";
 
 import { validate } from "../middleware/validationMiddleware.js";
-import { OrderUpdateSchema, OrderCreateSchema } from "../validation/schemas.js";
+import { OrderUpdateSchema, OrderCreateSchema, ShipmentUpdateSchema } from "../validation/schemas.js";
 
 const router = express.Router();
 
@@ -22,5 +24,8 @@ router.put("/:orderId", authRequired, validate(OrderUpdateSchema), updateOrder);
 router.delete("/:orderId", authRequired, cancelOrder); // Route to cancel a specific order
 
 router.post("/:orderId/shipment", authRequired, staffOnly, createShipment); // Admin: create a shipment/label
+
+router.put("/:orderId/shipment", authRequired, staffOnly, validate(ShipmentUpdateSchema), updateShipment); // Staff: edit shipment details
+router.delete("/:orderId/shipment", authRequired, staffOnly, deleteShipment); // Staff: remove shipment
 
 export default router;

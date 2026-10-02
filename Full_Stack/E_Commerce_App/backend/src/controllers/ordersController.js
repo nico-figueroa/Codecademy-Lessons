@@ -356,10 +356,100 @@ export async function placeOrder(req, res) {
   }
 }
 
+// Replaces the quantities of an unpaid order, adjusting stock and the total.
+// A quantity of 0 removes the line; unknown products are added.
+async function replaceOrderItems(orderId, items) {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    await client.query(`SELECT id FROM orders WHERE id = $1 FOR UPDATE`, [orderId]);
+
+    const currentRes = await client.query(
+      `SELECT id, product_id, quantity FROM order_items WHERE order_id = $1`,
+      [orderId],
+    );
+    const current = new Map(currentRes.rows.map((r) => [r.product_id, r]));
+    const desired = new Map();
+    for (const it of items) desired.set(it.productId, it.quantity);
+
+    if ([...desired.values()].every((q) => q === 0) && desired.size >= current.size) {
+      await client.query("ROLLBACK");
+      return { code: 400, error: "An order needs at least one item; cancel it instead" };
+    }
+
+    for (const [productId, qty] of desired) {
+      const existing = current.get(productId);
+      const delta = qty - (existing?.quantity ?? 0);
+      if (delta === 0) continue;
+
+      const prodRes = await client.query(
+        `SELECT price, currency, stock, is_active FROM products WHERE id = $1 FOR UPDATE`,
+        [productId],
+      );
+      if (prodRes.rowCount === 0) {
+        await client.query("ROLLBACK");
+        return { code: 404, error: "Product not found" };
+      }
+      const product = prodRes.rows[0];
+      if (delta > 0 && (!product.is_active || product.stock < delta)) {
+        await client.query("ROLLBACK");
+        return { code: 409, error: "Insufficient stock for order" };
+      }
+
+      await client.query(
+        `UPDATE products SET stock = stock - $2, updated_at = NOW() WHERE id = $1`,
+        [productId, delta],
+      );
+
+      if (qty === 0) {
+        await client.query(`DELETE FROM order_items WHERE id = $1`, [existing.id]);
+      } else if (existing) {
+        await client.query(
+          `UPDATE order_items SET quantity = $2, updated_at = NOW() WHERE id = $1`,
+          [existing.id, qty],
+        );
+      } else {
+        await client.query(
+          `INSERT INTO order_items (order_id, product_id, quantity, unit_price, currency)
+           VALUES ($1, $2, $3, $4, $5)`,
+          [orderId, productId, qty, product.price, product.currency],
+        );
+      }
+    }
+
+    const totalRes = await client.query(
+      `SELECT COALESCE(SUM(quantity * unit_price), 0) AS total, COUNT(*) AS n
+       FROM order_items WHERE order_id = $1`,
+      [orderId],
+    );
+    if (Number(totalRes.rows[0].n) === 0) {
+      await client.query("ROLLBACK");
+      return { code: 400, error: "An order needs at least one item; cancel it instead" };
+    }
+    await client.query(
+      `UPDATE orders SET total_amount = $2, updated_at = NOW() WHERE id = $1`,
+      [orderId, totalRes.rows[0].total],
+    );
+    await client.query("COMMIT");
+    return {};
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
 // Updates the status of an existing order, ensuring the user has access rights
 export async function updateOrder(req, res) {
   const { orderId } = req.params;
-  const { status, userId: newOwnerId } = req.body;
+  const {
+    status,
+    userId: newOwnerId,
+    paymentStatus,
+    shippingAddress,
+    items,
+  } = req.body;
   const userId = req.user.userId;
   const role = req.user.role;
 
@@ -377,8 +467,8 @@ export async function updateOrder(req, res) {
   const order = orderRes.rows[0];
 
   if (newOwnerId !== undefined) {
-    if (role !== "admin") {
-      return res.status(403).json({ error: "Only admins can reassign orders" });
+    if (!isStaff(role)) {
+      return res.status(403).json({ error: "Only staff can reassign orders" });
     }
     if (order.paymentStatus === "paid") {
       return res
@@ -403,11 +493,73 @@ export async function updateOrder(req, res) {
     if (order.userId !== userId) {
       return res.status(403).json({ error: "Forbidden" });
     }
+    if (
+      paymentStatus !== undefined ||
+      shippingAddress !== undefined ||
+      items !== undefined
+    ) {
+      return res.status(403).json({ error: "Only staff can edit orders" });
+    }
 
     if (status !== "cancelled") {
       return res
         .status(403)
         .json({ error: "Only admins can update this order status" });
+    }
+  }
+
+  if (paymentStatus !== undefined && role !== "admin") {
+    return res
+      .status(403)
+      .json({ error: "Only admins can change the payment status" });
+  }
+
+  if (shippingAddress !== undefined) {
+    await pool.query(
+      `UPDATE orders
+       SET shipping_name = $2, shipping_phone = $3, shipping_line1 = $4,
+           shipping_line2 = $5, shipping_city = $6, shipping_state = $7,
+           shipping_postal_code = $8, shipping_country = $9, updated_at = NOW()
+       WHERE id = $1`,
+      [
+        orderId,
+        shippingAddress.name,
+        shippingAddress.phone || null,
+        shippingAddress.line1,
+        shippingAddress.line2 || null,
+        shippingAddress.city,
+        shippingAddress.state,
+        shippingAddress.postalCode,
+        shippingAddress.country,
+      ],
+    );
+  }
+
+  if (items !== undefined) {
+    if (order.status !== "pending" || order.paymentStatus === "paid") {
+      return res
+        .status(409)
+        .json({ error: "Items can only be edited on unpaid pending orders" });
+    }
+    const outcome = await replaceOrderItems(orderId, items);
+    if (outcome.error) {
+      return res.status(outcome.code).json({ error: outcome.error });
+    }
+  }
+
+  let effectiveStatus = status;
+  if (paymentStatus !== undefined) {
+    await pool.query(
+      `UPDATE orders SET payment_status = $2, updated_at = NOW() WHERE id = $1`,
+      [orderId, paymentStatus],
+    );
+    // Keep the order status consistent when payment is confirmed manually
+    if (
+      paymentStatus === "paid" &&
+      status === undefined &&
+      order.status === "pending"
+    ) {
+      effectiveStatus = "paid";
     }
   }
 
@@ -479,7 +631,7 @@ export async function updateOrder(req, res) {
        payment_reference AS "paymentReference",
        created_at AS "createdAt",
        updated_at AS "updatedAt",       shipping_name AS "shippingName",       shipping_phone AS "shippingPhone",       shipping_line1 AS "shippingLine1",       shipping_line2 AS "shippingLine2",       shipping_city AS "shippingCity",       shipping_state AS "shippingState",       shipping_postal_code AS "shippingPostalCode",       shipping_country AS "shippingCountry"`,
-    [orderId, status],
+    [orderId, effectiveStatus ?? null],
   );
 
   res.json(shapeOrder(result.rows[0]));
@@ -569,6 +721,28 @@ export async function createShipment(req, res) {
     return res.status(409).json({ error: "Order already has a shipment" });
   }
 
+  // Manual entry: staff supply the carrier/tracking instead of buying a label
+  const manual = req.body;
+  if (manual?.carrier && manual?.trackingNumber) {
+    const ins = await pool.query(
+      `INSERT INTO shipments (order_id, provider, carrier, service, tracking_number, tracking_url)
+       VALUES ($1, 'manual', $2, $3, $4, $5)
+       RETURNING ${SHIPMENT_COLUMNS}`,
+      [
+        orderId,
+        String(manual.carrier).slice(0, 100),
+        manual.service ? String(manual.service).slice(0, 100) : null,
+        String(manual.trackingNumber).slice(0, 255),
+        manual.trackingUrl ? String(manual.trackingUrl).slice(0, 2000) : null,
+      ],
+    );
+    await pool.query(
+      `UPDATE orders SET status = 'shipped', updated_at = NOW() WHERE id = $1`,
+      [orderId],
+    );
+    return res.status(201).json(ins.rows[0]);
+  }
+
   let label;
   try {
     label = await shippoClient.createLabel(order.shippingAddress);
@@ -604,6 +778,64 @@ export async function createShipment(req, res) {
     );
     await client.query("COMMIT");
     res.status(201).json(shipRes.rows[0]);
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+// Staff: edit the latest shipment's carrier/tracking details or status.
+export async function updateShipment(req, res) {
+  const { orderId } = req.params;
+  const b = req.body;
+  const result = await pool.query(
+    `UPDATE shipments SET
+       carrier = COALESCE($2, carrier),
+       service = COALESCE($3, service),
+       tracking_number = COALESCE($4, tracking_number),
+       tracking_url = COALESCE($5, tracking_url),
+       status = COALESCE($6, status),
+       updated_at = NOW()
+     WHERE id = (SELECT id FROM shipments WHERE order_id = $1
+                 ORDER BY created_at DESC LIMIT 1)
+     RETURNING ${SHIPMENT_COLUMNS}`,
+    [
+      orderId,
+      b.carrier ?? null,
+      b.service ?? null,
+      b.trackingNumber ?? null,
+      b.trackingUrl ?? null,
+      b.status ?? null,
+    ],
+  );
+  if (result.rowCount === 0) {
+    return res.status(404).json({ error: "Shipment not found" });
+  }
+  res.json(result.rows[0]);
+}
+
+// Staff: removes the order's shipments; a shipped order goes back to paid.
+export async function deleteShipment(req, res) {
+  const { orderId } = req.params;
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const del = await client.query(
+      `DELETE FROM shipments WHERE order_id = $1`,
+      [orderId],
+    );
+    if (del.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Shipment not found" });
+    }
+    await client.query(
+      `UPDATE orders SET status = 'paid', updated_at = NOW()
+       WHERE id = $1 AND status = 'shipped'`,
+      [orderId],
+    );
+    await client.query("COMMIT");
+    res.status(204).send();
   } catch (err) {
     await client.query("ROLLBACK");
     throw err;

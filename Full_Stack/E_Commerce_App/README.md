@@ -157,3 +157,5 @@ only rebuilds/redeploys that service when files under its folder change.
 Admins get a **Manage users** page (`/admin/users`) with full CRUD (create, edit profile/role, reset password, deactivate/reactivate; admins cannot deactivate or delete themselves). From **Manage orders**, *Take payment* on a pending order asks which user to assign the order to, then opens the Stripe payment form and pays on that user's behalf (`PUT /orders/{id}` with `userId`, admin only).
 
 **Vendor role:** vendors can manage products and orders (list all orders, change status, create shipments) but cannot access user management or reassign orders; those remain admin-only.
+
+**Staff order editing:** admins and vendors can change an order's customer (not once paid), delivery address, item quantities (pending, unpaid orders only) and shipment (manual create, update, delete) from **Manage orders > Edit order**. Only admins can change an order's payment status. Related endpoints: `PUT /orders/{id}`, `PUT|DELETE /orders/{id}/shipment`, `GET /users/lookup`.

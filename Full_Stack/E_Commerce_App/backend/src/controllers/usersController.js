@@ -36,6 +36,14 @@ export async function listUsers(req, res) {
   res.json(result.rows.map(shapeUser));
 }
 
+// Staff: id/name/email/phone/address of active users, for assigning orders
+export async function lookupUsers(req, res) {
+  const result = await pool.query(
+    `SELECT id, name, email FROM users WHERE is_active = TRUE ORDER BY name, email`,
+  );
+  res.json(result.rows);
+}
+
 // Creates a new user with the provided details
 export async function createUser(req, res) {
   const { email, password, role = "customer", name, phone, address = {} } =

@@ -831,7 +831,7 @@
         "tags": [
           "Orders"
         ],
-        "summary": "Update order",
+        "summary": "Update order (staff: customer, address, quantities; admin: payment status)",
         "security": [
           {
             "bearerAuth": []
@@ -842,7 +842,43 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/OrderUpdateRequest"
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "paymentStatus": {
+                    "type": "string",
+                    "enum": [
+                      "unpaid",
+                      "paid",
+                      "failed"
+                    ]
+                  },
+                  "shippingAddress": {
+                    "type": "object"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "productId": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "quantity": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -858,7 +894,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Staff (admin/vendor) may send userId (reassign; not when paid), shippingAddress, and items [{productId, quantity}] (quantity 0 removes; only pending, unpaid orders). paymentStatus (unpaid|paid|failed) is admin-only."
       },
       "delete": {
         "tags": [
@@ -1138,7 +1175,7 @@
     },
     "/orders/{orderId}/shipment": {
       "post": {
-        "summary": "Admin: create a shipment and label (Shippo test mode, or simulated without SHIPPO_API_KEY)",
+        "summary": "Admin: create a shipment and label (Shippo test mode, or simulated without SHIPPO_API_KEY); send {carrier, trackingNumber} to record a manual shipment",
         "responses": {
           "201": {
             "description": "Shipment created"
@@ -1174,7 +1211,151 @@
         ],
         "tags": [
           "Orders"
-        ]
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "carrier": {
+                    "type": "string"
+                  },
+                  "service": {
+                    "type": "string"
+                  },
+                  "trackingNumber": {
+                    "type": "string"
+                  },
+                  "trackingUrl": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Staff: update the latest shipment",
+        "tags": [
+          "Orders"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "carrier": {
+                    "type": "string"
+                  },
+                  "service": {
+                    "type": "string"
+                  },
+                  "trackingNumber": {
+                    "type": "string"
+                  },
+                  "trackingUrl": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pre_transit",
+                      "in_transit",
+                      "delivered",
+                      "failed"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated"
+          },
+          "403": {
+            "description": "Staff only"
+          },
+          "404": {
+            "description": "No shipment"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Staff: delete the shipment (shipped order reverts to paid)",
+        "tags": [
+          "Orders"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "403": {
+            "description": "Staff only"
+          },
+          "404": {
+            "description": "No shipment"
+          }
+        }
+      }
+    },
+    "/users/lookup": {
+      "get": {
+        "summary": "Staff: list active users (id, name, email) for order assignment",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users"
+          },
+          "403": {
+            "description": "Staff only"
+          }
+        }
       }
     }
   },
