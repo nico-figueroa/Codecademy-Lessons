@@ -6,7 +6,7 @@ const FIELDS = [
   { key: "line1", label: "Address line 1", autoComplete: "address-line1", required: true, span: 2 },
   { key: "line2", label: "Address line 2", autoComplete: "address-line2", span: 2 },
   { key: "city", label: "City", autoComplete: "address-level2", required: true },
-  { key: "state", label: "State / Province", autoComplete: "address-level1" },
+  { key: "state", label: "State / Province", autoComplete: "address-level1", required: true },
   { key: "postalCode", label: "Postal code", autoComplete: "postal-code", required: true },
   { key: "country", label: "Country (2-letter code)", autoComplete: "country", required: true, maxLength: 2 },
 ];

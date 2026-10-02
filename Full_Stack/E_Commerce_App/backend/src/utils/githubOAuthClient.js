@@ -90,7 +90,8 @@ export const githubOAuthClient = {
     const primary = emails.find((entry) => entry.primary && entry.verified);
     const anyVerified = emails.find((entry) => entry.verified);
 
-    return primary?.email || anyVerified?.email || emails[0]?.email || null;
+    // Only verified addresses are returned: accounts are linked by email.
+    return primary?.email || anyVerified?.email || null;
   },
 };
 

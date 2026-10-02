@@ -358,10 +358,10 @@ export async function placeOrder(req, res) {
 
 // Replaces the quantities of an unpaid order, adjusting stock and the total.
 // A quantity of 0 removes the line; unknown products are added.
-async function replaceOrderItems(orderId, items) {
-  const client = await pool.connect();
-  try {
-    await client.query("BEGIN");
+// Runs inside the caller's transaction; returns {code, error} on failure so the
+// caller can roll everything back.
+async function replaceOrderItems(client, orderId, items) {
+  {
     await client.query(`SELECT id FROM orders WHERE id = $1 FOR UPDATE`, [orderId]);
 
     const currentRes = await client.query(
@@ -373,7 +373,6 @@ async function replaceOrderItems(orderId, items) {
     for (const it of items) desired.set(it.productId, it.quantity);
 
     if ([...desired.values()].every((q) => q === 0) && desired.size >= current.size) {
-      await client.query("ROLLBACK");
       return { code: 400, error: "An order needs at least one item; cancel it instead" };
     }
 
@@ -387,12 +386,10 @@ async function replaceOrderItems(orderId, items) {
         [productId],
       );
       if (prodRes.rowCount === 0) {
-        await client.query("ROLLBACK");
         return { code: 404, error: "Product not found" };
       }
       const product = prodRes.rows[0];
       if (delta > 0 && (!product.is_active || product.stock < delta)) {
-        await client.query("ROLLBACK");
         return { code: 409, error: "Insufficient stock for order" };
       }
 
@@ -423,24 +420,19 @@ async function replaceOrderItems(orderId, items) {
       [orderId],
     );
     if (Number(totalRes.rows[0].n) === 0) {
-      await client.query("ROLLBACK");
       return { code: 400, error: "An order needs at least one item; cancel it instead" };
     }
     await client.query(
       `UPDATE orders SET total_amount = $2, updated_at = NOW() WHERE id = $1`,
       [orderId, totalRes.rows[0].total],
     );
-    await client.query("COMMIT");
     return {};
-  } catch (err) {
-    await client.query("ROLLBACK");
-    throw err;
-  } finally {
-    client.release();
   }
 }
 
 // Updates the status of an existing order, ensuring the user has access rights
+const CANCELLABLE_STATUSES = ["pending", "paid"];
+
 export async function updateOrder(req, res) {
   const { orderId } = req.params;
   const {
@@ -452,189 +444,153 @@ export async function updateOrder(req, res) {
   } = req.body;
   const userId = req.user.userId;
   const role = req.user.role;
+  const staff = isStaff(role);
 
-  const orderRes = await pool.query(
-    `SELECT id, user_id AS "userId", status, payment_status AS "paymentStatus"
-     FROM orders
-     WHERE id = $1`,
-    [orderId],
-  );
+  // All changes are applied in a single transaction so a failure leaves the
+  // order untouched.
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
 
-  if (orderRes.rowCount === 0) {
-    return res.status(404).json({ error: "Order not found" });
-  }
-
-  const order = orderRes.rows[0];
-
-  if (newOwnerId !== undefined) {
-    if (!isStaff(role)) {
-      return res.status(403).json({ error: "Only staff can reassign orders" });
-    }
-    if (order.paymentStatus === "paid") {
-      return res
-        .status(409)
-        .json({ error: "A paid order cannot be reassigned" });
-    }
-    const ownerRes = await pool.query(
-      `SELECT id FROM users WHERE id = $1 AND is_active = TRUE`,
-      [newOwnerId],
+    const orderRes = await client.query(
+      `SELECT id, user_id AS "userId", status, payment_status AS "paymentStatus"
+       FROM orders
+       WHERE id = $1
+       FOR UPDATE`,
+      [orderId],
     );
-    if (ownerRes.rowCount === 0) {
-      return res.status(404).json({ error: "Assignee not found or inactive" });
-    }
-    await pool.query(
-      `UPDATE orders SET user_id = $2, updated_at = NOW() WHERE id = $1`,
-      [orderId, newOwnerId],
-    );
-    order.userId = newOwnerId;
-  }
 
-  if (!isStaff(role)) {
-    if (order.userId !== userId) {
-      return res.status(403).json({ error: "Forbidden" });
-    }
-    if (
-      paymentStatus !== undefined ||
-      shippingAddress !== undefined ||
-      items !== undefined
-    ) {
-      return res.status(403).json({ error: "Only staff can edit orders" });
-    }
-
-    if (status !== "cancelled") {
-      return res
-        .status(403)
-        .json({ error: "Only admins can update this order status" });
-    }
-  }
-
-  if (paymentStatus !== undefined && role !== "admin") {
-    return res
-      .status(403)
-      .json({ error: "Only admins can change the payment status" });
-  }
-
-  if (shippingAddress !== undefined) {
-    await pool.query(
-      `UPDATE orders
-       SET shipping_name = $2, shipping_phone = $3, shipping_line1 = $4,
-           shipping_line2 = $5, shipping_city = $6, shipping_state = $7,
-           shipping_postal_code = $8, shipping_country = $9, updated_at = NOW()
-       WHERE id = $1`,
-      [
-        orderId,
-        shippingAddress.name,
-        shippingAddress.phone || null,
-        shippingAddress.line1,
-        shippingAddress.line2 || null,
-        shippingAddress.city,
-        shippingAddress.state,
-        shippingAddress.postalCode,
-        shippingAddress.country,
-      ],
-    );
-  }
-
-  if (items !== undefined) {
-    if (order.status !== "pending" || order.paymentStatus === "paid") {
-      return res
-        .status(409)
-        .json({ error: "Items can only be edited on unpaid pending orders" });
-    }
-    const outcome = await replaceOrderItems(orderId, items);
-    if (outcome.error) {
-      return res.status(outcome.code).json({ error: outcome.error });
-    }
-  }
-
-  let effectiveStatus = status;
-  if (paymentStatus !== undefined) {
-    await pool.query(
-      `UPDATE orders SET payment_status = $2, updated_at = NOW() WHERE id = $1`,
-      [orderId, paymentStatus],
-    );
-    // Keep the order status consistent when payment is confirmed manually
-    if (
-      paymentStatus === "paid" &&
-      status === undefined &&
-      order.status === "pending"
-    ) {
-      effectiveStatus = "paid";
-    }
-  }
-
-  if (status === "cancelled" && order.status !== "cancelled") {
-    const client = await pool.connect();
-    try {
-      await client.query("BEGIN");
-
-      const lockedOrderRes = await client.query(
-        `SELECT id, user_id AS "userId", status
-         FROM orders
-         WHERE id = $1
-         FOR UPDATE`,
-        [orderId],
-      );
-      const lockedOrder = lockedOrderRes.rows[0];
-
-      if (!isStaff(role) && lockedOrder.userId !== userId) {
-        await client.query("ROLLBACK");
-        return res.status(403).json({ error: "Forbidden" });
-      }
-
-      if (shouldRestockOrder(lockedOrder.status)) {
-        await restoreOrderStock(client, orderId);
-      }
-
-      const result = await client.query(
-        `UPDATE orders
-         SET status = 'cancelled',
-             updated_at = NOW()
-         WHERE id = $1
-         RETURNING
-           id,
-           user_id AS "userId",
-           status,
-           total_amount AS "totalAmount",
-           currency,
-           payment_status AS "paymentStatus",
-           payment_provider AS "paymentProvider",
-           payment_reference AS "paymentReference",
-           created_at AS "createdAt",
-           updated_at AS "updatedAt",           shipping_name AS "shippingName",           shipping_phone AS "shippingPhone",           shipping_line1 AS "shippingLine1",           shipping_line2 AS "shippingLine2",           shipping_city AS "shippingCity",           shipping_state AS "shippingState",           shipping_postal_code AS "shippingPostalCode",           shipping_country AS "shippingCountry"`,
-        [orderId],
-      );
-
-      await client.query("COMMIT");
-      return res.json(shapeOrder(result.rows[0]));
-    } catch (err) {
+    if (orderRes.rowCount === 0) {
       await client.query("ROLLBACK");
-      throw err;
-    } finally {
-      client.release();
+      return res.status(404).json({ error: "Order not found" });
     }
+
+    const order = orderRes.rows[0];
+    const fail = async (code, error) => {
+      await client.query("ROLLBACK");
+      return res.status(code).json({ error });
+    };
+
+    if (newOwnerId !== undefined) {
+      if (!staff) return fail(403, "Only staff can reassign orders");
+      if (order.paymentStatus === "paid") {
+        return fail(409, "A paid order cannot be reassigned");
+      }
+      const ownerRes = await client.query(
+        `SELECT id FROM users WHERE id = $1 AND is_active = TRUE`,
+        [newOwnerId],
+      );
+      if (ownerRes.rowCount === 0) {
+        return fail(404, "Assignee not found or inactive");
+      }
+    }
+
+    if (!staff) {
+      if (order.userId !== userId) return fail(403, "Forbidden");
+      if (
+        paymentStatus !== undefined ||
+        shippingAddress !== undefined ||
+        items !== undefined
+      ) {
+        return fail(403, "Only staff can edit orders");
+      }
+      if (status !== "cancelled") {
+        return fail(403, "Only admins can update this order status");
+      }
+    }
+
+    if (paymentStatus !== undefined && role !== "admin") {
+      return fail(403, "Only admins can change the payment status");
+    }
+
+    if (
+      status === "cancelled" &&
+      order.status !== "cancelled" &&
+      !CANCELLABLE_STATUSES.includes(order.status)
+    ) {
+      return fail(409, `A ${order.status} order cannot be cancelled`);
+    }
+
+    if (items !== undefined) {
+      if (order.status !== "pending" || order.paymentStatus === "paid") {
+        return fail(409, "Items can only be edited on unpaid pending orders");
+      }
+    }
+
+    if (newOwnerId !== undefined) {
+      await client.query(
+        `UPDATE orders SET user_id = $2, updated_at = NOW() WHERE id = $1`,
+        [orderId, newOwnerId],
+      );
+    }
+
+    if (shippingAddress !== undefined) {
+      await client.query(
+        `UPDATE orders
+         SET shipping_name = $2, shipping_phone = $3, shipping_line1 = $4,
+             shipping_line2 = $5, shipping_city = $6, shipping_state = $7,
+             shipping_postal_code = $8, shipping_country = $9, updated_at = NOW()
+         WHERE id = $1`,
+        [
+          orderId,
+          shippingAddress.name,
+          shippingAddress.phone || null,
+          shippingAddress.line1,
+          shippingAddress.line2 || null,
+          shippingAddress.city,
+          shippingAddress.state,
+          shippingAddress.postalCode,
+          shippingAddress.country,
+        ],
+      );
+    }
+
+    if (items !== undefined) {
+      const outcome = await replaceOrderItems(client, orderId, items);
+      if (outcome.error) return fail(outcome.code, outcome.error);
+    }
+
+    let effectiveStatus = status;
+    if (paymentStatus !== undefined) {
+      await client.query(
+        `UPDATE orders SET payment_status = $2, updated_at = NOW() WHERE id = $1`,
+        [orderId, paymentStatus],
+      );
+      // Keep the order status consistent when payment is confirmed manually
+      if (
+        paymentStatus === "paid" &&
+        status === undefined &&
+        order.status === "pending"
+      ) {
+        effectiveStatus = "paid";
+      }
+    }
+
+    if (
+      status === "cancelled" &&
+      order.status !== "cancelled" &&
+      shouldRestockOrder(order.status)
+    ) {
+      await restoreOrderStock(client, orderId);
+    }
+
+    const result = await client.query(
+      `UPDATE orders
+       SET status = COALESCE($2, status),
+           updated_at = NOW()
+       WHERE id = $1
+       RETURNING id, user_id AS "userId", status, total_amount AS "totalAmount", currency, payment_status AS "paymentStatus", payment_provider AS "paymentProvider", payment_reference AS "paymentReference", created_at AS "createdAt", updated_at AS "updatedAt", shipping_name AS "shippingName", shipping_phone AS "shippingPhone", shipping_line1 AS "shippingLine1", shipping_line2 AS "shippingLine2", shipping_city AS "shippingCity", shipping_state AS "shippingState", shipping_postal_code AS "shippingPostalCode", shipping_country AS "shippingCountry"`,
+      [orderId, effectiveStatus ?? null],
+    );
+
+    await client.query("COMMIT");
+    return res.json(shapeOrder(result.rows[0]));
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
   }
-
-  const result = await pool.query(
-    `UPDATE orders
-     SET status = COALESCE($2, status),
-         updated_at = NOW()
-     WHERE id = $1
-     RETURNING
-       id,
-       user_id AS "userId",
-       status,
-       total_amount AS "totalAmount",
-       currency,
-       payment_status AS "paymentStatus",
-       payment_provider AS "paymentProvider",
-       payment_reference AS "paymentReference",
-       created_at AS "createdAt",
-       updated_at AS "updatedAt",       shipping_name AS "shippingName",       shipping_phone AS "shippingPhone",       shipping_line1 AS "shippingLine1",       shipping_line2 AS "shippingLine2",       shipping_city AS "shippingCity",       shipping_state AS "shippingState",       shipping_postal_code AS "shippingPostalCode",       shipping_country AS "shippingCountry"`,
-    [orderId, effectiveStatus ?? null],
-  );
-
-  res.json(shapeOrder(result.rows[0]));
 }
 
 // Cancels an existing order, ensuring the user has access rights
@@ -659,6 +615,13 @@ export async function cancelOrder(req, res) {
     if (orderRes.rowCount === 0) {
       await client.query("ROLLBACK");
       return res.status(404).json({ error: "Order not found" });
+    }
+
+    if (!CANCELLABLE_STATUSES.includes(orderRes.rows[0].status)) {
+      await client.query("ROLLBACK");
+      return res
+        .status(409)
+        .json({ error: `A ${orderRes.rows[0].status} order cannot be cancelled` });
     }
 
     if (shouldRestockOrder(orderRes.rows[0].status)) {

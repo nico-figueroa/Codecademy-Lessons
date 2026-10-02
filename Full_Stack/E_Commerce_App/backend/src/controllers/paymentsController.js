@@ -38,6 +38,7 @@ export async function createPaymentIntent(req, res) {
          user_id AS "userId",
          total_amount AS "totalAmount",
          currency,
+         status,
          payment_status AS "paymentStatus"
        FROM orders
        WHERE id = $1
@@ -55,6 +56,13 @@ export async function createPaymentIntent(req, res) {
     if (!isStaff(role) && order.userId !== userId) {
       await client.query("ROLLBACK");
       return res.status(403).json({ error: "Forbidden" });
+    }
+
+    if (order.status !== "pending") {
+      await client.query("ROLLBACK");
+      return res
+        .status(409)
+        .json({ error: `A ${order.status} order cannot be paid` });
     }
 
     if (order.paymentStatus === "paid") {

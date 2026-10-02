@@ -14,7 +14,7 @@ vi.mock("../api/admin.js");
 beforeEach(() => vi.resetAllMocks());
 
 const VENDOR = { ...ADMIN, id: "v1", email: "vendor@example.com", role: "vendor" };
-const ADDRESS = { name: "Ann", line1: "1 Main St", city: "Austin", postalCode: "78701", country: "US" };
+const ADDRESS = { name: "Ann", line1: "1 Main St", city: "Austin", state: "TX", postalCode: "78701", country: "US" };
 
 function setup(user, order = {}) {
   orders.fetchOrders.mockResolvedValue([

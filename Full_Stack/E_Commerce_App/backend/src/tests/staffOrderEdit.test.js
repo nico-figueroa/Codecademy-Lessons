@@ -144,3 +144,65 @@ describe("Staff order editing", () => {
     expect(order.body.status).toBe("paid");
   });
 });
+
+describe("Order integrity", () => {
+  test("a failed item edit leaves the owner and address unchanged", async () => {
+    await request(app).post("/carts/me").set("Authorization", bearer(vendorToken));
+    await request(app)
+      .post("/carts/me/items")
+      .set("Authorization", bearer(vendorToken))
+      .send({ productId: product.id, quantity: 1 });
+    const order = await request(app)
+      .post("/orders")
+      .set("Authorization", bearer(vendorToken))
+      .send({ shippingAddress: TEST_ADDRESS });
+    const id = order.body.id;
+    const before = order.body;
+
+    const res = await request(app)
+      .put(`/orders/${id}`)
+      .set("Authorization", bearer(vendorToken))
+      .send({
+        userId: customerId,
+        shippingAddress: { ...TEST_ADDRESS, city: "Changedville" },
+        items: [{ productId: product.id, quantity: 500 }],
+      });
+    expect(res.status).toBe(409);
+
+    const after = await request(app)
+      .get(`/orders/${id}`)
+      .set("Authorization", bearer(vendorToken));
+    expect(after.body.userId).toBe(before.userId);
+    expect(after.body.shippingAddress.city).toBe(TEST_ADDRESS.city);
+  });
+
+  test("shipped orders cannot be cancelled", async () => {
+    await request(app).post("/carts/me").set("Authorization", bearer(vendorToken));
+    await request(app)
+      .post("/carts/me/items")
+      .set("Authorization", bearer(vendorToken))
+      .send({ productId: product.id, quantity: 1 });
+    const order = await request(app)
+      .post("/orders")
+      .set("Authorization", bearer(vendorToken))
+      .send({ shippingAddress: TEST_ADDRESS });
+    const id = order.body.id;
+
+    const shipped = await request(app)
+      .put(`/orders/${id}`)
+      .set("Authorization", bearer(adminToken))
+      .send({ status: "shipped" });
+    expect(shipped.status).toBe(200);
+
+    const viaPut = await request(app)
+      .put(`/orders/${id}`)
+      .set("Authorization", bearer(adminToken))
+      .send({ status: "cancelled" });
+    expect(viaPut.status).toBe(409);
+
+    const viaDelete = await request(app)
+      .delete(`/orders/${id}`)
+      .set("Authorization", bearer(adminToken));
+    expect(viaDelete.status).toBe(409);
+  });
+});
