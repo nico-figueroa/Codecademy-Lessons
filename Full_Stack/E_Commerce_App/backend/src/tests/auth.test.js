@@ -13,6 +13,8 @@ async function confirmTicket(callback) {
   return confirmed.body.accessToken;
 }
 
+const realFetchPrimaryEmail = githubOAuthClient.fetchPrimaryEmail;
+
 describe("Auth API", () => {
   test("Login works for seeded admin", async () => {
     const res = await request(app).post("/auth/login").send({
@@ -136,6 +138,26 @@ describe("Auth API", () => {
     expect(me.status).toBe(200);
     expect(me.body.email).toBe("customer@example.com");
     expect(githubOAuthClient.fetchPrimaryEmail).not.toHaveBeenCalled();
+  });
+
+  test("fetchPrimaryEmail ignores unverified GitHub emails", async () => {
+    const realFetch = global.fetch;
+    const respond = (emails) =>
+      jest.fn().mockResolvedValue({ ok: true, json: async () => emails });
+    try {
+      global.fetch = respond([
+        { email: "unverified@example.com", primary: true, verified: false },
+      ]);
+      expect(await realFetchPrimaryEmail.call(githubOAuthClient, "t")).toBeNull();
+
+      global.fetch = respond([
+        { email: "unverified@example.com", primary: true, verified: false },
+        { email: "ok@example.com", primary: false, verified: true },
+      ]);
+      expect(await realFetchPrimaryEmail.call(githubOAuthClient, "t")).toBe("ok@example.com");
+    } finally {
+      global.fetch = realFetch;
+    }
   });
 
   test("GitHub OAuth start can request the account picker", async () => {

@@ -901,7 +901,7 @@
         "tags": [
           "Orders"
         ],
-        "summary": "Cancel order",
+        "summary": "Cancel order (only pending or paid orders; shipped, completed or already cancelled orders return 409)",
         "security": [
           {
             "bearerAuth": []
@@ -910,6 +910,9 @@
         "responses": {
           "204": {
             "description": "Order cancelled"
+          },
+          "409": {
+            "description": "Order is not in a cancellable state"
           }
         }
       }
@@ -919,7 +922,7 @@
         "tags": [
           "Payments"
         ],
-        "summary": "Create a payment attempt",
+        "summary": "Create a payment attempt (the order must be pending and unpaid, otherwise 409)",
         "security": [
           {
             "bearerAuth": []
@@ -945,6 +948,9 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "Order is not pending or is already paid"
           }
         }
       }
@@ -981,6 +987,9 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "Order is not pending or is already paid"
           }
         }
       }

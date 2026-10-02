@@ -145,6 +145,25 @@ describe("Payments API", () => {
     expect(res.status).toBe(403);
   });
 
+  test("Creating a PaymentIntent for a non-pending order is rejected", async () => {
+    const orderId = await placeOrder(customerToken);
+    stripeClient.paymentIntents.create = jest.fn();
+
+    const shipped = await request(app)
+      .put(`/orders/${orderId}`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .send({ status: "shipped" });
+    expect(shipped.status).toBe(200);
+
+    const res = await request(app)
+      .post("/payments/intent")
+      .set("Authorization", `Bearer ${customerToken}`)
+      .send({ orderId });
+
+    expect(res.status).toBe(409);
+    expect(stripeClient.paymentIntents.create).not.toHaveBeenCalled();
+  });
+
   test("Creating a PaymentIntent for an already-paid order is rejected", async () => {
     const orderId = await placeOrder(customerToken);
     const intent = fakePaymentIntent();
