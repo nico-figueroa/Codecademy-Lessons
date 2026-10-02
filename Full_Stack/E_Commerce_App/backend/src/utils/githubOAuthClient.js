@@ -13,7 +13,7 @@ const GITHUB_EMAILS_URL = "https://api.github.com/user/emails";
 export const githubOAuthClient = {
   // Builds the URL the browser is redirected to in order to let the user
   // authorize this app on GitHub.
-  buildAuthorizeUrl(state) {
+  buildAuthorizeUrl(state, { selectAccount = false } = {}) {
     const clientId = process.env.GITHUB_CLIENT_ID;
     const redirectUri = process.env.GITHUB_REDIRECT_URI;
 
@@ -22,6 +22,7 @@ export const githubOAuthClient = {
     url.searchParams.set("redirect_uri", redirectUri);
     url.searchParams.set("scope", "read:user user:email");
     url.searchParams.set("state", state);
+    if (selectAccount) url.searchParams.set("prompt", "select_account");
 
     return url.toString();
   },

@@ -47,11 +47,22 @@ export default function Navbar() {
             </NavLink>
           )}
 
+          {user?.role === "admin" && (
+            <>
+              <NavLink to="/admin/products" className={linkClasses}>
+                Manage products
+              </NavLink>
+              <NavLink to="/admin/orders" className={linkClasses}>
+                Manage orders
+              </NavLink>
+            </>
+          )}
+
           {isAuthenticated ? (
             <div className="ml-2 flex items-center gap-3 border-l border-slate-200 pl-3">
-              <span className="hidden text-sm text-slate-500 sm:inline">
-                {user?.email}
-              </span>
+              <NavLink to="/profile" className={linkClasses}>
+                {user?.name || user?.email}
+              </NavLink>
               <button
                 type="button"
                 onClick={handleLogout}

@@ -3,14 +3,9 @@ import { Link } from "react-router-dom";
 import { fetchOrders } from "../api/orders.js";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import Alert from "../components/Alert.jsx";
+import { STATUS_STYLES } from "../utils/orderStatus.js";
 import { formatMoney } from "../utils/formatMoney.js";
 
-const STATUS_STYLES = {
-  pending: "bg-amber-100 text-amber-800",
-  paid: "bg-emerald-100 text-emerald-800",
-  cancelled: "bg-rose-100 text-rose-800",
-  fulfilled: "bg-indigo-100 text-indigo-800",
-};
 
 export default function OrderHistoryPage() {
   const [orders, setOrders] = useState([]);

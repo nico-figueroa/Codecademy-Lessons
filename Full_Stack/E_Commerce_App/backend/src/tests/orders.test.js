@@ -1,3 +1,4 @@
+import { TEST_ADDRESS } from "./setup/address.mjs";
 import request from "supertest";
 import app from "../app.js";
 
@@ -46,6 +47,7 @@ describe("Orders API", () => {
   test("Customer can place an order", async () => {
     const res = await request(app)
       .post("/orders")
+      .send({ shippingAddress: TEST_ADDRESS })
       .set("Authorization", authHeader(customerToken));
 
     expect(res.status).toBe(201);
@@ -105,6 +107,7 @@ describe("Orders API", () => {
 
     const placed = await request(app)
       .post("/orders")
+      .send({ shippingAddress: TEST_ADDRESS })
       .set("Authorization", authHeader(customerToken));
 
     expect(placed.status).toBe(201);
@@ -145,6 +148,7 @@ describe("Orders API", () => {
 
     const placed = await request(app)
       .post("/orders")
+      .send({ shippingAddress: TEST_ADDRESS })
       .set("Authorization", authHeader(customerToken));
     expect(placed.status).toBe(201);
 

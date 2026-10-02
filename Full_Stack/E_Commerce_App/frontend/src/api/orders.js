@@ -5,8 +5,8 @@ import client from "./client.js";
 // itself is left untouched at this point - items are only removed once
 // Stripe confirms the payment succeeded, so a declined/failed card leaves
 // the customer's selections staged in their cart.
-export function placeOrder() {
-  return client.post("/orders").then((res) => res.data);
+export function placeOrder(shippingAddress) {
+  return client.post("/orders", shippingAddress ? { shippingAddress } : {}).then((res) => res.data);
 }
 
 export function fetchOrders() {

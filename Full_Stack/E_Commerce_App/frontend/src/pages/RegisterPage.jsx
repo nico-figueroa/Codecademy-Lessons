@@ -7,6 +7,7 @@ export default function RegisterPage() {
   const { register, login } = useAuth();
   const navigate = useNavigate();
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -28,7 +29,7 @@ export default function RegisterPage() {
 
     setIsSubmitting(true);
     try {
-      await register({ email, password });
+      await register({ email, password, name: name.trim() || undefined });
       // Registration doesn't return a token, so log in immediately with the
       // same credentials for a seamless sign-up -> signed-in experience.
       await login({ email, password });
@@ -57,6 +58,19 @@ export default function RegisterPage() {
         className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
         onSubmit={handleSubmit}
       >
+        <div>
+          <label htmlFor="name" className="text-sm font-medium text-slate-700">
+            Full name
+          </label>
+          <input
+            id="name"
+            type="text"
+            autoComplete="name"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500"
+          />
+        </div>
         <div>
           <label htmlFor="email" className="text-sm font-medium text-slate-700">
             Email

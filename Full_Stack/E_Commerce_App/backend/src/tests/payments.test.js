@@ -1,3 +1,4 @@
+import { TEST_ADDRESS } from "./setup/address.mjs";
 import { jest } from "@jest/globals";
 import request from "supertest";
 import app from "../app.js";
@@ -17,6 +18,7 @@ async function placeOrder(token) {
 
   const orderRes = await request(app)
     .post("/orders")
+      .send({ shippingAddress: TEST_ADDRESS })
     .set("Authorization", `Bearer ${token}`);
 
   return orderRes.body.id;
@@ -262,6 +264,7 @@ describe("Payments API", () => {
 
     const orderRes = await request(app)
       .post("/orders")
+      .send({ shippingAddress: TEST_ADDRESS })
       .set("Authorization", `Bearer ${customerToken}`);
     const orderId = orderRes.body.id;
 
@@ -314,6 +317,7 @@ describe("Payments API", () => {
 
     const orderRes = await request(app)
       .post("/orders")
+      .send({ shippingAddress: TEST_ADDRESS })
       .set("Authorization", `Bearer ${customerToken}`);
     const orderId = orderRes.body.id;
 

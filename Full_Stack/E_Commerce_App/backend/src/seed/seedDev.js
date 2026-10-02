@@ -12,6 +12,7 @@ const { hashPassword } = await import("../utils/password.js");
 async function seedDev() {
   console.log("🌱 Seeding development database...");
 
+  await pool.query("DELETE FROM shipments");
   await pool.query("DELETE FROM payments");
   await pool.query("DELETE FROM order_items");
   await pool.query("DELETE FROM orders");

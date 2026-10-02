@@ -133,6 +133,96 @@ export async function createPaymentIntent(req, res) {
   }
 }
 
+// Applies the outcome of a Stripe PaymentIntent to the payment/order rows.
+// Shared by the webhook and by on-demand reconciliation so results are
+// identical (and idempotent) regardless of which path observes it first.
+async function applyPaymentIntentResult(paymentIntent, eventType) {
+  if (eventType === "payment_intent.succeeded") {
+    const updateRes = await pool.query(
+      `UPDATE payments
+       SET status = 'captured',
+           failure_message = NULL,
+           updated_at = NOW()
+       WHERE stripe_payment_intent_id = $1
+       RETURNING order_id AS "orderId"`,
+      [paymentIntent.id],
+    );
+
+    if (updateRes.rowCount > 0) {
+      const orderId = updateRes.rows[0].orderId;
+
+      const orderUpdateRes = await pool.query(
+        `UPDATE orders
+         SET payment_status = 'paid',
+             status = CASE WHEN status = 'pending' THEN 'paid' ELSE status END,
+             updated_at = NOW()
+         WHERE id = $1
+         RETURNING user_id AS "userId"`,
+        [orderId],
+      );
+
+      if (orderUpdateRes.rowCount > 0) {
+        // Remove only the purchased items from the customer's cart, so items
+        // added after placing the order are preserved.
+        await pool.query(
+          `DELETE FROM cart_items
+           WHERE cart_id = (SELECT id FROM carts WHERE user_id = $1)
+             AND product_id IN (
+               SELECT product_id FROM order_items WHERE order_id = $2
+             )`,
+          [orderUpdateRes.rows[0].userId, orderId],
+        );
+      }
+    }
+  } else if (eventType === "payment_intent.payment_failed") {
+    const failureMessage =
+      paymentIntent.last_payment_error?.message || "Payment failed";
+
+    const updateRes = await pool.query(
+      `UPDATE payments
+       SET status = 'failed',
+           failure_message = $2,
+           updated_at = NOW()
+       WHERE stripe_payment_intent_id = $1
+       RETURNING order_id AS "orderId"`,
+      [paymentIntent.id, failureMessage],
+    );
+
+    if (updateRes.rowCount > 0) {
+      await pool.query(
+        `UPDATE orders
+         SET payment_status = 'failed',
+             updated_at = NOW()
+         WHERE id = $1`,
+        [updateRes.rows[0].orderId],
+      );
+    }
+  }
+}
+
+// Asks Stripe directly for the PaymentIntent state and applies it. This makes
+// the payment result independent of webhook delivery (e.g. `stripe listen`
+// not running or a stale signing secret).
+async function reconcilePayment(payment) {
+  if (!payment.stripePaymentIntentId) return payment.status;
+  const intent = await stripeClient.paymentIntents.retrieve(
+    payment.stripePaymentIntentId,
+  );
+  if (intent.status === "succeeded") {
+    await applyPaymentIntentResult(intent, "payment_intent.succeeded");
+  } else if (
+    intent.status === "requires_payment_method" &&
+    intent.last_payment_error
+  ) {
+    await applyPaymentIntentResult(intent, "payment_intent.payment_failed");
+  } else {
+    return payment.status;
+  }
+  const res = await pool.query(`SELECT status FROM payments WHERE id = $1`, [
+    payment.id,
+  ]);
+  return res.rows[0]?.status ?? payment.status;
+}
 // Retrieves a specific payment by ID, ensuring the user has access rights.
 export async function getPayment(req, res) {
   const { paymentId } = req.params;
@@ -147,6 +237,7 @@ export async function getPayment(req, res) {
        currency,
        provider,
        status,
+       stripe_payment_intent_id AS "stripePaymentIntentId",
        failure_message AS "failureMessage",
        created_at AS "createdAt",
        updated_at AS "updatedAt"
@@ -176,6 +267,21 @@ export async function getPayment(req, res) {
     return res.status(403).json({ error: "Forbidden" });
   }
 
+  if (payment.status === "pending" || payment.status === "authorized") {
+    try {
+      await reconcilePayment(payment);
+      const refreshed = await pool.query(
+        `SELECT status, failure_message AS "failureMessage", updated_at AS "updatedAt"
+         FROM payments WHERE id = $1`,
+        [paymentId],
+      );
+      Object.assign(payment, refreshed.rows[0]);
+    } catch (error) {
+      console.error("Payment reconciliation failed:", error.message);
+    }
+  }
+
+  delete payment.stripePaymentIntentId;
   res.json(payment);
 }
 
@@ -205,78 +311,12 @@ export async function handleStripeWebhook(req, res) {
     return res.status(400).send(`Webhook Error: ${error.message}`);
   }
 
-  const paymentIntent = event.data.object;
-
   try {
-    if (event.type === "payment_intent.succeeded") {
-      const updateRes = await pool.query(
-        `UPDATE payments
-         SET status = 'captured',
-             failure_message = NULL,
-             updated_at = NOW()
-         WHERE stripe_payment_intent_id = $1
-         RETURNING order_id AS "orderId"`,
-        [paymentIntent.id],
-      );
-
-      if (updateRes.rowCount > 0) {
-        const orderId = updateRes.rows[0].orderId;
-
-        const orderUpdateRes = await pool.query(
-          `UPDATE orders
-           SET payment_status = 'paid',
-               status = CASE WHEN status = 'pending' THEN 'paid' ELSE status END,
-               updated_at = NOW()
-           WHERE id = $1
-           RETURNING user_id AS "userId"`,
-          [orderId],
-        );
-
-        if (orderUpdateRes.rowCount > 0) {
-          // Now that payment is confirmed, remove only the purchased items
-          // from the customer's cart. Scoping by the order's product IDs
-          // (rather than wiping the whole cart) protects anything the
-          // customer added after placing this order but before payment
-          // resolved.
-          await pool.query(
-            `DELETE FROM cart_items
-             WHERE cart_id = (SELECT id FROM carts WHERE user_id = $1)
-               AND product_id IN (
-                 SELECT product_id FROM order_items WHERE order_id = $2
-               )`,
-            [orderUpdateRes.rows[0].userId, orderId],
-          );
-        }
-      }
-    } else if (event.type === "payment_intent.payment_failed") {
-      const failureMessage =
-        paymentIntent.last_payment_error?.message || "Payment failed";
-
-      const updateRes = await pool.query(
-        `UPDATE payments
-         SET status = 'failed',
-             failure_message = $2,
-             updated_at = NOW()
-         WHERE stripe_payment_intent_id = $1
-         RETURNING order_id AS "orderId"`,
-        [paymentIntent.id, failureMessage],
-      );
-
-      if (updateRes.rowCount > 0) {
-        await pool.query(
-          `UPDATE orders
-           SET payment_status = 'failed',
-               updated_at = NOW()
-           WHERE id = $1`,
-          [updateRes.rows[0].orderId],
-        );
-      }
-    }
+    await applyPaymentIntentResult(event.data.object, event.type);
   } catch (error) {
     console.error("Failed to process Stripe webhook event:", error);
     // Return 500 so Stripe retries delivery.
     return res.status(500).json({ error: "Failed to process webhook event" });
   }
-
   res.json({ received: true });
 }

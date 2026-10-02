@@ -17,9 +17,10 @@ instructions (database setup, GitHub OAuth App, Stripe keys/webhook).
 
 ## Scripts
 
-- `npm run dev` — start the Vite dev server with HMR.
+- `npm run dev` — start the Vite dev server with HMR and open the browser.
+- `npm test` — run the Vitest/Testing Library suite (`src/test`).
 - `npm run build` — production build to `dist/`.
-- `npm run preview` — preview the production build locally.
+- `npm run preview` — build, then preview the production build locally.
 - `npm run lint` — run ESLint.
 
 ## Structure

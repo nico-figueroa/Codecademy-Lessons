@@ -66,7 +66,16 @@ app.use(cookieParser());
 
 // Health check
 app.get("/", (req, res) => {
-  res.json({ message: "Nomadant Tech Store API is running" });
+  const docs = `${req.protocol}://${req.get("host")}/api-docs`;
+  if (req.accepts(["json", "html"]) === "html") {
+    return res.type("html").send(
+      `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Nomadant Tech Store API</title>
+<style>body{font-family:system-ui,sans-serif;max-width:40rem;margin:4rem auto;padding:0 1rem;color:#0f172a}a{color:#4f46e5;font-weight:600}</style></head>
+<body><h1>Nomadant Tech Store API is running</h1>
+<p>Explore the interactive API documentation: <a href="/api-docs">/api-docs</a></p></body></html>`,
+    );
+  }
+  res.json({ message: "Nomadant Tech Store API is running", docs });
 });
 
 app.get("/openapi.json", (req, res) => {

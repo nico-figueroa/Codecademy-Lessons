@@ -13,7 +13,7 @@ export async function resetTestDb() {
   const schema = fs.readFileSync(sqlPath, "utf8");
 
   await pool.query(`
-    DROP TABLE IF EXISTS payments, order_items, orders, cart_items, carts, products, oauth_accounts, users CASCADE;
+    DROP TABLE IF EXISTS shipments, payments, order_items, orders, cart_items, carts, products, oauth_accounts, users CASCADE;
   `);
   await pool.query(schema);
 }

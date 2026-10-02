@@ -3,6 +3,16 @@ import request from "supertest";
 import app from "../app.js";
 import { githubOAuthClient } from "../utils/githubOAuthClient.js";
 
+// Completes the confirmation step that follows the GitHub callback.
+async function confirmTicket(callback) {
+  const ticket = callback.headers.location.split("#ticket=")[1];
+  const pending = await request(app).get(`/auth/oauth/pending/${ticket}`);
+  expect(pending.status).toBe(200);
+  const confirmed = await request(app).post("/auth/oauth/confirm").send({ ticket });
+  expect(confirmed.status).toBe(200);
+  return confirmed.body.accessToken;
+}
+
 describe("Auth API", () => {
   test("Login works for seeded admin", async () => {
     const res = await request(app).post("/auth/login").send({
@@ -84,9 +94,9 @@ describe("Auth API", () => {
       .query({ code: "fake-code", state });
 
     expect(callback.status).toBe(302);
-    expect(callback.headers.location).toMatch(/\/oauth\/callback#token=.+/);
+    expect(callback.headers.location).toMatch(/\/oauth\/confirm#ticket=.+/);
 
-    const token = callback.headers.location.split("#token=")[1];
+    const token = await confirmTicket(callback);
 
     const me = await request(app)
       .get("/auth/me")
@@ -117,7 +127,7 @@ describe("Auth API", () => {
       .query({ code: "fake-code-2", state });
 
     expect(callback.status).toBe(302);
-    const token = callback.headers.location.split("#token=")[1];
+    const token = await confirmTicket(callback);
 
     const me = await request(app)
       .get("/auth/me")
@@ -126,6 +136,16 @@ describe("Auth API", () => {
     expect(me.status).toBe(200);
     expect(me.body.email).toBe("customer@example.com");
     expect(githubOAuthClient.fetchPrimaryEmail).not.toHaveBeenCalled();
+  });
+
+  test("GitHub OAuth start can request the account picker", async () => {
+    const res = await request(app).get("/auth/oauth/github/start?select=1");
+    expect(new URL(res.headers.location).searchParams.get("prompt")).toBe("select_account");
+  });
+
+  test("An unknown GitHub ticket cannot be confirmed", async () => {
+    const res = await request(app).post("/auth/oauth/confirm").send({ ticket: "00000000-0000-4000-8000-000000000000" });
+    expect(res.status).toBe(404);
   });
 
   test("GitHub OAuth callback redirects with an error for invalid/expired state", async () => {

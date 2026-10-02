@@ -59,6 +59,12 @@ export function AuthProvider({ children }) {
     await apiRegister(credentials);
   }, []);
 
+  const refreshUser = useCallback(async () => {
+    const me = await fetchCurrentUser();
+    setUser(me);
+    return me;
+  }, []);
+
   const logout = useCallback(() => {
     setStoredToken(null);
     setUser(null);
@@ -73,8 +79,9 @@ export function AuthProvider({ children }) {
       register,
       logout,
       applyToken,
+      refreshUser,
     }),
-    [user, isLoading, login, register, logout, applyToken],
+    [user, isLoading, login, register, logout, applyToken, refreshUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

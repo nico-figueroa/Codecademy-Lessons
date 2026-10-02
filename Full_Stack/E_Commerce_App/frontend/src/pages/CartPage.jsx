@@ -5,11 +5,16 @@ import { placeOrder } from "../api/orders.js";
 import { fetchProducts } from "../api/products.js";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import Alert from "../components/Alert.jsx";
+import AddressForm from "../components/AddressForm.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
+import { addressFromProfile, cleanAddress } from "../utils/address.js";
 import { formatMoney } from "../utils/formatMoney.js";
 
 export default function CartPage() {
   const { cart, isLoading, error, updateItem, removeItem, refresh } = useCart();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [address, setAddress] = useState(() => addressFromProfile(user));
   const [actionError, setActionError] = useState(null);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [pendingItemId, setPendingItemId] = useState(null);
@@ -50,11 +55,12 @@ export default function CartPage() {
     }
   }
 
-  async function handlePlaceOrder() {
+  async function handlePlaceOrder(event) {
+    event.preventDefault();
     setIsPlacingOrder(true);
     setActionError(null);
     try {
-      const order = await placeOrder();
+      const order = await placeOrder(cleanAddress(address));
       await refresh();
       navigate(`/checkout/${order.id}`);
     } catch (err) {
@@ -138,7 +144,19 @@ export default function CartPage() {
             ))}
           </ul>
 
-          <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-5">
+          <form
+            onSubmit={handlePlaceOrder}
+            className="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white p-5"
+          >
+            <div>
+              <h2 className="font-display text-lg font-semibold text-slate-900">
+                Delivery address
+              </h2>
+              <div className="mt-4">
+                <AddressForm value={address} onChange={setAddress} />
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-slate-500">Order total</p>
               <p className="text-2xl font-bold text-slate-900">
@@ -146,14 +164,14 @@ export default function CartPage() {
               </p>
             </div>
             <button
-              type="button"
-              onClick={handlePlaceOrder}
+              type="submit"
               disabled={isPlacingOrder}
               className="rounded-lg bg-indigo-600 px-6 py-3 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-50"
             >
               {isPlacingOrder ? "Placing order…" : "Place order"}
             </button>
-          </div>
+            </div>
+          </form>
         </div>
       )}
     </div>

@@ -27,6 +27,7 @@
   },
   "scripts": {
     "start": "node ./bin/www",
+    "dev": "node --watch ./bin/www",
     "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --runInBand",
     "test:watch": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --watch",
     "seed:dev": "node src/seed/seedDev.js"

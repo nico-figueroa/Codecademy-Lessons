@@ -24,6 +24,13 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255),
     name VARCHAR(255),
+    phone VARCHAR(50),
+    address_line1 VARCHAR(255),
+    address_line2 VARCHAR(255),
+    city VARCHAR(100),
+    state VARCHAR(100),
+    postal_code VARCHAR(20),
+    country VARCHAR(2),
     role VARCHAR(20) NOT NULL CHECK (role IN ('customer', 'admin', 'vendor')),
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -101,6 +108,14 @@ CREATE TABLE orders (
     payment_status VARCHAR(20) NOT NULL DEFAULT 'unpaid' CHECK (payment_status IN ('unpaid', 'paid', 'failed')),
     payment_provider VARCHAR(50),
     payment_reference VARCHAR(255),
+    shipping_name VARCHAR(255),
+    shipping_phone VARCHAR(50),
+    shipping_line1 VARCHAR(255),
+    shipping_line2 VARCHAR(255),
+    shipping_city VARCHAR(100),
+    shipping_state VARCHAR(100),
+    shipping_postal_code VARCHAR(20),
+    shipping_country VARCHAR(2),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -131,6 +146,26 @@ CREATE TABLE payments (
     status VARCHAR(20) NOT NULL CHECK (status IN ('pending', 'authorized', 'captured', 'failed')),
     stripe_payment_intent_id VARCHAR(255) UNIQUE,
     failure_message TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- ============================
+-- SHIPMENTS (Shippo test mode, or simulated)
+-- ============================
+CREATE TABLE shipments (
+    id UUID PRIMARY KEY DEFAULT uuid_v4(),
+    order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    provider VARCHAR(30) NOT NULL DEFAULT 'shippo',
+    carrier VARCHAR(100),
+    service VARCHAR(100),
+    tracking_number VARCHAR(255),
+    tracking_url TEXT,
+    label_url TEXT,
+    provider_shipment_id VARCHAR(255),
+    provider_transaction_id VARCHAR(255),
+    status VARCHAR(20) NOT NULL DEFAULT 'pre_transit'
+        CHECK (status IN ('pre_transit', 'in_transit', 'delivered', 'failed')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

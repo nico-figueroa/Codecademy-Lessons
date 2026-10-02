@@ -6,7 +6,7 @@ export function createPaymentIntent(orderId) {
   return client.post("/payments/intent", { orderId }).then((res) => res.data);
 }
 
-// The webhook is the sole authority for marking a payment/order as paid, so
+// The backend confirms the outcome with Stripe (webhook or direct lookup), so
 // the frontend polls this after stripe.confirmPayment() resolves instead of
 // trusting the client-side confirmation result.
 export function fetchPayment(paymentId) {

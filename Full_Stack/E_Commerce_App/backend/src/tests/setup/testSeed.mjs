@@ -22,7 +22,7 @@ export async function seedTestData() {
   await pool.query(
     `INSERT INTO products (name, description, price, currency, stock, image_url)
      VALUES
-       ('Laptop', 'High performance laptop', 1299.99, 'USD', 10, 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=640&q=80'),
-       ('Headphones', 'Noise cancelling', 199.99, 'USD', 50, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=640&q=80')`,
+       ('Laptop', 'High performance laptop', 1299.99, 'USD', 500, 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=640&q=80'),
+       ('Headphones', 'Noise cancelling', 199.99, 'USD', 500, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=640&q=80')`,
   );
 }

@@ -2,6 +2,7 @@ import express from "express";
 import { authRequired, adminOnly } from "../middleware/authMiddleware.js";
 import {
   listProducts,
+  listAllProducts,
   createProduct,
   getProduct,
   updateProduct,
@@ -25,6 +26,7 @@ router.post(
   createProduct,
 ); // Route to create a new product
 
+router.get("/admin/all", authRequired, adminOnly, listAllProducts); // Admin: all products incl. inactive
 router.get("/:productId", getProduct); // Route to get details of a specific product
 router.put(
   "/:productId",

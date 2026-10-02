@@ -27,6 +27,18 @@ export async function listProducts(req, res) {
   res.json(result.rows);
 }
 
+// Admin: lists every product, including inactive (removed) ones
+export async function listAllProducts(req, res) {
+  const result = await pool.query(
+    `SELECT id, name, description, sku, price, currency, stock,
+            image_url AS "imageUrl", is_active AS "isActive",
+            created_at AS "createdAt", updated_at AS "updatedAt"
+     FROM products
+     ORDER BY created_at DESC`,
+  );
+  res.json(result.rows);
+}
+
 // Creates a new product with the provided details
 export async function createProduct(req, res) {
   const {

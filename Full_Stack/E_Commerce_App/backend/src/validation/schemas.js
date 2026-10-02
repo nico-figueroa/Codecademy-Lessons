@@ -15,6 +15,7 @@ export const RegisterSchema = z.object({
   body: z.object({
     email: z.string().email(),
     password: z.string().min(8),
+    name: z.string().trim().min(1).max(255).optional(),
   }),
 });
 
@@ -55,6 +56,51 @@ export const OAuthCallbackSchema = z.object({
 export const OAuthStartSchema = z.object({
   params: z.object({
     provider: z.enum(["github"]),
+  }),
+  query: z.object({ select: z.string().optional() }).optional(),
+});
+
+/**
+ * OAuthConfirmSchema: Body for confirming (or discarding) a pending GitHub
+ * sign-in ticket.
+ */
+export const OAuthConfirmSchema = z.object({
+  body: z.object({
+    ticket: z.string().uuid(),
+  }),
+});
+
+export const OAuthTicketSchema = z.object({
+  params: z.object({
+    ticket: z.string().uuid(),
+  }),
+});
+
+// =========================
+// ADDRESSES / PROFILE
+// =========================
+export const AddressFields = {
+  name: z.string().trim().min(1).max(255),
+  phone: z.string().trim().max(50).optional().or(z.literal("")),
+  line1: z.string().trim().min(1).max(255),
+  line2: z.string().trim().max(255).optional().or(z.literal("")),
+  city: z.string().trim().min(1).max(100),
+  state: z.string().trim().min(1).max(100),
+  postalCode: z.string().trim().min(1).max(20),
+  country: z.string().trim().length(2).toUpperCase(),
+};
+
+export const AddressSchema = z.object(AddressFields);
+
+/**
+ * ProfileUpdateSchema: Validates the signed-in user updating their own
+ * profile (display name, phone and default delivery address). All optional.
+ */
+export const ProfileUpdateSchema = z.object({
+  body: z.object({
+    name: z.string().trim().min(1).max(255).optional(),
+    phone: z.string().trim().max(50).optional().or(z.literal("")),
+    address: AddressSchema.partial().optional(),
   }),
 });
 
@@ -156,6 +202,18 @@ export const CartItemUpdateSchema = z.object({
  * OrderUpdateSchema: Validates the request body for updating an existing order.
  * Ensures that the status is one of 'pending', 'paid', 'shipped', 'completed', or 'cancelled' (optional).
  */
+
+/**
+ * OrderCreateSchema: optional delivery address. When omitted the address
+ * saved on the user profile is used; if neither exists the order is rejected.
+ */
+export const OrderCreateSchema = z.object({
+  body: z
+    .object({
+      shippingAddress: AddressSchema.optional(),
+    })
+    .optional(),
+});
 
 export const OrderUpdateSchema = z.object({
   body: z.object({

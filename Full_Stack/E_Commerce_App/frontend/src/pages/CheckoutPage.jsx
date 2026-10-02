@@ -154,8 +154,8 @@ function PaymentForm({ orderId, paymentId }) {
       return;
     }
 
-    // Stripe's client-side result is informational only - the webhook is
-    // the authoritative source of truth, so poll our backend for it.
+    // Stripe's client-side result is informational only - poll our backend,
+    // which reconciles the payment with Stripe (webhook or direct lookup).
     await pollForOutcome();
   }
 

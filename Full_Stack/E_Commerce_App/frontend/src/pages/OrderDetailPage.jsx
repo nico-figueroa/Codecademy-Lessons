@@ -4,14 +4,9 @@ import { cancelOrder, fetchOrder } from "../api/orders.js";
 import { fetchProducts } from "../api/products.js";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import Alert from "../components/Alert.jsx";
+import { STATUS_STYLES } from "../utils/orderStatus.js";
 import { formatMoney } from "../utils/formatMoney.js";
 
-const STATUS_STYLES = {
-  pending: "bg-amber-100 text-amber-800",
-  paid: "bg-emerald-100 text-emerald-800",
-  cancelled: "bg-rose-100 text-rose-800",
-  fulfilled: "bg-indigo-100 text-indigo-800",
-};
 
 export default function OrderDetailPage() {
   const { orderId } = useParams();
@@ -123,6 +118,37 @@ export default function OrderDetailPage() {
           </li>
         ))}
       </ul>
+
+      {order.shippingAddress && (
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
+          <p className="text-sm text-slate-500">Delivery address</p>
+          <address className="mt-1 not-italic text-slate-900">
+            {order.shippingAddress.name}
+            <br />
+            {order.shippingAddress.line1}
+            {order.shippingAddress.line2 ? `, ${order.shippingAddress.line2}` : ""}
+            <br />
+            {order.shippingAddress.city}
+            {order.shippingAddress.state ? `, ${order.shippingAddress.state}` : ""}{" "}
+            {order.shippingAddress.postalCode}, {order.shippingAddress.country}
+          </address>
+        </div>
+      )}
+
+      {order.shipment && (
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
+          <p className="text-sm text-slate-500">Shipment</p>
+          <p className="mt-1 text-slate-900">
+            {order.shipment.carrier} · tracking {order.shipment.trackingNumber}
+          </p>
+          {order.shipment.labelUrl && (
+            <a href={order.shipment.labelUrl} target="_blank" rel="noreferrer"
+              className="text-sm font-medium text-indigo-600 hover:underline">
+              View shipping label
+            </a>
+          )}
+        </div>
+      )}
 
       <div className="mt-6 flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-5">
         <div>

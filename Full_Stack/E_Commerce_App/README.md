@@ -30,8 +30,22 @@ E_Commerce_App/
 - Other routes: `/auth` (register/login/me), `/products`, `/carts`,
   `/orders`, `/users`. Full OpenAPI docs served at `/api-docs` when running.
 - Scripts run **from inside `backend/`**: `npm install`, `npm start`,
-  `npm test`, `npm run seed:dev`. (There is no `dev`/watch script — restart
-  `npm start` after backend code changes.)
+  `npm run dev` (watch), `npm test`, `npm run seed:dev`. `npm start` /
+  `npm run dev` open the backend (`/` links to `/api-docs`) and the
+  frontend (`FRONTEND_URL`) in your browser; set `OPEN_BROWSER=false` to
+  disable (always disabled when `NODE_ENV=production`).
+- Existing databases: apply `migration_002_profiles_addresses_shipments.sql`
+  (profiles, delivery addresses, shipments).
+- Optional env: `SHIPPO_API_KEY` (Shippo **test** key; without it shipments are
+  simulated) and `SHIP_FROM_*` (sender address).
+- Payments: status is reconciled directly with Stripe, so the webhook is
+  optional locally but recommended. Local: `stripe listen --forward-to
+  localhost:3000/payments/webhook` and put the printed `whsec_` in
+  `STRIPE_WEBHOOK_SECRET`. Render: add a webhook endpoint
+  `https://<backend>/payments/webhook` for `payment_intent.succeeded` and
+  `payment_intent.payment_failed` and use its signing secret.
+- GitHub sign-in ends on a confirmation screen (continue as the returned
+  account or pick a different one).
 - Entry point: `backend/bin/www`. App wiring: `backend/src/app.js`.
 - Env file: `backend/src/.env`. Copy `backend/src/.env.example` to
   `backend/src/.env` and fill in real values — **never commit the real
@@ -54,7 +68,8 @@ E_Commerce_App/
 - Env file: `frontend/.env`. Copy `frontend/.env.example` to `frontend/.env`
   and fill in real values.
 - Scripts run **from inside `frontend/`**: `npm install`, `npm run dev`,
-  `npm run build`, `npm run lint`.
+  `npm run build`, `npm run lint`, `npm test` (Vitest + Testing Library),
+  `npm run preview` (builds, then opens the preview).
 
 ## Local development setup
 
