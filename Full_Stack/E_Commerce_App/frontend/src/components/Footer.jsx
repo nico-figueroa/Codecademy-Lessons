@@ -3,7 +3,7 @@ export default function Footer() {
     <footer className="border-t border-slate-200 bg-white">
       <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-slate-500 sm:px-6">
         <p>
-          Summit &amp; Co. is an academic demo storefront. Payments are
+          Nomadant Tech Store is an academic demo storefront. Payments are
           processed with Stripe&rsquo;s test/sandbox mode only — use a{" "}
           <a
             className="font-medium text-indigo-600 hover:underline"

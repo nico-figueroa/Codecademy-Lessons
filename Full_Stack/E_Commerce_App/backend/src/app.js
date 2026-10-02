@@ -66,7 +66,7 @@ app.use(cookieParser());
 
 // Health check
 app.get("/", (req, res) => {
-  res.json({ message: "E-commerce API is running" });
+  res.json({ message: "Nomadant Tech Store API is running" });
 });
 
 app.get("/openapi.json", (req, res) => {
@@ -77,7 +77,7 @@ app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(openApiDocument, {
-    customSiteTitle: "Mercantile API Documentation",
+    customSiteTitle: "Nomadant Tech Store API Documentation",
   }),
 );
 

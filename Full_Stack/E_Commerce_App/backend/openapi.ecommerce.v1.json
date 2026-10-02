@@ -1,9 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Generic E-commerce API",
+    "title": "Nomadant Tech Store API",
     "version": "1.0.0",
-    "description": "Reusable e-commerce REST API template using Express, Node.js, and PostgreSQL."
+    "description": "REST API powering the Nomadant Tech Store electronics storefront, built with Express, Node.js, and PostgreSQL."
   },
   "servers": [
     { "url": "https://api.example.com" },

@@ -8,7 +8,7 @@ import Alert from "../components/Alert.jsx";
 import { formatMoney } from "../utils/formatMoney.js";
 
 const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80";
+  "https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=900&q=80";
 
 export default function ProductDetailPage() {
   const { productId } = useParams();

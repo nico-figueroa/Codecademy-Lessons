@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { formatMoney } from "../utils/formatMoney.js";
 
 const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80";
+  "https://images.unsplash.com/photo-1550009158-9ebf69173e03?auto=format&fit=crop&w=600&q=80";
 
 export default function ProductCard({ product }) {
   const outOfStock = product.stock <= 0;

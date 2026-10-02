@@ -1,4 +1,4 @@
-# E-Commerce App (Summit & Co.)
+# E-Commerce App (Nomadant Tech Store)
 
 A full-stack academic e-commerce application with **real GitHub OAuth login**
 and **real Stripe sandbox (test-mode) payments**. See

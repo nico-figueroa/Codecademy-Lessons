@@ -7,7 +7,7 @@ describe("API documentation", () => {
 
     expect(res.status).toBe(200);
     expect(res.body.openapi).toBe("3.1.0");
-    expect(res.body.info.title).toBe("Generic E-commerce API");
+    expect(res.body.info.title).toBe("Nomadant Tech Store API");
     expect(res.body.paths["/openapi.json"]).toBeDefined();
     expect(res.body.paths["/api-docs/"]).toBeDefined();
   });
@@ -17,6 +17,6 @@ describe("API documentation", () => {
 
     expect(res.status).toBe(200);
     expect(res.headers["content-type"]).toContain("text/html");
-    expect(res.text).toContain("Mercantile API Documentation");
+    expect(res.text).toContain("Nomadant Tech Store API Documentation");
   });
 });

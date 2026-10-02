@@ -30,10 +30,10 @@ export default function HomePage() {
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <div className="mb-8 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-800 px-6 py-12 text-white sm:px-10">
         <h1 className="font-display text-3xl font-bold sm:text-4xl">
-          Gear for your next summit.
+          The latest tech, ready to ship.
         </h1>
         <p className="mt-3 max-w-xl text-indigo-100">
-          Hand-picked outdoor and travel essentials. Browse freely — sign in
+          Hand-picked laptops, audio, and accessories. Browse freely — sign in
           only when you&rsquo;re ready to add items to your cart or check
           out.
         </p>

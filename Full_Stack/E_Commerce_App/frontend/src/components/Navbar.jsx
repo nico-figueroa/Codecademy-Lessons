@@ -24,9 +24,9 @@ export default function Navbar() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <NavLink to="/" className="font-display flex items-center gap-2 text-lg font-semibold text-slate-900">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white">
-            S
+            N
           </span>
-          Summit&nbsp;&amp;&nbsp;Co.
+          Nomadant&nbsp;Tech&nbsp;Store
         </NavLink>
 
         <div className="flex items-center gap-1 sm:gap-2">

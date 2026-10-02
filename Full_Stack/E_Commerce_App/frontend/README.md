@@ -1,4 +1,4 @@
-# Summit & Co. — frontend
+# Nomadant Tech Store — frontend
 
 React 19 + Vite SPA for the [E-Commerce App](../README.md). Styled with
 Tailwind CSS v4 and Google Fonts (Inter + Poppins) for a production-ready
