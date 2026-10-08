@@ -40,7 +40,7 @@ const Category = ({ category, onDeleteCategory, onUpdateCategory }) => {
   };
 
   return (
-    <article className="rounded-2xl border border-stone-200 bg-white p-4 shadow-sm sm:p-5">
+    <article className="rounded-2xl border border-stone-200 bg-white p-4 shadow-xs sm:p-5">
       {isEditing ? (
         <form onSubmit={saveName}>
           <label

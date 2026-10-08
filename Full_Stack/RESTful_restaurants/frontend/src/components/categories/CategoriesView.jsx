@@ -72,7 +72,7 @@ const CategoriesView = () => {
             return (
               <section
                 aria-labelledby={`category-${category.id}`}
-                className="min-w-0 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm"
+                className="min-w-0 rounded-2xl border border-stone-200 bg-white p-5 shadow-xs"
                 key={category.id}
               >
                 <div className="flex items-start justify-between gap-3">

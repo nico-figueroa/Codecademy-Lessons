@@ -7,14 +7,14 @@ A responsive React application for organizing restaurants into categories, keepi
 ![React](https://img.shields.io/badge/React-19.3-61DAFB?logo=react&logoColor=white)
 ![React Router](https://img.shields.io/badge/React_Router-7-CA4245?logo=reactrouter&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
-![Create React App](https://img.shields.io/badge/Create_React_App-5-09D3AC?logo=createreactapp&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
 ![Axios](https://img.shields.io/badge/Axios-HTTP_client-5A29E4?logo=axios&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-LTS-5FA04E?logo=nodedotjs&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3FCF8E?logo=supabase&logoColor=white)
 ![npm](https://img.shields.io/badge/npm-package_manager-CB3837?logo=npm&logoColor=white)
 
-- **Frontend:** React, React Router, Tailwind CSS, Create React App, Axios, and Fetch
+- **Frontend:** React, React Router, Tailwind CSS 4, Vite, Vitest, Axios, and Fetch
 - **Backend:** Node.js, Express, and the Supabase JavaScript client
 - **Data:** Supabase (PostgreSQL)
 - **Development:** npm and `concurrently`
@@ -63,7 +63,7 @@ SUPABASE_SECRET_KEY=your-server-side-supabase-key
 Create `frontend/.env` to point the React app at the local API:
 
 ```dotenv
-REACT_APP_API_URL=http://localhost:3000
+VITE_API_URL=http://localhost:3000
 ```
 
 Start both services from this directory:
@@ -72,14 +72,14 @@ Start both services from this directory:
 npm run dev
 ```
 
-The frontend runs on the Create React App development server (normally port 3001 when the backend is already using port 3000). The backend listens on `PORT` when configured, or port 3000 by default. To run either service independently, use `npm start` from its `frontend` or `backend` directory. Create React App reads `REACT_APP_API_URL` at build time, so set the production API URL before building or deploying the frontend.
+The frontend runs on the Vite development server on port 3001. The backend listens on `PORT` when configured, or port 3000 by default. To run either service independently, use `npm start` from its `frontend` or `backend` directory. Vite reads `VITE_API_URL` at build time, so set the production API URL before building or deploying the frontend.
 
 ## Deployment
 
 - Frontend: [React App](https://restful-restaurants-frontend-xjlj.onrender.com/)
 - Backend: [restful-restaurants-backend-2ygw.onrender.com](https://restful-restaurants-backend-2ygw.onrender.com/)
 
-Configure the Render frontend service with `REACT_APP_API_URL` set to the backend URL, and configure the backend service with `SUPABASE_URL` and `SUPABASE_SECRET_KEY`.
+Configure the Render frontend service with `VITE_API_URL` set to the backend URL, and configure the backend service with `SUPABASE_URL` and `SUPABASE_SECRET_KEY`.
 
 The frontend uses browser-based routes. For a Render Static Site, add a rewrite rule from `/*` to `/index.html` so direct visits and refreshes on the four page URLs load the React app.
 
@@ -91,9 +91,9 @@ From the project directory:
 
 From `frontend`:
 
-- `npm start` — start the development server
-- `npm test -- --watchAll=false` — run frontend tests once
-- `npm run build` — create a production build
+- `npm start` — start the Vite development server
+- `npm test` — run frontend tests once (Vitest)
+- `npm run build` — create a production build in `build/`
 
 From `backend`:
 

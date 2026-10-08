@@ -7,27 +7,27 @@ import {
 import { getRestaurants } from "./api/restaurants";
 import { getStarredRestaurants } from "./api/starredRestaurants";
 
-jest.mock("./api/categories", () => ({
-  getCategories: jest.fn(),
-  createCategory: jest.fn(),
-  updateCategory: jest.fn(),
-  deleteCategory: jest.fn(),
-  assignRestaurantToCategory: jest.fn(),
-  removeRestaurantFromCategory: jest.fn(),
+vi.mock("./api/categories", () => ({
+  getCategories: vi.fn(),
+  createCategory: vi.fn(),
+  updateCategory: vi.fn(),
+  deleteCategory: vi.fn(),
+  assignRestaurantToCategory: vi.fn(),
+  removeRestaurantFromCategory: vi.fn(),
 }));
 
-jest.mock("./api/restaurants", () => ({
-  getRestaurants: jest.fn(),
-  addNewRestaurant: jest.fn(),
-  deleteRestaurant: jest.fn(),
-  updateRestaurantName: jest.fn(),
-  starRestaurant: jest.fn(),
+vi.mock("./api/restaurants", () => ({
+  getRestaurants: vi.fn(),
+  addNewRestaurant: vi.fn(),
+  deleteRestaurant: vi.fn(),
+  updateRestaurantName: vi.fn(),
+  starRestaurant: vi.fn(),
 }));
 
-jest.mock("./api/starredRestaurants", () => ({
-  getStarredRestaurants: jest.fn(),
-  unstarRestaurant: jest.fn(),
-  updateComment: jest.fn(),
+vi.mock("./api/starredRestaurants", () => ({
+  getStarredRestaurants: vi.fn(),
+  unstarRestaurant: vi.fn(),
+  updateComment: vi.fn(),
 }));
 
 beforeEach(() => {

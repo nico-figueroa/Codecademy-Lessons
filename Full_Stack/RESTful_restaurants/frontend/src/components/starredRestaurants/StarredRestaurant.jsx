@@ -45,7 +45,7 @@ const StarredRestaurant = ({
   };
 
   return (
-    <article className="flex h-full flex-col rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
+    <article className="flex h-full flex-col rounded-2xl border border-stone-200 bg-white p-5 shadow-xs">
       <h3 className="break-words text-xl font-bold text-slate-950">
         {restaurant.name}
       </h3>
