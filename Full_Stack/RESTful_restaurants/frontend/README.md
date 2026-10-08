@@ -1,3 +1,3 @@
 # Frontend
 
-The React, React Router, and Tailwind CSS client for RESTful Restaurants. For full project setup, environment variables, features, and deployment links, see the [project README](../README.md).
+React + Vite + Tailwind CSS 4 single-page app. See the [project README](../README.md) for setup and scripts.

@@ -120,7 +120,7 @@ const Restaurants = () => {
         </div>
 
         <form
-          className="h-fit rounded-2xl border border-stone-200 bg-white p-5 shadow-sm sm:p-6"
+          className="h-fit rounded-2xl border border-stone-200 bg-white p-5 shadow-xs sm:p-6"
           onSubmit={onAddNewRestaurant}
         >
           <h3 className="text-xl font-bold text-slate-900">Add a restaurant</h3>
