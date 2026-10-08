@@ -2,7 +2,7 @@ import { API_ENDPOINT } from ".";
 
 const BASE_API_ROUTE = `${API_ENDPOINT}/restaurants/starred`;
 
-const readResponse = async (response) => {
+const readResponse = async (response, { expectJson = true } = {}) => {
   const text = await response.text();
   let data;
 
@@ -10,10 +10,10 @@ const readResponse = async (response) => {
     try {
       data = JSON.parse(text);
     } catch {
-      if (response.ok) {
+      if (response.ok && expectJson) {
         throw new Error("The server returned an unreadable response.");
       }
-      data = { error: text };
+      data = response.ok ? text : { error: text };
     }
   }
 
@@ -32,7 +32,7 @@ export const getStarredRestaurants = async () => {
 
 export const unstarRestaurant = async (id) => {
   const response = await fetch(`${BASE_API_ROUTE}/${id}`, { method: "DELETE" });
-  const result = await readResponse(response);
+  const result = await readResponse(response, { expectJson: false });
   return result.status;
 };
 
@@ -42,6 +42,6 @@ export const updateComment = async (id, newComment) => {
     body: JSON.stringify({ newComment }),
     headers: { "Content-Type": "application/json" },
   });
-  const result = await readResponse(response);
+  const result = await readResponse(response, { expectJson: false });
   return result.status;
 };

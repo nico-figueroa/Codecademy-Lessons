@@ -1,6 +1,6 @@
 import { API_ENDPOINT } from ".";
 
-const readResponse = async (response) => {
+const readResponse = async (response, { expectJson = true } = {}) => {
   const text = await response.text();
   let data;
 
@@ -8,10 +8,10 @@ const readResponse = async (response) => {
     try {
       data = JSON.parse(text);
     } catch {
-      if (response.ok) {
+      if (response.ok && expectJson) {
         throw new Error("The server returned an unreadable response.");
       }
-      data = { error: text };
+      data = response.ok ? text : { error: text };
     }
   }
 
@@ -43,7 +43,7 @@ export const deleteRestaurant = async (id) => {
   const response = await fetch(`${API_ENDPOINT}/restaurants/${id}`, {
     method: "DELETE",
   });
-  const result = await readResponse(response);
+  const result = await readResponse(response, { expectJson: false });
   return result.status;
 };
 
@@ -53,7 +53,7 @@ export const updateRestaurantName = async (id, newName) => {
     body: JSON.stringify({ newName }),
     headers: { "Content-Type": "application/json" },
   });
-  const result = await readResponse(response);
+  const result = await readResponse(response, { expectJson: false });
   return result.status;
 };
 
