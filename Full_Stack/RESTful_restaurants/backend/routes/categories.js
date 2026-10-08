@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const supabase = require("../provider/supabase");
+const { validateName } = require("../utils/inputValidation");
 
 // -----------------------------
 // GET ALL CATEGORIES
@@ -61,9 +62,12 @@ router.get("/:id", async (req, res) => {
 // CREATE CATEGORY
 // -----------------------------
 router.post("/", async (req, res) => {
-  const { name } = req.body;
-
-  if (!name) return res.status(400).json({ error: "Name is required" });
+  const { value: name, error: validationError } = validateName(
+    req.body?.name
+  );
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
+  }
 
   const { data, error } = await supabase
     .from("categories")
@@ -81,9 +85,12 @@ router.post("/", async (req, res) => {
 // -----------------------------
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
-
-  if (!name) return res.status(400).json({ error: "Name is required" });
+  const { value: name, error: validationError } = validateName(
+    req.body?.name
+  );
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
+  }
 
   const { data, error } = await supabase
     .from("categories")

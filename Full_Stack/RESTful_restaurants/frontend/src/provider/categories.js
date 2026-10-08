@@ -13,14 +13,14 @@ export const CategoriesReducer = (state = CategoriesInitialState, action) => {
       return { ...state, categories: [...state.categories, action.payload] };
     }
     case "UPDATE_CATEGORY_NAME": {
-      const nextCategoriesState = [...state.categories];
-      const categoryToUpdate = nextCategoriesState.find(
-        (category) => category.id === action.payload.id
-      );
-      if (categoryToUpdate) {
-        categoryToUpdate.name = action.payload.newName;
-      }
-      return { ...state, categories: nextCategoriesState };
+      return {
+        ...state,
+        categories: state.categories.map((category) =>
+          category.id === action.payload.id
+            ? { ...category, name: action.payload.newName }
+            : category
+        ),
+      };
     }
     case "DELETE_CATEGORY": {
       return {
@@ -71,6 +71,18 @@ export const CategoriesReducer = (state = CategoriesInitialState, action) => {
       });
 
       return { ...state, categories: nextCategoriesState };
+    }
+
+    case "REMOVE_RESTAURANT_ASSIGNMENTS": {
+      return {
+        ...state,
+        categories: state.categories.map((category) => ({
+          ...category,
+          restaurantIds: category.restaurantIds.filter(
+            (id) => id !== action.payload
+          ),
+        })),
+      };
     }
 
     default:
