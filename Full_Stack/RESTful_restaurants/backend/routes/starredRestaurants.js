@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const supabase = require("../provider/supabase");
+const { validateComment } = require("../utils/inputValidation");
 
 // --------------------------------------------------
 // GET ALL STARRED RESTAURANTS (JOIN WITH RESTAURANTS)
@@ -25,6 +26,7 @@ router.get("/", async (req, res) => {
     return {
       id: s.id,
       comment: s.comment,
+      restaurantId: s.restaurantId,
       name: restaurant ? restaurant.name : "Unknown Restaurant",
     };
   });
@@ -55,6 +57,7 @@ router.get("/:id", async (req, res) => {
   res.json({
     id: starred.id,
     comment: starred.comment,
+    restaurantId: starred.restaurantId,
     name: restaurant ? restaurant.name : "Unknown Restaurant",
   });
 });
@@ -63,15 +66,21 @@ router.get("/:id", async (req, res) => {
 // ADD NEW STARRED RESTAURANT
 // --------------------------------------------------
 router.post("/", async (req, res) => {
-  const { restaurantId, comment } = req.body;
+  const { restaurantId, comment } = req.body || {};
 
   if (!restaurantId)
     return res.status(400).json({ error: "restaurantId is required" });
 
+  const { value: validatedComment, error: validationError } =
+    validateComment(comment == null ? "" : comment);
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
+  }
+
   // Insert into Supabase
   const { data: newStarred, error } = await supabase
     .from("starred_restaurants")
-    .insert([{ restaurantId, comment }])
+    .insert([{ restaurantId, comment: validatedComment }])
     .select()
     .single();
 
@@ -87,6 +96,7 @@ router.post("/", async (req, res) => {
   res.json({
     id: newStarred.id,
     comment: newStarred.comment,
+    restaurantId: newStarred.restaurantId,
     name: restaurant ? restaurant.name : "Unknown Restaurant",
   });
 });
@@ -114,7 +124,12 @@ router.delete("/:id", async (req, res) => {
 // --------------------------------------------------
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { newComment } = req.body;
+  const { value: newComment, error: validationError } = validateComment(
+    req.body?.newComment
+  );
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
+  }
 
   const { data, error } = await supabase
     .from("starred_restaurants")

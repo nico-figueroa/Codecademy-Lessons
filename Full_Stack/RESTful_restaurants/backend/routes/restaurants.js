@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const supabase = require("../provider/supabase");
+const { validateName } = require("../utils/inputValidation");
 
 // GET ALL RESTAURANTS
 router.get("/", async (req, res) => {
@@ -31,7 +32,12 @@ router.get("/:id", async (req, res) => {
 
 // CREATE RESTAURANT
 router.post("/", async (req, res) => {
-  const { name } = req.body;
+  const { value: name, error: validationError } = validateName(
+    req.body?.name
+  );
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
+  }
 
   const { data, error } = await supabase
     .from("restaurants")
@@ -63,7 +69,12 @@ router.delete("/:id", async (req, res) => {
 // UPDATE RESTAURANT NAME
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { newName } = req.body;
+  const { value: newName, error: validationError } = validateName(
+    req.body?.newName
+  );
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
+  }
 
   const { error } = await supabase
     .from("restaurants")

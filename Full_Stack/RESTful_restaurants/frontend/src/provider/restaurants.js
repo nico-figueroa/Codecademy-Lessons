@@ -24,19 +24,33 @@ export const RestaurantsReducer = (state = RestaurantsInitialState, action) => {
         ),
       };
     }
-    case "UPDATE_RESTAURANT_NAME": {
-      const nextRestaurantsState = [...state.restaurants];
-      const restaurantToUpdate = nextRestaurantsState.find(
-        (restaurant) => restaurant.id === action.payload.id
-      );
-
-      restaurantToUpdate.name = action.payload.newName;
+    case "REMOVE_STARRED_RESTAURANT_BY_RESTAURANT_ID": {
       return {
         ...state,
-        restaurants: nextRestaurantsState,
+        starredRestaurants: state.starredRestaurants.filter(
+          (restaurant) => restaurant.restaurantId !== action.payload
+        ),
+      };
+    }
+    case "UPDATE_RESTAURANT_NAME": {
+      return {
+        ...state,
+        restaurants: state.restaurants.map((restaurant) =>
+          restaurant.id === action.payload.id
+            ? { ...restaurant, name: action.payload.newName }
+            : restaurant
+        ),
       };
     }
     case "STAR_RESTAURANT": {
+      if (
+        state.starredRestaurants.some(
+          (restaurant) =>
+            restaurant.restaurantId === action.payload.restaurantId
+        )
+      ) {
+        return state;
+      }
       return {
         ...state,
         starredRestaurants: [...state.starredRestaurants, action.payload],
@@ -51,14 +65,14 @@ export const RestaurantsReducer = (state = RestaurantsInitialState, action) => {
       };
     }
     case "UPDATE_STARRED_RESTAURANT_COMMENT": {
-      const nextStarredRestaurantsState = [...state.starredRestaurants];
-      const restaurantToUpdate = nextStarredRestaurantsState.find(
-        (restaurant) => restaurant.id === action.payload.id
-      );
-
-      restaurantToUpdate.comment = action.payload.newComment;
-
-      return { ...state, starredRestaurants: nextStarredRestaurantsState };
+      return {
+        ...state,
+        starredRestaurants: state.starredRestaurants.map((restaurant) =>
+          restaurant.id === action.payload.id
+            ? { ...restaurant, comment: action.payload.newComment }
+            : restaurant
+        ),
+      };
     }
     default:
       return state;

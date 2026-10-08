@@ -2,31 +2,46 @@ import { API_ENDPOINT } from ".";
 
 const BASE_API_ROUTE = `${API_ENDPOINT}/restaurants/starred`;
 
-export const getStarredRestaurants = async () => {
-  const response = await fetch(`${BASE_API_ROUTE}`);
-  const json = await response.json();
+const readResponse = async (response) => {
+  const text = await response.text();
+  let data;
 
-  return json;
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      if (response.ok) {
+        throw new Error("The server returned an unreadable response.");
+      }
+      data = { error: text };
+    }
+  }
+
+  if (!response.ok) {
+    throw new Error(data?.error || `Request failed with status ${response.status}.`);
+  }
+
+  return { data, status: response.status };
+};
+
+export const getStarredRestaurants = async () => {
+  const response = await fetch(BASE_API_ROUTE);
+  const result = await readResponse(response);
+  return result.data;
 };
 
 export const unstarRestaurant = async (id) => {
-  const response =  await fetch(`${BASE_API_ROUTE}/${id}`, {
-    method: "DELETE"
-  });
-
-  return response.status;
+  const response = await fetch(`${BASE_API_ROUTE}/${id}`, { method: "DELETE" });
+  const result = await readResponse(response);
+  return result.status;
 };
 
 export const updateComment = async (id, newComment) => {
   const response = await fetch(`${BASE_API_ROUTE}/${id}`, {
     method: "PUT",
-    body: JSON.stringify({
-      newComment,
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
+    body: JSON.stringify({ newComment }),
+    headers: { "Content-Type": "application/json" },
   });
-
-  return response.status;
+  const result = await readResponse(response);
+  return result.status;
 };
