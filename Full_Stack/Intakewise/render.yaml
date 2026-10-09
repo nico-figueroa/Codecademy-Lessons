@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: drug-intake-api
+    name: intakewise-api
     runtime: node
     plan: free
     rootDir: Full_Stack/Intakewise/backend
@@ -10,7 +10,9 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 22
-      # Supabase session-pooler URI (IPv4-compatible). Entered in the Render dashboard on first Blueprint sync.
+      # Render has no outbound IPv6, so the IPv6-only direct host (db.<ref>.supabase.co) is unreachable.
+      # Use the free Supabase session pooler (IPv4), entered in the Render dashboard on first Blueprint sync:
+      # postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres
       - key: DATABASE_URL
         sync: false
       - key: DATABASE_SSL
@@ -24,16 +26,16 @@ services:
         generateValue: true
       - key: CLIENT_ORIGIN
         fromService:
-          name: drug-intake-web
+          name: intakewise-web
           type: web
           property: host
 
   - type: web
-    name: drug-intake-web
+    name: intakewise
     runtime: static
     rootDir: Full_Stack/Intakewise/frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        value: https://drug-intake-api.onrender.com/api
+        value: https://intakewise-api.onrender.com/api
