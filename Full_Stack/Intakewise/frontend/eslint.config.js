@@ -15,7 +15,8 @@ export default [
       globals: { ...globals.browser, ...globals.jest },
     },
     plugins: { react, "react-hooks": reactHooks },
-    settings: { react: { version: "detect" } },
+    // "detect" relies on context.getFilename(), which ESLint 10 removed.
+    settings: { react: { version: "19.3" } },
     rules: {
       ...react.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
