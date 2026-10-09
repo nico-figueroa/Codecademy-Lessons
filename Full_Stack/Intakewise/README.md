@@ -216,7 +216,7 @@ The application currently uses PostgreSQL through the `pg` driver; Supabase Post
      Store these files securely; data exports contain private account and intake information. Review `schema.sql` for extensions, roles, ownership commands, or provider-specific objects. The data export deliberately omits migration history and refresh sessions; users must sign in again after cutover.
    - SQLite dumps are **not** PostgreSQL SQL and cannot be imported with `psql`. Export the schema and representative table data, for example `sqlite3 app.db ".schema" > sqlite-schema.sql` and `sqlite3 -header -csv app.db "SELECT * FROM users;" > users.csv` (repeat for each required table). Convert the schema and CSV data with a tested migration script/tool, mapping IDs, foreign keys, JSON and array fields to the definitions in `backend/migrations/`. Validate in staging, preserve IDs/sequences, and compare per-table row counts. This repository itself targets PostgreSQL, not SQLite.
 2. **Create the Supabase project.** Create a project in the Supabase Dashboard, choose the production region, save the database password in a secret manager, and wait for the database to finish provisioning. Use the project's **Connect** panel to obtain the connection string. Supabase recommends direct connections for persistent servers when reachable and the session pooler when an IPv4-only host cannot reach the direct endpoint; use the direct endpoint for migrations and `pg_dump`/`psql`.
-3. **Create the target schema and import data.** For a clean Supabase database, set the API's `DATABASE_URL` to the target connection string and start a non-public/staging backend once. Its startup migration runner applies `backend/migrations/001_*.sql` through `006_*.sql` and records the applied versions in `schema_migrations`. Confirm all migrations succeeded before importing source rows. The exported `schema.sql` is for review and conversion planning; do not restore it over the schema created by these migrations. Then, for PostgreSQL source data, import the reviewed data-only dump:
+3. **Create the target schema and import data.** For a clean Supabase database, set the API's `DATABASE_URL` to the target connection string and start a non-public/staging backend once. Its startup migration runner applies `backend/migrations/001_*.sql` through `007_*.sql` and records the applied versions in `schema_migrations`. Confirm all migrations succeeded before importing source rows. The exported `schema.sql` is for review and conversion planning; do not restore it over the schema created by these migrations. Then, for PostgreSQL source data, import the reviewed data-only dump:
 
    ```powershell
    psql "$env:SUPABASE_DATABASE_URL" -v ON_ERROR_STOP=1 -f data.sql
@@ -272,13 +272,16 @@ Backend unit tests use Mocha and Chai; frontend tests use Jest and React Testing
 
 ## Render Deployment Notes
 
-An optional [Render Blueprint](./render.yaml) describes the API, static frontend, and managed PostgreSQL service:
+The [Render Blueprint](./render.yaml) describes the free-tier API and static frontend only. The database is hosted in Supabase (see [Migrating the Database to Supabase](#migrating-the-database-to-supabase)); the Blueprint does not create a Render PostgreSQL instance.
 
-1. Push the repository to GitHub and create a new Blueprint in Render.
+1. Push the repository to GitHub and create a new Blueprint in Render, using `Full_Stack/Intakewise/render.yaml` as the Blueprint path.
 2. Select the repository; review the paths and generated environment values.
-3. Keep `JWT_SECRET` generated and private. Confirm `DATABASE_URL` references the managed database.
+3. When prompted, enter the `sync: false` secrets:
+   - `DATABASE_URL`: the Supabase **session pooler** connection string from the project's **Connect** panel. Render's network is IPv4, and Supabase's direct endpoint is IPv6 by default. Don't append `sslmode` to the URI; TLS is configured by `DATABASE_SSL`/`DATABASE_SSL_CA`.
+   - `DATABASE_SSL_CA`: the full PEM text of the Supabase root certificate. Download it from **Project Settings → Database → SSL Configuration**. The API verifies the server certificate, so the connection fails without it.
+   Keep `JWT_SECRET` generated and private. `DB_POOL_MAX` defaults to `5` to stay within the pooler's client limit.
 4. Configure the API `CLIENT_ORIGIN` to the deployed static site origin and confirm the frontend `VITE_API_URL` points to the API `/api` base path.
-5. Deploy. The API runs migrations before listening. Verify `/health`, register a test user, add an item, and check schedule and source lookups.
+5. Deploy. On first start the API runs migrations `001`–`007` against the empty Supabase database before listening. Then, in Supabase, enable RLS on the created `public` tables (or revoke `anon`/`authenticated` grants) so they aren't reachable through the Data API. Verify `/health`, register a test user, add an item, and check schedule and source lookups.
 
 For separate Render services, set the API root directory to `Full_Stack/Intakewise/backend`, build/start commands to `npm install` and `npm start`, and the static-site root to `Full_Stack/Intakewise/frontend`, with build command `npm install && npm run build` and publish directory `dist`.
 
