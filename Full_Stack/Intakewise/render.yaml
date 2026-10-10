@@ -17,9 +17,10 @@ services:
         sync: false
       - key: DATABASE_SSL
         value: "true"
-      # Supabase root CA certificate (PEM) from Project Settings > Database > SSL Configuration.
-      - key: DATABASE_SSL_CA
-        sync: false
+      # Upload Supabase's prod-ca-2021.crt (Database Settings > SSL Configuration) as a Render
+      # Secret File named prod-ca-2021.crt; Render mounts secret files under /etc/secrets/.
+      - key: DATABASE_SSL_CA_FILE
+        value: /etc/secrets/prod-ca-2021.crt
       - key: DB_POOL_MAX
         value: "5"
       - key: JWT_SECRET

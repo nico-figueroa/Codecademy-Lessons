@@ -1,14 +1,26 @@
+import { readFileSync } from "node:fs";
 import pkg from "pg";
 import dotenv from "dotenv";
 dotenv.config();
 
 const { Pool } = pkg;
 
-const ssl = process.env.DATABASE_SSL === "true"
-  ? {
-    rejectUnauthorized: true,
-    ...(process.env.DATABASE_SSL_CA ? { ca: process.env.DATABASE_SSL_CA } : {}),
+export function resolveSslCa(env = process.env, readFile = readFileSync) {
+  if (env.DATABASE_SSL_CA_FILE) {
+    try {
+      return readFile(env.DATABASE_SSL_CA_FILE, "utf8");
+    } catch (error) {
+      throw new Error(`Unable to read DATABASE_SSL_CA_FILE at ${env.DATABASE_SSL_CA_FILE}`, { cause: error });
+    }
   }
+  // Dashboards often store multi-line values with literal "\n" sequences.
+  return env.DATABASE_SSL_CA ? env.DATABASE_SSL_CA.replace(/\\n/g, "\n") : undefined;
+}
+
+const ca = process.env.DATABASE_SSL === "true" ? resolveSslCa() : undefined;
+
+const ssl = process.env.DATABASE_SSL === "true"
+  ? { rejectUnauthorized: true, ...(ca ? { ca } : {}) }
   : undefined;
 
 const pool = new Pool({

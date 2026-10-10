@@ -110,14 +110,15 @@ The API requires a database and a strong `JWT_SECRET`; it intentionally exits du
 PORT=5000
 DATABASE_URL=postgresql://postgres:password@localhost:5432/drug_intake_organizer
 DATABASE_SSL=false
-# Optional trusted PEM certificate when the database provider requires a custom CA.
+# Optional custom root CA. Prefer a path to the provider's .crt file; DATABASE_SSL_CA_FILE wins if both are set.
+# DATABASE_SSL_CA_FILE=./certs/prod-ca-2021.crt
 # DATABASE_SSL_CA=-----BEGIN CERTIFICATE-----...
 DB_POOL_MAX=10
 JWT_SECRET=replace-with-a-random-secret-at-least-32-characters
 CLIENT_ORIGIN=http://localhost:5173
 ```
 
-`DATABASE_SSL=true` enables TLS with certificate verification. If a provider requires a custom root CA, set `DATABASE_SSL_CA` to its PEM contents as a private server-side environment variable. Use TLS for managed database connections.
+`DATABASE_SSL=true` enables TLS with certificate verification. If a provider requires a custom root CA, set `DATABASE_SSL_CA_FILE` to the path of its `.crt` file, or set `DATABASE_SSL_CA` to the PEM text (literal `\n` sequences are converted to newlines). The backend fails at startup if `DATABASE_SSL_CA_FILE` points to a file that can't be read. Use TLS for managed database connections.
 
 `frontend/.env`:
 
@@ -224,7 +225,7 @@ The application currently uses PostgreSQL through the `pg` driver; Supabase Post
 
    For SQLite or other non-PostgreSQL sources, load converted records through a reviewed import script into this already-created schema. If restoring a full pre-existing PostgreSQL schema instead, verify it exactly matches this version's migrations and reconcile its `schema_migrations` ledger before starting the API; the initial migrations are not all idempotent. Never mark migrations applied without verifying schema equivalence. Back up and rehearse the exact procedure in a separate Supabase project before production.
    Check Supabase's Data API exposure and SQL grants for the `public` tables. If tables are reachable through the Data API, enable RLS and either leave `anon`/`authenticated` without table grants or add ownership policies before granting access. This app uses its own JWT and server-side account filters; `auth.uid()` policies alone do not authorize those custom tokens.
-4. **Configure the database adapter and environment.** The least disruptive option is to keep `pg`: set Render's backend `DATABASE_URL` to the Supabase direct or session-pooler connection string appropriate for the Render network, `DATABASE_SSL=true`, and optionally `DATABASE_SSL_CA` if the selected endpoint requires a custom CA. Keep `JWT_SECRET`, `CLIENT_ORIGIN`, and `DB_POOL_MAX` configured as described above. Keep parameterized SQL and current server-side user ownership checks. If replacing `pg` with `@supabase/supabase-js`, install a reviewed, pinned version in `backend/` (`npm install --save-exact @supabase/supabase-js@<approved-version>`), commit the lockfile, set `SUPABASE_URL` and `SUPABASE_SECRET_KEY` on the backend only, create a server-only client, and rewrite controller data access from `pool.query(...)` to typed `.from("table").select/insert/update/delete(...)` calls. Example server-only client:
+4. **Configure the database adapter and environment.** The least disruptive option is to keep `pg`: set Render's backend `DATABASE_URL` to the Supabase direct or session-pooler connection string appropriate for the Render network, `DATABASE_SSL=true`, and optionally `DATABASE_SSL_CA_FILE` (path to the Supabase `.crt`) if the selected endpoint requires a custom CA. Keep `JWT_SECRET`, `CLIENT_ORIGIN`, and `DB_POOL_MAX` configured as described above. Keep parameterized SQL and current server-side user ownership checks. If replacing `pg` with `@supabase/supabase-js`, install a reviewed, pinned version in `backend/` (`npm install --save-exact @supabase/supabase-js@<approved-version>`), commit the lockfile, set `SUPABASE_URL` and `SUPABASE_SECRET_KEY` on the backend only, create a server-only client, and rewrite controller data access from `pool.query(...)` to typed `.from("table").select/insert/update/delete(...)` calls. Example server-only client:
 
    ```js
    import { createClient } from "@supabase/supabase-js";
@@ -278,7 +279,7 @@ The [Render Blueprint](./render.yaml) describes the free-tier API and static fro
 2. Select the repository; review the paths and generated environment values.
 3. When prompted, enter the `sync: false` secrets:
    - `DATABASE_URL`: the Supabase **session pooler** connection string from the project's **Connect** panel (**Connection type → Session pooler**). It is free and IPv4-compatible. Don't use the direct host `db.<project-ref>.supabase.co`: it is IPv6-only unless you buy Supabase's IPv4 add-on, and Render has no outbound IPv6, so it fails with `ENETUNREACH`/`ENOTFOUND`. The session pooler URI looks like `postgresql://postgres.<project-ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres`. The user is `postgres.<project-ref>`, not `postgres`. Use port `5432` (session mode), not `6543` (transaction mode). URL-encode special characters in the password. Don't append `sslmode` to the URI; TLS is configured by `DATABASE_SSL`/`DATABASE_SSL_CA`. The direct IPv6 host is still fine for `psql`/`pg_dump` from a local machine that has IPv6.
-   - `DATABASE_SSL_CA`: the full PEM text of the Supabase root certificate. Download it from **Project Settings → Database → SSL Configuration**. The API verifies the server certificate, so the connection fails without it.
+   - **Supabase CA certificate (Secret File):** in Supabase, open **Database Settings → SSL Configuration** and download the certificate (`prod-ca-2021.crt`). In Render, open the `intakewise-api` service → **Environment → Secret Files → Add Secret File**, name it `prod-ca-2021.crt`, paste the file's contents, and save. Render mounts it at `/etc/secrets/prod-ca-2021.crt`, which the Blueprint already sets as `DATABASE_SSL_CA_FILE`. Blueprints can't declare secret files, so this step is manual. The API verifies the server certificate, so startup fails until the file exists. Optionally, under Supabase's **SSL Configuration**, turn on **Enforce SSL on incoming connections** so non-TLS clients are rejected.
    Keep `JWT_SECRET` generated and private. `DB_POOL_MAX` defaults to `5` to stay within the pooler's client limit.
 4. Configure the API `CLIENT_ORIGIN` to the deployed static site origin and confirm the frontend `VITE_API_URL` points to the API `/api` base path.
 5. Deploy. On first start the API runs migrations `001`–`007` against the empty Supabase database before listening. Then, in Supabase, enable RLS on the created `public` tables (or revoke `anon`/`authenticated` grants) so they aren't reachable through the Data API. Verify `/health`, register a test user, add an item, and check schedule and source lookups.
