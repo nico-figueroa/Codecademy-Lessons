@@ -220,7 +220,14 @@ The application currently uses PostgreSQL through the `pg` driver; Supabase Post
 3. **Create the target schema and import data.** For a clean Supabase database, set the API's `DATABASE_URL` to the target connection string and start a non-public/staging backend once. Its startup migration runner applies `backend/migrations/001_*.sql` through `007_*.sql` and records the applied versions in `schema_migrations`. Confirm all migrations succeeded before importing source rows. The exported `schema.sql` is for review and conversion planning; do not restore it over the schema created by these migrations. Then, for PostgreSQL source data, import the reviewed data-only dump:
 
    ```powershell
-   psql "$env:SUPABASE_DATABASE_URL" -v ON_ERROR_STOP=1 -f data.sql
+   psql "$env:SUPABASE_DATABASE_URL" -v ON_ERROR_STOP=1 --single-transaction -f data.sql
+   ```
+
+   Import before anyone registers in the new database: the dump preserves user IDs, so a pre-created account takes `id = 1` and makes the `users` copy fail. If that happens, empty the application tables (keeping `schema_migrations`) and re-run the import:
+
+   ```sql
+   TRUNCATE users, items, schedule_overrides, auth_sessions, password_reset_tokens,
+            interaction_cache, reference_cache RESTART IDENTITY CASCADE;
    ```
 
    For SQLite or other non-PostgreSQL sources, load converted records through a reviewed import script into this already-created schema. If restoring a full pre-existing PostgreSQL schema instead, verify it exactly matches this version's migrations and reconcile its `schema_migrations` ledger before starting the API; the initial migrations are not all idempotent. Never mark migrations applied without verifying schema equivalence. Back up and rehearse the exact procedure in a separate Supabase project before production.
